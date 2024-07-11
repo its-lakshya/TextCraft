@@ -1,7 +1,13 @@
 import './App.css';
+import Editor from './utils/Editor';
 
 function App() {
-  return <div className="">TextCraft</div>;
+
+  return (
+      <div>
+        <Editor/>
+      </div>
+  )
 }
 
 export default App;
