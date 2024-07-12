@@ -1,4 +1,18 @@
 {
+  "name": "backend",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Backend of TextCraft",
+  "type": "module",
+  "main": "index.ts",
+  "scripts": {
+    "dev": "nodemon -r dotenv/config --experimental-json-modules src/index.js"
+  },
+  "keywords": [
+    "TextCraft"
+  ],
+  "author": "Lakshya Kumar",
+  "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.1.1",
     "cloudinary": "^2.2.0",
