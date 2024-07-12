@@ -1,0 +1,80 @@
+import mongoose, { Schema } from 'mongoose';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+
+const userSchema = new Schema(
+  {
+    userName: {
+      type: String,
+      required: true,
+      lowercase: true,
+      trim: true,
+      unique: true,
+    },
+    email: {
+      type: String,
+      required: true,
+      lowercase: true,
+      trim: true,
+    },
+    fullName: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    password: {
+      type: String,
+      required: true,
+      trim: [true, 'Password is required'],
+    },
+    profileImage: {
+      type: String,
+    },
+    refreshToken: {
+      type: String,
+    },
+  },
+  { timestamps: true },
+);
+
+userSchema.pre('save', async function (next) {
+  if (!this.isModified('password')) return next();
+
+  this.password = await bcrypt.hash(this.password, 10);
+  next();
+});
+
+userSchema.method.isPasswordCorrect = async password => {
+  return await bcrypt.compare(password, this.password);
+};
+
+userSchema.method.generateAccessToken = async () => {
+  return jwt.sign(
+    {
+      _id: this.id,
+      email: this.email,
+      userName: this.userName,
+      fullName: this.fullName,
+    },
+    process.env.ACCESS_TOKEN_SECRET,
+    {
+      expiresIn: process.env.ACCESS_TOKEN_EXPIRY,
+    },
+  );
+};
+
+userSchema.method.generateRefreshToken = async () => {
+  return jwt.sign(
+    {
+      _id: this._id,
+    },
+    process.env.REFRESH_TOKEN_SECRET,
+    {
+      expiresIn: process.env.REFRES_TOKEN_EXPIRY,
+    },
+  );
+};
+
+const User = mongoose.model('User', userSchema);
+
+export { User };
