@@ -1,70 +1,63 @@
-import React from "react";
-import "react-quill/dist/quill.snow.css";
-import { Quill } from "react-quill";
+import React from 'react';
+import 'react-quill/dist/quill.snow.css';
+import { Quill } from 'react-quill';
 
 const CustomUndo = () => (
   <svg viewBox="0 0 18 18">
     <polygon className="ql-fill ql-stroke" points="6 10 4 12 2 10 6 10" />
-    <path
-      className="ql-stroke"
-      d="M8.09,13.91A4.6,4.6,0,0,0,9,14,5,5,0,1,0,4,9"
-    />
+    <path className="ql-stroke" d="M8.09,13.91A4.6,4.6,0,0,0,9,14,5,5,0,1,0,4,9" />
   </svg>
 );
 
 const CustomRedo = () => (
   <svg viewBox="0 0 18 18">
     <polygon className="ql-fill ql-stroke" points="12 10 14 12 16 10 12 10" />
-    <path
-      className="ql-stroke"
-      d="M9.91,13.91A4.6,4.6,0,0,1,9,14a5,5,0,1,1,5-5"
-    />
+    <path className="ql-stroke" d="M9.91,13.91A4.6,4.6,0,0,1,9,14a5,5,0,1,1,5-5" />
   </svg>
 );
 
-const Size = Quill.import("formats/size");
+const Size = Quill.import('formats/size');
 
-Size.whitelist = ["extra-small", "small", "medium", "large"];
+Size.whitelist = ['extra-small', 'small', 'medium', 'large'];
 Quill.register(Size, true);
 
-const Font = Quill.import("formats/font");
+const Font = Quill.import('formats/font');
 
-Font.whitelist = [
-  "arial",
-  "comic-sans",
-  "courier-new",
-  "georgia",
-  "helvetica",
-  "lucida"
-];
+Font.whitelist = ['arial', 'comic-sans', 'courier-new', 'georgia', 'helvetica', 'lucida'];
 
 Quill.register(Font, true);
 
-function undoChange <t>(this: t) {
+function undoChange<t>(this: t) {
+  // @ts-expect-error i am unable to find why this this is giving error in ts
   this.quill.history.undo();
 }
 
 function redoChange() {
+  // @ts-expect-error i am unable to find why this this is giving error in ts
   this.quill.history.redo();
 }
 
 export const modules = {
   toolbar: {
-    container: "#toolbar",
+    container: '#toolbar',
     handlers: {
       undo: undoChange,
-      redo: redoChange
-    }
+      redo: redoChange,
+    },
   },
   history: {
     delay: 500,
     maxStack: 100,
-    userOnly: true
-  }
+    userOnly: true,
+  },
 };
 
 export const Toolbar: React.FC = () => (
-  <div id="toolbar" className="flex justify-center bg-[#B7C2D5] bg-opacity-30 ">
+  <div
+    id="toolbar"
+    style={{border: "none"}}
+    className="flex justify-center bg-[#CBD6F3] bg-opacity-50 rounded-full w-[90vw]"
+  >
     <span className="ql-formats">
       <select className="ql-font" defaultValue="arial">
         <option value="arial">Arial</option>

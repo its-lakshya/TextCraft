@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import ReactQuill from 'react-quill';
-import { Toolbar, modules } from './Toolbar';
+import { Toolbar, modules } from '../toolbar/Toolbar';
 import 'react-quill/dist/quill.snow.css';
 
 interface EditorProps {}
@@ -36,15 +36,15 @@ const Editor: React.FC<EditorProps> = () => {
   return (
     <div className="text-editor">
       <Toolbar />
-      <ReactQuill
-        className='h-[80vh] border-0 bordre-none'
-        theme="snow"
-        value={value}
-        onChange={handleChange}
-        placeholder={'Write something awesome...'}
-        modules={modules}
-        formats={formats}
-      />
+        <ReactQuill
+          className="h-[80vh] w-[90vw] rounded-full border-red-500 outline-none "
+          theme="snow"
+          value={value}
+          onChange={handleChange}
+          placeholder={'Write something awesome...'}
+          modules={modules}
+          formats={formats}
+          />
     </div>
   );
 };
