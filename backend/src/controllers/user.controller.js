@@ -5,7 +5,7 @@ import { asyncHandler } from '../utils/asyncHandler.js';
 import { uploadOnCloudinary } from '../utils/cloudinary.js';
 
 const registerUser = asyncHandler(async (req, res) => {
-  const { userName, email, fullName, password } = req.body;
+  const { userName, email, fullName, password, mobileNumber, gender } = req.body;
 
   if ([userName, email, fullName, password].some(field => field.trim() === '')) {
     throw new apiError(400, 'Bad request: Missing required details for registration');
@@ -16,7 +16,7 @@ const registerUser = asyncHandler(async (req, res) => {
   });
 
   if (existedUser) {
-    throw new apiError(409, 'Conflict: User with this email of username already exists');
+    throw new apiError(409, 'User with this email of username already exists');
   }
 
   const profileImageLocalPath = req.files?.profileImage[0]?.path;
@@ -37,6 +37,8 @@ const registerUser = asyncHandler(async (req, res) => {
     email,
     password,
     profileImage: profileImage?.url || '',
+    mobileNumber: mobileNumber || null,
+    gender: gender
   });
 
   const createdUser = await User.findById(user._id).select('-password -refreshToken');

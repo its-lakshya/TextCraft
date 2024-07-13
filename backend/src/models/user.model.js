@@ -11,6 +11,17 @@ const userSchema = new Schema(
       trim: true,
       unique: true,
     },
+    mobileNumber: {
+      type: String,
+      unique: true,
+      required: false,
+    },
+    gender: {
+      type: String,
+      enum: ["male", "female", "prefer-not-to-say"],
+      required: false,
+      default: "prefer-not-to-say"
+    },
     email: {
       type: String,
       required: true,
