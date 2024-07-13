@@ -4,27 +4,22 @@ import cookieParser from "cookie-parser";
 
 const app = express();
 
+// defining middlewares
 app.use(
   cors({
     origin: process.env.CORS_ORIGIN
   })
 )
-
 app.use(cookieParser())
 app.use(express.json({limit: "16kb"}))
 app.use(urlencoded({extended:true, limit: "16kb"}))
 app.use(express.static("public"));
 
-app.get("/", (req, res) => {
-  res.send("App is connected")
-})
+// routes import
+import userRouter from "./routes/user.routes"
 
-const port = process.env.PORT || 3000
-
-
-app.listen(port, () => {
-  console.log(`Server is running at http://localhost:${port}`)
-})
+// routes declaration
+app.use("/api/v1/user", userRouter);
 
 
 export { app }
