@@ -7,11 +7,11 @@ import { uploadOnCloudinary } from '../utils/cloudinary.js';
 const registerUser = asyncHandler(async (req, res) => {
   const { userName, email, fullName, password } = req.body;
 
-  if ([userName, email, fullName, password, profileImage].some(field => field.trim() === '')) {
+  if ([userName, email, fullName, password].some(field => field.trim() === '')) {
     throw new apiError(400, 'Bad request: Missing required details for registration');
   }
 
-  const existedUser = User.findOne({
+  const existedUser = await User.findOne({
     $or: [{ userName, email }],
   });
 
@@ -19,7 +19,7 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new apiError(409, 'Conflict: User with this email of username already exists');
   }
 
-  const profileImageLocalPath = req.file?.profileImage?.path;
+  const profileImageLocalPath = req.files?.profileImage[0]?.path;
 
   if (!profileImageLocalPath) {
     throw new apiError(400, 'Profile image is required');
@@ -39,7 +39,7 @@ const registerUser = asyncHandler(async (req, res) => {
     profileImage: profileImage?.url || '',
   });
 
-  const createdUser = User.findById(user._id).select('-password -refreshToken');
+  const createdUser = await User.findById(user._id).select('-password -refreshToken');
 
   if (!createdUser) {
     throw new apiError(500, 'Something went wrong while registering user');
