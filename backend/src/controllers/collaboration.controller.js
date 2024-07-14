@@ -56,5 +56,50 @@ const addCollaborator = asyncHandler(async (req, res) => {
     .json(new apiResponse(200, createdCollaborator, 'Collaborator added successfully'));
 });
 
+const removeCollaborator = asyncHandler(async (req, res) => {
+  const { documentId } = req.params;
+  const { email } = req.body;
+  const user = req.user;
 
-export { addCollaborator }
+  if (!user) {
+    throw new apiError(401, 'Unathorized request');
+  }
+
+  if (!mongoose.isValidObjectId(documentId)) {
+    throw new apiError(400, 'Invalid of missing document id');
+  }
+
+  if (!email || email.trim() === '') {
+    throw new apiError(400, 'Email is missing');
+  }
+
+  const document = await Document.findById(documentId);
+
+  if (!document) {
+    throw new apiError(400, 'Document does not exist');
+  }
+
+  const collaborator = await User.findOne({ email });
+
+  if (!collaborator) {
+    throw new apiError(400, 'User with this email does not exists');
+  }
+
+  const collab = await Collaboration.findOne({document, collaborator});
+
+  if(!collab){
+    throw new apiError(404, "Provide users is not a collaborator");
+  }
+
+  const removedCollaborator = await Collaboration.findByIdAndDelete(collab._id, {
+    new: true,
+  });
+
+  if (!removedCollaborator) {
+    throw new apiError(500, 'Something went wrong while removeing the collaborator');
+  }
+
+  return res.status(200).json(new apiResponse(200, 'Collaborator removed successfully'));
+});
+
+export { addCollaborator, removeCollaborator };
