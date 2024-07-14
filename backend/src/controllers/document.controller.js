@@ -55,23 +55,56 @@ const getDocumentByID = asyncHandler(async (req, res) => {
     throw new apiError(401, 'Unauthorized request');
   }
 
-  if(!mongoose.isValidObjectId(documentId)){
-    throw new apiError(400, "Invalid or missing document id");
+  if (!mongoose.isValidObjectId(documentId)) {
+    throw new apiError(400, 'Invalid or missing document id');
   }
 
   const document = await Document.findById(documentId);
 
-  if(!document){
-    throw new apiError(500, "Something went wrong while fetching the document");
+  if (!document) {
+    throw new apiError(500, 'Something went wrong while fetching the document');
   }
 
-  return res
-    .status(200)
-    .json(new apiResponse(200, document, "Document fetched successfully"));
-
+  return res.status(200).json(new apiResponse(200, document, 'Document fetched successfully'));
 });
 
-const updateDocument = asyncHandler(async (req, res) => {});
+const updateDocument = asyncHandler(async (req, res) => {
+  const { documentId } = req.params;
+
+  const { documentName, content } = req.body;
+
+  const user = req.user;
+
+  if (!user) {
+    throw new apiError(401, 'Unauthorized request');
+  }
+
+  if (!mongoose.isValidObjectId(documentId)) {
+    throw new apiError(400, 'Invalid or missing document id');
+  }
+
+  if (!documentName && !content) {
+    throw new apiError(400, 'Atleast one from the documentName or content is required');
+  }
+
+  const fieldsToBeUpdated = {};
+
+  if (documentName && documentName.trim() !== '') {
+    fieldsToBeUpdated.documentName = documentName;
+  }
+
+  if (content && content.trim() !== '') {
+    fieldsToBeUpdated.content = content;
+  }
+
+  const document = await Document.findByIdAndUpdate(documentId, fieldsToBeUpdated, { new: true });
+
+  if (!document) {
+    throw new apiError(500, 'Something went wrong while updating the document');
+  }
+
+  return res.status(200).json(new apiResponse(200, document, 'Document updated successfully'));
+});
 
 const deleteDocument = asyncHandler(async (req, res) => {
   const { documentId } = req.params;
