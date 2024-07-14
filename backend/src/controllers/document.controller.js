@@ -127,55 +127,6 @@ const deleteDocument = asyncHandler(async (req, res) => {
   return res.status(200).json(new apiResponse(200, 'Document deleted successfully'));
 });
 
-const addCollaborator = asyncHandler(async (req, res) => {
-  const user = req.user;
-  const { documentId } = req.params;
-  const { email, accessType } = req.body;
-
-  if (!user) {
-    throw new apiError(401, 'Unauthorized request');
-  }
-
-  if (!mongoose.isValidObjectId(documentId)) {
-    throw new apiError(400, 'Invalid or missing document id');
-  }
-
-  if(!email){
-    throw new apiError(400, "Email is missing");
-  }
-
-  if(accessType !== 'read' && accessType !== 'write' && accessType){
-    throw new apiError(400, "Invalid accessType")
-  }
-
-  const document = await Document.findById(documentId);
-
-  if (!document) {
-    throw new apiError(500, 'Something went wrong while deleting the document');
-  }
-
-  const collaborator = await User.findOne({email});
-
-  if(!collaborator){
-    throw new apiError(404, "No such user with this email found");
-  }
-
-  document.collaborators.push({user: collaborator, accessType: accessType || 'read'})
-
-  const addedCollaborator = await document.save();
-
-  if(!addedCollaborator){
-    throw new apiError(500, "Something went wrong while adding the collaborator")
-  }
-
-  return res
-    .status(200)
-    .json(new apiResponse(200, "Collaborator added successfully"));
-});
-
-const removeCollaborator = asyncHandler(async (req, res) => {});
-
-const updateCollaboratorPermissions = asyncHandler(async (req, res) => {});
 
 export {
   createDocument,
@@ -183,7 +134,4 @@ export {
   getDocumentByID,
   updateDocument,
   deleteDocument,
-  addCollaborator,
-  removeCollaborator,
-  updateCollaboratorPermissions,
 };
