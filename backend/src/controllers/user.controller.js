@@ -172,4 +172,42 @@ const updateProfileImage = asyncHandler(async (req, res) => {
   return res.status(200).json(new apiResponse(200, user, 'Profile image updated successfully'));
 });
 
-export { registerUser, loginUser, logoutUser, updateProfileImage };
+const updateUserDetails = asyncHandler(async (req, res) => {
+  const { userName, fullName, email, mobileNumber, gender } = req.body;
+  const user = req.user;
+
+  if (!user) {
+    throw new apiError(401, 'Unauthorized request');
+  }
+
+  if (!userName && !fullName && !email && !mobileNumber && !gender) {
+    throw new apiError(400, 'At least one field must be provided for update');
+  }
+
+  const fieldsToBeUpdated = {};
+  
+  if (userName && userName.trim() !== "") fieldsToBeUpdated.userName = userName;
+  if (fullName && fullName.trim() !== "") fieldsToBeUpdated.fullName = fullName;
+  if (email && email.trim() !== "") fieldsToBeUpdated.email = email;
+  if (mobileNumber && mobileNumber.trim() !== "") fieldsToBeUpdated.mobileNumber = mobileNumber;
+  if (gender && gender.trim() !== "") fieldsToBeUpdated.gender = gender;
+
+
+  if (!fieldsToBeUpdated) {
+    throw new apiError(400, 'Fields to be updated are not provided');
+  }
+
+  const updateFields = await User.findByIdAndUpdate(user._id, fieldsToBeUpdated, {
+    new: true,
+  }).select('-password -refreshToken');
+
+  if (!updateFields) {
+    throw new apiError(500, 'Something went wrong while updating the details');
+  }
+
+  return res
+    .status(200)
+    .json(new apiResponse(200, updateFields, 'User details updated successfully'));
+});
+
+export { registerUser, loginUser, logoutUser, updateProfileImage, updateUserDetails };

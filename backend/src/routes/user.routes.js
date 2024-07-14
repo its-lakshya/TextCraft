@@ -6,6 +6,7 @@ import {
   logoutUser,
   registerUser,
   updateProfileImage,
+  updateUserDetails,
 } from '../controllers/user.controller.js';
 
 const router = Router();
@@ -27,5 +28,7 @@ router.use(verifyJWT);
 router.route('/logout').post(logoutUser);
 
 router.route('/profile-image').patch(upload.single('profileImage'), updateProfileImage);
+
+router.route('/update-account').patch(updateUserDetails);
 
 export default router;
