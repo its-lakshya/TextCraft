@@ -55,3 +55,6 @@ const addCollaborator = asyncHandler(async (req, res) => {
     .status(200)
     .json(new apiResponse(200, createdCollaborator, 'Collaborator added successfully'));
 });
+
+
+export { addCollaborator }
