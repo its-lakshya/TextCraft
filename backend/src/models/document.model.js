@@ -12,18 +12,7 @@ const documentSchema = new Schema({
   owner: {
     type: Schema.Types.ObjectId,
     ref: "User"
-  },
-  collaborators: [{
-    user: {
-      type: Schema.Types.ObjectId,
-      ref: "User",
-    },
-    accessType: {
-      type: String,
-      enum: ["read", "write"],
-      default: "read",
-    }
-  }],
+  }
 }, {timestamps: true})
 
 
