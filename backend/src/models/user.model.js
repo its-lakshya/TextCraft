@@ -14,7 +14,8 @@ const userSchema = new Schema(
     mobileNumber: {
       type: String,
       unique: true,
-      required: false,
+      trim: true,
+      sparse: true,
     },
     gender: {
       type: String,
