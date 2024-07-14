@@ -2,7 +2,7 @@ import { User } from '../models/user.model.js';
 import { apiError } from '../utils/apiError.js';
 import { apiResponse } from '../utils/apiResponse.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
-import { uploadOnCloudinary } from '../utils/cloudinary.js';
+import { deleteFromCloudinary, uploadOnCloudinary } from '../utils/cloudinary.js';
 
 const generateAccessAndRefreshToken = async userId => {
   try {
@@ -124,14 +124,52 @@ const logoutUser = asyncHandler(async (req, res) => {
 
   const options = {
     httpOnly: true,
-    secure: true
-  }
+    secure: true,
+  };
 
   return res
     .status(200)
-    .cookie("accessToken", options)
-    .cookie("refreshToken", options)
-    .json(new apiResponse(200, "User logged out successfully"))
+    .cookie('accessToken', options)
+    .cookie('refreshToken', options)
+    .json(new apiResponse(200, 'User logged out successfully'));
 });
 
-export { registerUser, loginUser, logoutUser };
+const updateProfileImage = asyncHandler(async (req, res) => {
+  const newProfileImageLocalPath = req.file?.path;
+
+  const isUserLoggedIn = req.user;
+
+  if (!isUserLoggedIn) {
+    throw new apiError(404, 'Unauthorized request');
+  }
+
+  if (!newProfileImageLocalPath) {
+    throw new apiError(400, 'Profile image is missing');
+  }
+
+  const newProfileImage = await uploadOnCloudinary(newProfileImageLocalPath);
+
+  if (!newProfileImage) {
+    throw new apiError(500, 'Something went wrong while updating the profile image');
+  }
+
+  const oldImageDeleted = await deleteFromCloudinary(isUserLoggedIn.profileImage);
+
+  if (!oldImageDeleted || oldImageDeleted.result !== 'ok') {
+    throw new apiError(500, 'Something went wrong while updating the profile image');
+  }
+
+  const user = await User.findByIdAndUpdate(
+    req.user._id,
+    {
+      $set: {
+        profileImage: newProfileImage.url,
+      },
+    },
+    { new: true },
+  ).select('-password -refreshToken');
+
+  return res.status(200).json(new apiResponse(200, user, 'Profile image updated successfully'));
+});
+
+export { registerUser, loginUser, logoutUser, updateProfileImage };

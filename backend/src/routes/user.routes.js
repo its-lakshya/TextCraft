@@ -1,7 +1,12 @@
 import { Router } from 'express';
 import { verifyJWT } from '../middlewares/auth.middleware.js';
 import { upload } from '../middlewares/multer.middleware.js';
-import { loginUser, logoutUser, registerUser } from '../controllers/user.controller.js';
+import {
+  loginUser,
+  logoutUser,
+  registerUser,
+  updateProfileImage,
+} from '../controllers/user.controller.js';
 
 const router = Router();
 
@@ -21,5 +26,6 @@ router.use(verifyJWT);
 
 router.route('/logout').post(logoutUser);
 
+router.route('/profile-image').patch(upload.single('profileImage'), updateProfileImage);
 
 export default router;

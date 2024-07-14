@@ -23,4 +23,24 @@ const uploadOnCloudinary = async localFilePath => {
   }
 };
 
-export { uploadOnCloudinary };
+const extractPublicId = imageUrl => {
+  const startIndex = imageUrl.lastIndexOf('/', imageUrl.lastIndexOf('/') - 1) + 1;
+  const endIndex = imageUrl.lastIndexOf('.');
+  console.log(imageUrl.substring(startIndex, endIndex));
+  return imageUrl.substring(startIndex, endIndex);
+};
+
+const deleteFromCloudinary = async imageUrl => {
+  try {
+    const image = extractPublicId(imageUrl);
+
+    const response = await cloudinary.uploader.destroy(image);
+    console.log(imageUrl, '----> ', response);
+    return response;
+  } catch (error) {
+    console.log('Cloudinary Error: ', error);
+    return null;
+  }
+};
+
+export { uploadOnCloudinary, deleteFromCloudinary };
