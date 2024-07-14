@@ -31,7 +31,21 @@ const createDocument = asyncHandler(async (req, res) => {
   return res.status(200).json(new apiResponse(200, 'Document created successfully'));
 });
 
-const getAllDocument = asyncHandler(async (req, res) => {});
+const getAllDocuments = asyncHandler(async (req, res) => {
+  const user = req.user;
+
+  if (!user) {
+    throw new apiError(401, 'Unauthorized request');
+  }
+
+  const documents = await Document.find({ owner: user });
+
+  if (!documents) {
+    throw new apiError(500, 'Something went wrong while fetching the documents');
+  }
+
+  return res.status(200).json(new apiResponse(200, documents, 'Documents fetched successfully'));
+});
 
 const getDocumentByID = asyncHandler(async (req, res) => {});
 
@@ -51,7 +65,6 @@ const deleteDocument = asyncHandler(async (req, res) => {
 
   const document = await Document.findByIdAndDelete(documentId);
 
-
   if (!document) {
     throw new apiError(500, 'Something went wrong while deleting the document');
   }
@@ -67,7 +80,7 @@ const updateCollaboratorPermissions = asyncHandler(async (req, res) => {});
 
 export {
   createDocument,
-  getAllDocument,
+  getAllDocuments,
   getDocumentByID,
   updateDocument,
   deleteDocument,
