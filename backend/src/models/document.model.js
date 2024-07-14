@@ -13,7 +13,7 @@ const documentSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "User"
   },
-  access: {
+  collaborators: [{
     user: {
       type: Schema.Types.ObjectId,
       ref: "User",
@@ -23,7 +23,7 @@ const documentSchema = new Schema({
       enum: ["read", "write"],
       default: "read",
     }
-  },
+  }],
 }, {timestamps: true})
 
 
