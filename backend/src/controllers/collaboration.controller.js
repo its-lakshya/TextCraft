@@ -85,13 +85,7 @@ const removeCollaborator = asyncHandler(async (req, res) => {
     throw new apiError(400, 'User with this email does not exists');
   }
 
-  const collab = await Collaboration.findOne({document, collaborator});
-
-  if(!collab){
-    throw new apiError(404, "Provide users is not a collaborator");
-  }
-
-  const removedCollaborator = await Collaboration.findByIdAndDelete(collab._id, {
+  const removedCollaborator = await Collaboration.findOneAndDelete({document, collaborator}, {
     new: true,
   });
 
