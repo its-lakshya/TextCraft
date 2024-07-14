@@ -1,11 +1,11 @@
 import { Router } from 'express';
-import { verifyJWT } from '../middlewares/auth.middleware';
-import { addCollaborator } from '../controllers/collaboration.controller';
+import { verifyJWT } from '../middlewares/auth.middleware.js';
+import { addCollaborator } from '../controllers/collaboration.controller.js';
 
-const router = new Router();
+const router = Router();
 
 router.use(verifyJWT);
 
-router.route('/c/:documentId').post(addCollaborator).delete().put();
+router.route('/c/:documentId').post(addCollaborator);
 
 export default router;

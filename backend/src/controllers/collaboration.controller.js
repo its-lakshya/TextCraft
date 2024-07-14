@@ -1,9 +1,9 @@
+import mongoose from 'mongoose';
 import { apiResponse } from '../utils/apiResponse.js';
 import { apiError } from '../utils/apiError.js';
 import { Document } from '../models/document.model.js';
 import { Collaboration } from '../models/collaboration.model.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
-import mongoose from 'mongoose';
 import { User } from '../models/user.model.js';
 
 const addCollaborator = asyncHandler(async (req, res) => {

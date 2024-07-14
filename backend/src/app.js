@@ -23,6 +23,6 @@ import collaborationRouter from './routes/collaboration.routes.js';
 // routes declaration
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/documents', documentRouter);
-app.use('api/v1/collaborations', collaborationRouter);
+app.use('/api/v1/collaborations', collaborationRouter);
 
 export { app };

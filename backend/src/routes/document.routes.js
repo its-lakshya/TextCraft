@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { verifyJWT } from '../middlewares/auth.middleware.js';
-import { addCollaborator, createDocument, deleteDocument, getAllDocuments, getDocumentByID, updateDocument } from '../controllers/document.controller.js';
+import { createDocument, deleteDocument, getAllDocuments, getDocumentByID, updateDocument } from '../controllers/document.controller.js';
 
 const router = Router();
 
