@@ -45,13 +45,16 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new apiError(500, 'Something went wrong while uploading profile image');
   }
 
+  console.log(mobileNumber)
+
   const user = await User.create({
     userName: userName.toLowerCase(),
     fullName,
     email,
     password,
-    profileImage: profileImage?.url || '',
-    mobileNumber: mobileNumber || null,
+    profileImage: profileImage?.url,
+    mobileNumber,
+    gender: gender || 'prefer-not-to-say'
   });
 
   const createdUser = await User.findById(user._id).select('-password -refreshToken');
