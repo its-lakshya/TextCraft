@@ -38,7 +38,25 @@ const getDocumentByID = asyncHandler(async (req, res) => {});
 const updateDocument = asyncHandler(async (req, res) => {});
 
 const deleteDocument = asyncHandler(async (req, res) => {
-  
+  const { documentId } = req.params;
+  const user = req.user;
+
+  if (!user) {
+    throw new apiError(401, 'Unauthorized request');
+  }
+
+  if (!mongoose.isValidObjectId(documentId)) {
+    throw new apiError(400, 'Invalid or missing document id');
+  }
+
+  const document = await Document.findByIdAndDelete(documentId);
+
+
+  if (!document) {
+    throw new apiError(500, 'Something went wrong while deleting the document');
+  }
+
+  return res.status(200).json(new apiResponse(200, 'Document deleted successfully'));
 });
 
 const addCollaborator = asyncHandler(async (req, res) => {});
