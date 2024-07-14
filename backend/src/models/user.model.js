@@ -55,14 +55,14 @@ userSchema.pre('save', async function (next) {
   next();
 });
 
-userSchema.method.isPasswordCorrect = async password => {
+userSchema.methods.isPasswordCorrect = async function (password) {
   return await bcrypt.compare(password, this.password);
 };
 
-userSchema.method.generateAccessToken = async () => {
+userSchema.methods.generateAccessToken = function () {
   return jwt.sign(
     {
-      _id: this.id,
+      _id: this._id,
       email: this.email,
       userName: this.userName,
       fullName: this.fullName,
@@ -74,7 +74,7 @@ userSchema.method.generateAccessToken = async () => {
   );
 };
 
-userSchema.method.generateRefreshToken = async () => {
+userSchema.methods.generateRefreshToken = function () {
   return jwt.sign(
     {
       _id: this._id,
