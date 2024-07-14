@@ -70,7 +70,6 @@ const loginUser = asyncHandler(async (req, res) => {
     throw new apiError(400, 'Missing required details for login');
   }
 
-
   if (!password && !email) {
     throw new apiError(400, 'email and password both are required');
   }
@@ -81,7 +80,7 @@ const loginUser = asyncHandler(async (req, res) => {
     throw new apiError(404, 'No user found with these credentials');
   }
 
-  console.log(user)
+  console.log(user);
 
   const isPasswordValid = await user.isPasswordCorrect(password);
 
@@ -110,4 +109,29 @@ const loginUser = asyncHandler(async (req, res) => {
     );
 });
 
-export { registerUser, loginUser };
+const logoutUser = asyncHandler(async (req, res) => {
+  const user = req.user;
+
+  await User.findByIdAndUpdate(
+    user._id,
+    {
+      $unset: {
+        refreshToken: 1,
+      },
+    },
+    { new: true },
+  );
+
+  const options = {
+    httpOnly: true,
+    secure: true
+  }
+
+  return res
+    .status(200)
+    .cookie("accessToken", options)
+    .cookie("refreshToken", options)
+    .json(new apiResponse(200, "User logged out successfully"))
+});
+
+export { registerUser, loginUser, logoutUser };
