@@ -80,7 +80,6 @@ const loginUser = asyncHandler(async (req, res) => {
     throw new apiError(404, 'No user found with these credentials');
   }
 
-  console.log(user);
 
   const isPasswordValid = await user.isPasswordCorrect(password);
 
@@ -185,13 +184,12 @@ const updateUserDetails = asyncHandler(async (req, res) => {
   }
 
   const fieldsToBeUpdated = {};
-  
-  if (userName && userName.trim() !== "") fieldsToBeUpdated.userName = userName;
-  if (fullName && fullName.trim() !== "") fieldsToBeUpdated.fullName = fullName;
-  if (email && email.trim() !== "") fieldsToBeUpdated.email = email;
-  if (mobileNumber && mobileNumber.trim() !== "") fieldsToBeUpdated.mobileNumber = mobileNumber;
-  if (gender && gender.trim() !== "") fieldsToBeUpdated.gender = gender;
 
+  if (userName && userName.trim() !== '') fieldsToBeUpdated.userName = userName;
+  if (fullName && fullName.trim() !== '') fieldsToBeUpdated.fullName = fullName;
+  if (email && email.trim() !== '') fieldsToBeUpdated.email = email;
+  if (mobileNumber && mobileNumber.trim() !== '') fieldsToBeUpdated.mobileNumber = mobileNumber;
+  if (gender && gender.trim() !== '') fieldsToBeUpdated.gender = gender;
 
   if (!fieldsToBeUpdated) {
     throw new apiError(400, 'Fields to be updated are not provided');
@@ -210,4 +208,39 @@ const updateUserDetails = asyncHandler(async (req, res) => {
     .json(new apiResponse(200, updateFields, 'User details updated successfully'));
 });
 
-export { registerUser, loginUser, logoutUser, updateProfileImage, updateUserDetails };
+const updateUserPassword = asyncHandler(async (req, res) => {
+  const { oldPassword, newPassword } = req.body;
+
+  if (!req.user) {
+    throw new apiError(401, 'Unauthorized request');
+  }
+
+  if (!newPassword) {
+    throw new apiError(400, 'New password is missing');
+  }
+
+  const user = await User.findById(req.user._id);
+  const isOldPasswordValid = await user.isPasswordCorrect(oldPassword);
+
+  if (!isOldPasswordValid) {
+    throw new apiError(400, 'Password is incorrect');
+  }
+
+  user.password = newPassword;
+  const updatedPassword = await user.save();
+
+  if (!updatedPassword) {
+    throw new apiError(500, 'Something went wrong while updating the password');
+  }
+
+  return res.status(200).json(new apiResponse(200, 'Password updated successfully'));
+});
+
+export {
+  registerUser,
+  loginUser,
+  logoutUser,
+  updateProfileImage,
+  updateUserDetails,
+  updateUserPassword,
+};

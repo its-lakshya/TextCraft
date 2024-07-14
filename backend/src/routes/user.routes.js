@@ -7,6 +7,7 @@ import {
   registerUser,
   updateProfileImage,
   updateUserDetails,
+  updateUserPassword,
 } from '../controllers/user.controller.js';
 
 const router = Router();
@@ -30,5 +31,7 @@ router.route('/logout').post(logoutUser);
 router.route('/profile-image').patch(upload.single('profileImage'), updateProfileImage);
 
 router.route('/update-account').patch(updateUserDetails);
+
+router.route("/update-password").patch(updateUserPassword);
 
 export default router;
