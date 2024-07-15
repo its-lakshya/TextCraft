@@ -85,9 +85,12 @@ const removeCollaborator = asyncHandler(async (req, res) => {
     throw new apiError(400, 'User with this email does not exists');
   }
 
-  const removedCollaborator = await Collaboration.findOneAndDelete({document, collaborator}, {
-    new: true,
-  });
+  const removedCollaborator = await Collaboration.findOneAndDelete(
+    { document, collaborator },
+    {
+      new: true,
+    },
+  );
 
   if (!removedCollaborator) {
     throw new apiError(500, 'Something went wrong while removeing the collaborator');
@@ -96,4 +99,56 @@ const removeCollaborator = asyncHandler(async (req, res) => {
   return res.status(200).json(new apiResponse(200, 'Collaborator removed successfully'));
 });
 
-export { addCollaborator, removeCollaborator };
+const updateAccessTypes = asyncHandler(async (req, res) => {
+  const { documentId } = req.params;
+  const { email, accessType } = req.body;
+  const user = req.user;
+
+  if (!user) {
+    throw new apiError(401, 'Unauthorized request');
+  }
+
+  if (!mongoose.isValidObjectId(documentId)) {
+    throw new apiError(400, 'Invalid or missing documentId');
+  }
+
+  if (!email || email.trim() === '') {
+    throw new apiError(400, 'Email is missing');
+  }
+
+  if (!accessType) {
+    throw new apiError(400, 'Missing accessType ');
+  }
+
+  if (accessType && accessType !== 'read' && accessType !== 'write') {
+    throw new apiError(400, 'Invalid accessType');
+  }
+
+  const document = await Document.findById(documentId);
+
+  if (!document) {
+    throw new apiError(400, 'No such document found');
+  }
+
+  const collaborator = await User.findOne({ email });
+
+  if (!collaborator) {
+    throw new apiError(400, 'No such collaborator exists');
+  }
+
+  const collaboratorAccessType = await Collaboration.findOneAndUpdate(
+    { document, collaborator },
+    { accessType: accessType },
+    { new: true },
+  );
+
+  if (!collaboratorAccessType) {
+    throw new apiError(500, 'Something went wrong while updating the access types');
+  }
+
+  return res
+    .status(200)
+    .json(new apiResponse(200, collaboratorAccessType, 'Access type updated successfully'));
+});
+
+export { addCollaborator, removeCollaborator, updateAccessTypes };
