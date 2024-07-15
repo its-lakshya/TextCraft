@@ -151,4 +151,38 @@ const updateAccessTypes = asyncHandler(async (req, res) => {
     .json(new apiResponse(200, collaboratorAccessType, 'Access type updated successfully'));
 });
 
-export { addCollaborator, removeCollaborator, updateAccessTypes };
+const getAllCollaborators = asyncHandler(async (req, res) => {
+  const { documentId } = req.params;
+  const user = req.user;
+
+  if(!user){
+    throw new apiError(401, "Unauthorized request");
+  }
+
+  if(!mongoose.isValidObjectId(documentId)){
+    throw new apiError(400, "Invalid or missing documentId");
+  }
+
+  const document = await Document.findById(documentId);
+
+  if(!document){
+    throw new apiError(400, "No such document exists");
+  }
+
+  const collaborators = await Collaboration.find({document}).populate('collaborator');
+
+  if(!collaborators){
+    throw new apiError(500, "Something went wrong while fetching the collaborators");
+  }
+
+  return res
+    .status(200)
+    .json(new apiResponse(200, collaborators, "Collaborators fetched successfully"));
+
+})
+
+const getCollaboratorsAccessTypes = asyncHandler(async (req, res) => {
+
+})
+
+export { addCollaborator, removeCollaborator, updateAccessTypes, getAllCollaborators, getCollaboratorsAccessTypes };
