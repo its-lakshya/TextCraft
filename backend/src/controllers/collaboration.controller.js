@@ -181,8 +181,44 @@ const getAllCollaborators = asyncHandler(async (req, res) => {
 
 })
 
-const getCollaboratorsAccessTypes = asyncHandler(async (req, res) => {
+const getCollaboratorsAccessType = asyncHandler(async (req, res) => {
+  const { documentId } = req.params;
+  const { email } = req.body;
+  const user = req.user;
 
+  if (!user) {
+    throw new apiError(401, 'Unauthorized request');
+  }
+
+  if (!mongoose.isValidObjectId(documentId)) {
+    throw new apiError(400, 'Invalid or missing documentId');
+  }
+
+  if (!email || email.trim() === '') {
+    throw new apiError(400, 'Email is missing');
+  }
+
+  const document = await Document.findById(documentId);
+
+  if (!document) {
+    throw new apiError(400, 'No such document found');
+  }
+
+  const collaborator = await User.findOne({ email });
+
+  if (!collaborator) {
+    throw new apiError(400, 'No such collaborator exists');
+  }
+
+  const AccessType = await Collaboration.findOne({document, collaborator});
+
+  if(!AccessType){
+    throw new apiError(500, "Something went wrong while fetching the collaborators access type")
+  }
+
+  return res
+    .status(200)
+    .json(new apiResponse(200, AccessType, "Collaborator access types fetched successfully"));
 })
 
-export { addCollaborator, removeCollaborator, updateAccessTypes, getAllCollaborators, getCollaboratorsAccessTypes };
+export { addCollaborator, removeCollaborator, updateAccessTypes, getAllCollaborators, getCollaboratorsAccessType };
