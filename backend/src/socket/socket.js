@@ -22,6 +22,14 @@ io.on('connection', socket => {
     socket.to(documentId).emit('document-changes', changes);
   });
   
+  socket.on('join-document', ({ documentId, userInformation }) => {
+    console.log(`User joind the room ${userInformation}`);
+    socket.join(documentId);
+    activeUser[socket.id] = userInformation;
+    socket.to(documentId).emit('user-joined', userInformation);
+    io.to(documentId).emit('update-active-users', Object.values(activeUser))
+  });
+
   
 });
 
