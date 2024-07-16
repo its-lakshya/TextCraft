@@ -9,12 +9,20 @@ const io = new Server(server, {
     origin: process.env.CORS_ORIGIN,
     methods: ['GET', 'POST', 'GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     credentials: true,
-  }
+  },
 });
 
-io.on('connection', socket => {
-  console.log('connected', socket.id);
+const activeUser = {};
 
+io.on('connection', socket => {
+  console.log('User connected', socket.id);
+
+  socket.on('edit-document', ({ documentId, changes }) => {
+    console.log(`${socket.id} is editing the document`);
+    socket.to(documentId).emit('document-changes', changes);
+  });
+  
+  
 });
 
 export { server, io };
