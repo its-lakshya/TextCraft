@@ -30,7 +30,19 @@ io.on('connection', socket => {
     io.to(documentId).emit('update-active-users', Object.values(activeUser))
   });
 
-  
+  socket.on('disconnect', () => {
+    console.log(`User disconnected ${socket.id}`);
+    const userInformation = activeUser(socket.id);
+    if(userInformation){
+      socket.to(documentId).emit('user-disconnected', userInformation)
+      io.emmit('update-active-users', Object.values(activeUser))
+      delete activeUser[socket.id];
+    }
+  });
+
+  socket.on('error', (error) => {
+    console.error(`Socket error: ${error.message}`);
+  });
 });
 
 export { server, io };
