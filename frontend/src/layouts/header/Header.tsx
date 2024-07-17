@@ -1,6 +1,20 @@
 const Header = () => {
+
+  const hoverAnimation = "transition ease-in-out duration-500 hover:scale-105"
   return (
-    <div>Header</div>
+    <div className='HEADER w-full h-20 flex justify-between items-center px-rootXPadd text-md font-medium capitalize'>
+      <div className='HEADER-LEFT flex justify-between items-center gap-8 w-auto h-8 text-black'>
+        <div className='LOGO text-logoFontSize font-bold mr-4'>
+          <span className='text-primaryDark'>Text<span className='text-primary'>Craft</span></span>
+        </div>
+        <button className='ABOUT '>About</button>
+        <button className='EXPLORE '>Explore</button>
+      </div>
+      <div className='HEADER-RIGHT flex justify-center items-center gap-4 w-auto'>
+        <button className={`LOGIN hover:bg-primaryLight text-primary px-6 py-3 rounded-full ${hoverAnimation}`}>Log in</button>
+        <button className={`SIGNUP bg-primary hover:bg-primaryDark text-white px-8 py-3 rounded-full ${hoverAnimation}`}>Sign up now</button>
+      </div>
+    </div>
   )
 }
 
