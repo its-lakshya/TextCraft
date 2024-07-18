@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { FaGithub, FaLinkedinIn, FaXTwitter } from 'react-icons/fa6';
 import { IoHeartSharp } from 'react-icons/io5';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 const Footer: React.FC = () => {
   const location = useLocation();
-  const navigate = useNavigate();
   const [visibility, setVisibility] = useState<string>('visible');
+  const [zIndex, setZindex] = useState<string>('-z-10')
 
   useEffect(() => {
     const currentLocation = location.pathname.split('/');
@@ -14,9 +14,25 @@ const Footer: React.FC = () => {
     else setVisibility('visibile');
   }, []);
 
+  useEffect(() => {
+
+    const onScroll = () => {
+      if(window.scrollY+window.innerHeight >= document.body.offsetHeight - 52){
+        setZindex('z-0')
+      }
+      else setZindex('-z-10')
+    }
+
+    window.addEventListener('scroll', onScroll)
+
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+    }
+  })
+
   return (
     <div
-      className={`WRAPPER fixed bottom-0 -z-10 flex flex-col justify-between w-full h-52 py-12 px-rootXPadd bg-primaryExtraLight text-black ${visibility}`}
+      className={`WRAPPER fixed bottom-0 ${zIndex} flex flex-col justify-between w-full h-52 py-12 px-rootXPadd bg-primaryExtraLight text-black ${visibility}`}
     >
       <div className="flex items-center gap-2">
         Developed with
@@ -31,16 +47,15 @@ const Footer: React.FC = () => {
       <hr className="border-1 border-[#CBD5E1]" />
       <div className="flex justify-between items-center w-full">
         <div className="flex items-end gap-4 w-full">
-          <button
+          <Link to='/'
             className="LOGO text-logoFontSizeSmall font-bold leading-none mr-4"
-            onClick={() => navigate('/')}
           >
             <span className="text-primaryDark">
               Text<span className="text-primary">Craft</span>
             </span>
-          </button>
+          </Link>
           <span>Features</span>
-          <span>Contact us</span>
+          <Link to='/contact-us'>Contact us</Link>
         </div>
         <div className="flex justify-center items-end gap-6 w-auto [&>*]:text-xl [&>*]:text-black">
           <FaGithub />
