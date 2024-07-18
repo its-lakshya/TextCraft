@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import ImproveWorkFlowImage from '../../assets/images/ImproveWorkFlowImage.jpg';
 import { FaArrowRightLong } from 'react-icons/fa6';
 
-const ImproveWorkFlow = () => {
+const ImproveWorkFlow: React.FC = () => {
   const tableCellStyle: string =
     'flex justify-center items-center w-44 h-12 bg-[#F1F5F9] text-center border border-[#CBD5E1] text-black';
   return (

@@ -1,7 +1,7 @@
 import { FaArrowRightLong } from "react-icons/fa6";
 import { buttonHoverAnimaiton } from "../../utils/TailwindUtils";
 
-const JoinCommunity = () => {
+const JoinCommunity: React.FC = () => {
   return (
     <div className="WRAPPER flex justify-center items-center w-full h-auto py-rootXPadd bg-white mb-52 text-white text-center">
       <div

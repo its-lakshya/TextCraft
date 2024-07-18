@@ -3,7 +3,7 @@ import CollaborateIcon from '../../assets/images/CollaborateIcon.svg';
 import EditIcon from '../../assets/images/EditIcon.svg';
 import AccomplishIcon from '../../assets/images/AccomplishIcon.svg';
 
-const Steps = () => {
+const Steps: React.FC = () => {
   const stepsData = [
     {
       image: CreateIcon,

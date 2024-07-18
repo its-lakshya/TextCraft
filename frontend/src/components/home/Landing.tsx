@@ -4,7 +4,7 @@ import LandingPageBackground from '../../assets/images/LandingPageBackground.svg
 import LandingPageImage from '../../assets/images/LandingPageImage.avif';
 import { motion } from 'framer-motion';
 
-const Landing = () => {
+const Landing: React.FC = () => {
   const text = 'Unite Ideas. Write Together.'.split('');
   return (
     <div
