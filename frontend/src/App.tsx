@@ -3,6 +3,8 @@ import './App.css';
 import Editor from './components/editor/Editor';
 import Layout from './layouts/Layout';
 import Home from './pages/Home';
+import Login from './pages/Login';
+import Register from './pages/Register';
 
 const appRouter = createBrowserRouter([
   {
@@ -19,6 +21,14 @@ const appRouter = createBrowserRouter([
       },
     ],
   },
+  {
+    path:'/auth/login',
+    element: <Login/>
+  },
+  {
+    path:'/auth/register',
+    element: <Register/>
+  }
 ]);
 
 function App() {

@@ -1,27 +1,32 @@
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { buttonHoverAnimaiton } from '../../utils/TailwindUtils';
 import { useEffect, useState } from 'react';
 
 const Header: React.FC = () => {
-  const location = useLocation()
-  const [visibility, setVisibility] = useState<string>("visible")
+  const location = useLocation();
+  const navigate = useNavigate()
+  const [visibility, setVisibility] = useState<string>('visible');
 
   useEffect(() => {
-    const currentLocation = location.pathname.split('/')
-    if(currentLocation[1] === 'document') setVisibility('hidden')
-    else setVisibility('visibile')
-  },[])
+    const currentLocation = location.pathname.split('/');
+    if (currentLocation[1] === 'document') setVisibility('hidden');
+    else setVisibility('visibile');
+  }, []);
+
+
 
   return (
-    <div className={`HEADER w-full h-20 flex justify-between items-center px-rootXPadd text-md capitalize font-medium ${visibility}`}>
+    <div
+      className={`HEADER w-full h-20 flex justify-between items-center px-rootXPadd text-md capitalize font-medium ${visibility}`}
+    >
       <div className="HEADER-LEFT flex justify-between items-center gap-8 w-auto h-8 text-black">
-        <div className="LOGO text-logoFontSize font-bold mr-4">
+        <button className="LOGO text-logoFontSize font-bold mr-4" onClick={() => navigate('/')}>
           <span className="text-primaryDark">
             Text<span className="text-primary">Craft</span>
           </span>
-        </div>
-        <button className="ABOUT ">About</button>
-        <button className="EXPLORE ">Explore</button>
+        </button>
+        <button className="EXPLORE ">Features</button>
+        <button className="CONTACT US">Contact us</button>
       </div>
       <div className="HEADER-RIGHT flex justify-center items-center gap-4 w-auto">
         <button

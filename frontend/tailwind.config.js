@@ -12,6 +12,7 @@ export default {
         primary: '#7C3AED',
         primaryDark: '#4C1D95',
         primaryLight: '#D8B4FE',
+        primaryExtraLight: '#F3E7FF',
       },
       borderColor:{
         primary: '#7C3AED',
