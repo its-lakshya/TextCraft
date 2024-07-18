@@ -33,26 +33,24 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new apiError(409, 'User with this email of username already exists');
   }
 
-  const profileImageLocalPath = req.files?.profileImage[0]?.path;
+  // const profileImageLocalPath = req.files?.profileImage[0]?.path;
 
-  if (!profileImageLocalPath) {
-    throw new apiError(400, 'Profile image is required');
-  }
+  // if (!profileImageLocalPath) {
+  //   throw new apiError(400, 'Profile image is required');
+  // }
 
-  const profileImage = await uploadOnCloudinary(profileImageLocalPath);
+  // const profileImage = await uploadOnCloudinary(profileImageLocalPath);
 
-  if (!profileImage) {
-    throw new apiError(500, 'Something went wrong while uploading profile image');
-  }
-
-  console.log(mobileNumber)
+  // if (!profileImage) {
+  //   throw new apiError(500, 'Something went wrong while uploading profile image');
+  // }
 
   const user = await User.create({
     userName: userName.toLowerCase(),
     fullName,
     email,
     password,
-    profileImage: profileImage?.url,
+    // profileImage: profileImage?.url,
     mobileNumber,
     gender: gender || 'prefer-not-to-say'
   });
