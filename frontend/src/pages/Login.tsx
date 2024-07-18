@@ -3,6 +3,7 @@ import AuthBackgroundImage from '../assets/images/AuthBackgroundImage.svg';
 import { buttonHoverAnimaiton } from '../utils/TailwindUtils';
 
 const Login: React.FC = () => {
+  
   const inputStyles: string = 'w-full h-8 rounded-md px-4 border border-[#BCBEC0] text-black text-sm';
   const inputContainerStyles: string = 'flex flex-col gap-2 w-full';
   return (
