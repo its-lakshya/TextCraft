@@ -31,7 +31,10 @@ const Footer: React.FC = () => {
       <hr className="border-1 border-[#CBD5E1]" />
       <div className="flex justify-between items-center w-full">
         <div className="flex items-end gap-4 w-full">
-          <button className="LOGO text-logoFontSizeSmall font-bold leading-none mr-4" onClick={() => navigate('/')}>
+          <button
+            className="LOGO text-logoFontSizeSmall font-bold leading-none mr-4"
+            onClick={() => navigate('/')}
+          >
             <span className="text-primaryDark">
               Text<span className="text-primary">Craft</span>
             </span>

@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { buttonHoverAnimaiton } from '../../utils/TailwindUtils';
 import { useEffect, useState } from 'react';
 
@@ -26,19 +26,21 @@ const Header: React.FC = () => {
           </span>
         </button>
         <button className="EXPLORE ">Features</button>
-        <button className="CONTACT US">Contact us</button>
+        <Link to='/contact' className="CONTACT US">Contact us</Link>
       </div>
       <div className="HEADER-RIGHT flex justify-center items-center gap-4 w-auto">
-        <button
+        <Link
+          to='/auth/login'
           className={`LOGIN text-primary px-6 py-3 rounded-full ${buttonHoverAnimaiton} hover:bg-primaryLight`}
         >
           Log in
-        </button>
-        <button
+        </Link>
+        <Link
+          to='/auth/register'
           className={`SIGNUP bg-primary text-white px-8 py-3 rounded-full ${buttonHoverAnimaiton} hover:bg-primaryDark`}
         >
           Sign up now
-        </button>
+        </Link>
       </div>
     </div>
   );

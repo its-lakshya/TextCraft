@@ -32,7 +32,7 @@ const Steps: React.FC = () => {
       <div className="STEPS flex justify-center items-center gap-16 w-full h-full">
         {stepsData?.map(data => {
           return (
-            <div className="STEP flex flex-col justify-between gap-3 items-center">
+            <div key={data.title} className="STEP flex flex-col justify-between gap-3 items-center">
               <img src={data?.image} alt="img" />
               <span className="TITLE text-xl font-bold">{data?.title}</span>
               <span className="DESCRIPTION text-md text-center">{data?.description}</span>

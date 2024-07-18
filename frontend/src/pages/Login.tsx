@@ -12,7 +12,7 @@ const Login: React.FC = () => {
       style={{ backgroundImage: `url(${AuthBackgroundImage})` }}
     >
       <div
-        className="MAIN-CONTAINER flex flex-col justify-center items-center gap-10 w-[450px] h-auto p-10 px-rootXPadd border border-[#5882C1] rounded-3xl"
+        className="MAIN-CONTAINER flex flex-col justify-center items-center gap-10 w-[450px] h-auto p-10 px-rootXPadd border border-primary rounded-3xl"
         style={{ background: 'rgba(88, 130, 193, 0.28)', backdropFilter: 'blur(8.89323px)' }}
       >
         <button className="LOGO text-logoFontSize font-bold mr-4 drop-shadow-lg">
