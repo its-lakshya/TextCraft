@@ -30,6 +30,7 @@ export default {
       fontSize: {
         md: '16px',
         logoFontSize: '32px',
+        logoFontSizeSmall: '26px',
       },
       keyframes: {
         arrowMove: {

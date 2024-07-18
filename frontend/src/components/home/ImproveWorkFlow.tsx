@@ -4,9 +4,9 @@ import { FaArrowRightLong } from 'react-icons/fa6';
 
 const ImproveWorkFlow = () => {
   const tableCellStyle: string =
-    'flex justify-center items-center w-44 h-12 bg-[#F1F5F9] text-center border border-[#CBD5E1]';
+    'flex justify-center items-center w-44 h-12 bg-[#F1F5F9] text-center border border-[#CBD5E1] text-black';
   return (
-    <div className="WRAPPER flex justify-center items-center w-full h-[560px] p-rootXPadd">
+    <div className="WRAPPER flex justify-center items-center w-full h-[560px] bg-white p-rootXPadd">
       <div className="WORK-FLOW flex justify-between items-center w-full h-full py-12">
         <div className="TEXT flex flex-col justify-around items-start w-full h-full">
           <span className="TITLE text-[3.5vw] leading-none font-bold w-full">Improve workflow</span>

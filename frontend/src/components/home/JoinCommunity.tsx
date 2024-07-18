@@ -3,7 +3,7 @@ import { buttonHoverAnimaiton } from "../../utils/TailwindUtils";
 
 const JoinCommunity = () => {
   return (
-    <div className="WRAPPER flex justify-center items-center w-full h-auto text-white text-center ">
+    <div className="WRAPPER flex justify-center items-center w-full h-auto py-rootXPadd bg-white mb-52 text-white text-center">
       <div
         className="COLORED-DIV flex flex-col justify-between items-center p-rootXPadd w-[90vw] h-96 rounded-3xl"
         style={{

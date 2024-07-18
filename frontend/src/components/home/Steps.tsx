@@ -28,7 +28,7 @@ const Steps = () => {
   ];
 
   return (
-    <div className="STEPS-WRAPPER flex justify-center items-center w-full h-96 p-rootXPadd">
+    <div className="STEPS-WRAPPER flex justify-center items-center w-full h-96 p-rootXPadd bg-white text-black">
       <div className="STEPS flex justify-center items-center gap-16 w-full h-full">
         {stepsData?.map(data => {
           return (

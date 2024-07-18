@@ -8,7 +8,7 @@ const Landing = () => {
   const text = 'Unite Ideas. Write Together.'.split('');
   return (
     <div
-      className={`LANDING-PAGE flex flex-col justify-center items-center gap-20 w-screen h-auto py-20 bg-contain`}
+      className={`LANDING-PAGE flex flex-col justify-center items-center gap-20 w-screen h-auto py-20 bg-white bg-contain text-black`}
       style={{ backgroundImage: `url(${LandingPageBackground})` }}
     >
       <div className="TEXT-SECTION flex flex-col justify-center items-center gap-10">
