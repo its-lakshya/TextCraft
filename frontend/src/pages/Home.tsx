@@ -1,9 +1,13 @@
-import Landing from '../components/home/Landing'
+import Landing from '../components/home/Landing';
+import Steps from '../components/home/Steps';
 
 const Home = () => {
   return (
-    <Landing/>
-  )
-}
+    <>
+      <Landing />
+      <Steps />
+    </>
+  );
+};
 
-export default Home
+export default Home;

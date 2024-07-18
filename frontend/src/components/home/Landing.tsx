@@ -8,7 +8,7 @@ const Landing = () => {
   const text = 'Unite Ideas. Write Together.'.split('');
   return (
     <div
-      className={`LANDING-PAGE flex flex-col justify-center items-center gap-20 w-screen h-auto py-20`}
+      className={`LANDING-PAGE flex flex-col justify-center items-center gap-20 w-screen h-auto py-20 bg-contain`}
       style={{ backgroundImage: `url(${LandingPageBackground})` }}
     >
       <div className="TEXT-SECTION flex flex-col justify-center items-center gap-10">
@@ -39,11 +39,15 @@ const Landing = () => {
           </span>
         </button>
       </div>
-      <motion.div initial={{ opacity: 0, marginTop: '20rem' }}
-                            animate={{ opacity: 1, marginTop: "0" }}
-                            exit={{ opacity: 0, scale: 0 }} transition={{duration: 1}} className="IMAGE-CONTAINER flex justify-center items-center w-[78vw] h-[50vw] bg-white rounded-[20px] border-[6px] border-primaryDark">
+      <motion.div
+        initial={{ opacity: 0, marginTop: '20rem' }}
+        animate={{ opacity: 1, marginTop: '0' }}
+        exit={{ opacity: 0, scale: 0 }}
+        transition={{ duration: 1 }}
+        className="IMAGE-CONTAINER flex justify-center items-center w-[78vw] h-[50vw] bg-white rounded-[20px] border-[6px] border-primaryDark"
+      >
         <img src={LandingPageImage} alt="img" className="w-full" />
-      </motion.div >
+      </motion.div>
     </div>
   );
 };

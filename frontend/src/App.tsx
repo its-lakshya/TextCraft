@@ -4,29 +4,25 @@ import Editor from './components/editor/Editor';
 import Layout from './layouts/Layout';
 import Home from './pages/Home';
 
-
 const appRouter = createBrowserRouter([
   {
-    path: "/",
-    element: <Layout/>,
+    path: '/',
+    element: <Layout />,
     children: [
       {
-        path: "/",
-        element: <Home />
+        path: '/',
+        element: <Home />,
       },
       {
-        path: "/document/:documentId",
-        element: <Editor/>
-      }
-    ]
-  }
-])
-
+        path: '/document/:documentId',
+        element: <Editor />,
+      },
+    ],
+  },
+]);
 
 function App() {
-  return (
-        <RouterProvider router={appRouter}/>
-  )
+  return <RouterProvider router={appRouter} />;
 }
 
 export default App;
