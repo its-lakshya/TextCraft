@@ -8,9 +8,10 @@ const Login: React.FC = () => {
   const inputContainerStyles: string = 'flex flex-col gap-2 w-full';
   return (
     <div
-      className="WRAPPER flex justify-center items-center w-full h-screen bg-center bg-cover bg-primaryDark text-white"
-      style={{ backgroundImage: `url(${AuthBackgroundImage})` }}
+      className="WRAPPER relative flex justify-center items-center w-full h-screen bg-center bg-cover text-white"
+      style={{ background: 'linear-gradient(180deg, rgba(0,0,0,1) 11%, rgba(76,29,149,1) 99%)' }}
     >
+      <img src={AuthBackgroundImage} alt='img' className='absolute'/>
       <div
         className="MAIN-CONTAINER flex flex-col justify-center items-center gap-10 w-[450px] h-auto p-10 px-rootXPadd border border-primary rounded-3xl"
         style={{ background: 'rgba(88, 130, 193, 0.28)', backdropFilter: 'blur(8.89323px)' }}

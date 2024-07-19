@@ -5,6 +5,7 @@ import ContactUsImage from '../assets/images/ContactUsImage.svg';
 import ContactUsPlaneImage from '../assets/images/ContactUsPlaneImage.svg';
 import { useEffect, useRef } from 'react';
 import { buttonHoverAnimaiton } from '../utils/TailwindUtils';
+import { motion } from 'framer-motion';
 
 const Contact = () => {
   const nameRef = useRef<HTMLInputElement>(null);
@@ -28,9 +29,13 @@ const Contact = () => {
           Any question or remarks? Just write us a message!
         </p>
       </div>
-      <div className="FORM-CONTAINER flex w-[70vw] h-[40vw] rounded-xl">
-        <div
-          className="INFORMATION relative flex flex-col justify-between w-[40%] h-full rounded-xl p-10 text-white"
+      <div className="M-CONTAINER flex w-[70vw] h-[40vw] rounded-xl">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          whileHover={{rotateZ: '2deg', rotateX: '10deg'}}
+          transition={{ duration: 0.5}}
+          className="INFORMATION relative flex flex-col justify-between w-[40%] h-full rounded-xl p-10 text-white overflow-hidden"
           style={{
             background: 'linear-gradient(180deg, rgba(0,0,0,1) 11%, rgba(76,29,149,1) 99%)',
           }}
@@ -48,7 +53,13 @@ const Contact = () => {
               Noida, India
             </span>
           </div>
-          <div className="flex gap-4">
+          <div className="SOCIAL-MEDIA-LINKS flex gap-4">
+            <Link
+              to="https://github.com/its-lakshya"
+              className="flex justify-center items-center size-6 rounded-full hover:bg-primary"
+            >
+              <FaGithub />
+            </Link>
             <Link
               to="https://www.linkedin.com/in/lakshyakumar-/"
               className="flex justify-center items-center size-6 rounded-full hover:bg-primary"
@@ -61,19 +72,13 @@ const Contact = () => {
             >
               <FaXTwitter />
             </Link>
-            <Link
-              to="https://github.com/its-lakshya"
-              className="flex justify-center items-center size-6 rounded-full hover:bg-primary"
-            >
-              <FaGithub />
-            </Link>
           </div>
           <img
             src={ContactUsImage}
             alt="img"
             className="BG-IMAGE absolute bottom-0 right-0 opacity-50"
           />
-        </div>
+        </motion.div>
         <div className="FORM w-[60%] h-full relative text-md">
           <img
             src={ContactUsPlaneImage}

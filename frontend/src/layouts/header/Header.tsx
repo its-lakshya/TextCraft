@@ -25,7 +25,6 @@ const Header: React.FC = () => {
             Text<span className="text-primary">Craft</span>
           </span>
         </button>
-        <button className="EXPLORE ">Features</button>
         <Link to='/contact-us' className="CONTACT US">Contact us</Link>
       </div>
       <div className="HEADER-RIGHT flex justify-center items-center gap-4 w-auto">

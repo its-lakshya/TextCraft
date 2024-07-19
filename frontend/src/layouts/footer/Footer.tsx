@@ -6,7 +6,7 @@ import { Link, useLocation } from 'react-router-dom';
 const Footer: React.FC = () => {
   const location = useLocation();
   const [visibility, setVisibility] = useState<string>('visible');
-  const [zIndex, setZindex] = useState<string>('-z-10')
+  const [zIndex, setZindex] = useState<string>('-z-10');
 
   useEffect(() => {
     const currentLocation = location.pathname.split('/');
@@ -15,20 +15,18 @@ const Footer: React.FC = () => {
   }, []);
 
   useEffect(() => {
-
     const onScroll = () => {
-      if(window.scrollY+window.innerHeight >= document.body.offsetHeight - 52){
-        setZindex('z-0')
-      }
-      else setZindex('-z-10')
-    }
+      if (window.scrollY + window.innerHeight >= document.body.offsetHeight - 20) {
+        setZindex('z-0');
+      } else setZindex('-z-10');
+    };
 
-    window.addEventListener('scroll', onScroll)
+    window.addEventListener('scroll', onScroll);
 
     return () => {
       window.removeEventListener('scroll', onScroll);
-    }
-  })
+    };
+  });
 
   return (
     <div
@@ -47,20 +45,23 @@ const Footer: React.FC = () => {
       <hr className="border-1 border-[#CBD5E1]" />
       <div className="flex justify-between items-center w-full">
         <div className="flex items-end gap-4 w-full">
-          <Link to='/'
-            className="LOGO text-logoFontSizeSmall font-bold leading-none mr-4"
-          >
+          <Link to="/" className="LOGO text-logoFontSizeSmall font-bold leading-none mr-4">
             <span className="text-primaryDark">
               Text<span className="text-primary">Craft</span>
             </span>
           </Link>
-          <span>Features</span>
-          <Link to='/contact-us'>Contact us</Link>
+          <Link to="/contact-us">Contact us</Link>
         </div>
         <div className="flex justify-center items-end gap-6 w-auto [&>*]:text-xl [&>*]:text-black">
-          <FaGithub />
-          <FaLinkedinIn />
-          <FaXTwitter />
+          <Link to='https://github.com/its-lakshya'>
+            <FaGithub />
+          </Link>
+          <Link to='https://www.linkedin.com/in/lakshyakumar-/'>
+            <FaLinkedinIn />
+          </Link>
+          <Link to='https://x.com/its_lakshya'>
+            <FaXTwitter />
+          </Link>
         </div>
       </div>
     </div>
