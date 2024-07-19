@@ -13,10 +13,15 @@ export default {
         primaryDark: '#4C1D95',
         primaryLight: '#D8B4FE',
         primaryExtraLight: '#F3E7FF',
-        documentBackground: '#F9FBFD',
+        documentBackground: '#F8F8Fa',
         toolbarColor: '#EDF2FA',
       },
       borderColor: {
+        primary: '#7C3AED',
+        primaryDark: '#4C1D95',
+        primaryLight: '#D8B4FE',
+      },
+      outlineColor: {
         primary: '#7C3AED',
         primaryDark: '#4C1D95',
         primaryLight: '#D8B4FE',

@@ -55,8 +55,8 @@ export const modules = {
 export const Toolbar: React.FC = () => (
   <div
     id="toolbar"
-    style={{border: "none", boxShadow: 'inset 0 2px 4px 0 rgba(0,0,0,0.05);'}}
-    className="fixed top-16 z-50 flex justify-center w-[95vw] bg-toolbarColor rounded-full"
+    style={{border: "none", boxShadow: 'rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px'}}
+    className="fixed top-16 z-50 flex justify-center w-[95vw] bg-[#F1EAFB] rounded-full"
   >
     <span className="ql-formats">
       <select className="ql-font" defaultValue="arial">
