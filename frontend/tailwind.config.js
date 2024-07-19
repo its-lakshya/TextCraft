@@ -13,7 +13,7 @@ export default {
         primaryDark: '#4C1D95',
         primaryLight: '#D8B4FE',
         primaryExtraLight: '#F3E7FF',
-        documentBackground: '#F7FCFE',
+        documentBackground: '#F9FBFD',
         toolbarColor: '#EDF2FA',
       },
       borderColor: {

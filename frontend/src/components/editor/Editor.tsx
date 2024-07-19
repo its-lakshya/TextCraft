@@ -36,7 +36,7 @@ const Editor: React.FC<EditorProps> = () => {
   };
 
   return (
-    <div className="text-editor flex flex-col justify-center items-center mt-32">
+    <div className="text-editor flex flex-col justify-center items-center mt-[6.5rem]">
       <ReactQuill
         className="z-10 my-4"
         id="document"
