@@ -1,0 +1,15 @@
+#document {
+  background: white;
+  width: 21cm;
+  height: 29.7cm;
+  display: block;
+  margin: 0 auto;
+  margin: 1rem 0 1rem 0;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
+}
+@media print {
+  #document {
+    margin: 0;
+    box-shadow: 0;
+  }
+}

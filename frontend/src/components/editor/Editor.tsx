@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import ReactQuill from 'react-quill';
-import { Toolbar, modules } from '../toolbar/Toolbar';
+import { modules } from '../toolbar/Toolbar';
 import 'react-quill/dist/quill.snow.css';
+import './A4Document.css'
 
 interface EditorProps {}
 
 const Editor: React.FC<EditorProps> = () => {
   const [value, setValue] = useState<string | undefined>(undefined);
+
 
   const formats = [
     'header',
@@ -34,10 +36,10 @@ const Editor: React.FC<EditorProps> = () => {
   };
 
   return (
-    <div className="text-editor">
-      <Toolbar />
+    <div className="text-editor flex flex-col justify-center items-center mt-32">
       <ReactQuill
-        className="h-[80vh] w-[90vw] rounded-full border-red-500 outline-none "
+        className="z-10 my-4"
+        id="document"
         theme="snow"
         value={value}
         onChange={handleChange}

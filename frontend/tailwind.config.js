@@ -13,14 +13,20 @@ export default {
         primaryDark: '#4C1D95',
         primaryLight: '#D8B4FE',
         primaryExtraLight: '#F3E7FF',
+        documentBackground: '#F7FCFE',
+        toolbarColor: '#EDF2FA',
       },
-      borderColor:{
+      borderColor: {
         primary: '#7C3AED',
         primaryDark: '#4C1D95',
         primaryLight: '#D8B4FE',
       },
       padding: {
         rootXPadd: '80px',
+        documentPagePadd: '20px',
+      },
+      margin: {
+        documentPageMargin: '20px',
       },
       textColor: {
         black: '#0E1729',
@@ -35,14 +41,14 @@ export default {
       },
       keyframes: {
         arrowMove: {
-          '0%': {left: '0%'},
-          '50%': {left: '10%'},
-          '100%': {left: '0%'},
-        }
+          '0%': { left: '0%' },
+          '50%': { left: '10%' },
+          '100%': { left: '0%' },
+        },
       },
       animation: {
         arrowMove: 'arrowMove 1.5s ease-in-out infinite',
-      }
+      },
     },
   },
   plugins: [],

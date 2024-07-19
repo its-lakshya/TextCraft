@@ -1,23 +1,17 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { buttonHoverAnimaiton } from '../../utils/TailwindUtils';
-import { useEffect, useState } from 'react';
+// import { useEffect, useState } from 'react';
 
 const Header: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate()
-  const [visibility, setVisibility] = useState<string>('visible');
 
-  useEffect(() => {
-    const currentLocation = location.pathname.split('/');
-    if (currentLocation[1] === 'document') setVisibility('hidden');
-    else setVisibility('visibile');
-  }, []);
-
-
+  const currentLocation = location.pathname.split('/');
+  if (currentLocation[1] === 'document') return null;
 
   return (
     <div
-      className={`HEADER w-full h-20 flex justify-between items-center px-rootXPadd text-md capitalize font-medium ${visibility}`}
+      className={`HEADER w-full h-20 flex justify-between items-center px-rootXPadd text-md capitalize font-medium`}
     >
       <div className="HEADER-LEFT flex justify-between items-center gap-8 w-auto h-8 text-black">
         <button className="LOGO text-logoFontSize font-bold mr-4" onClick={() => navigate('/')}>

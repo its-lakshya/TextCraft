@@ -1,11 +1,11 @@
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import './App.css';
-import Editor from './components/editor/Editor';
 import Layout from './layouts/Layout';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Contact from './pages/Contact';
+import DocumentEdit from './pages/DocumentEdit';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 const appRouter = createBrowserRouter([
   {
@@ -18,7 +18,7 @@ const appRouter = createBrowserRouter([
       },
       {
         path: '/document/:documentId',
-        element: <Editor />,
+        element: <DocumentEdit/>,
       },
       {
         path: '/contact-us',

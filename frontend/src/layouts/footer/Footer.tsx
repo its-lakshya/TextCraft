@@ -5,14 +5,8 @@ import { Link, useLocation } from 'react-router-dom';
 
 const Footer: React.FC = () => {
   const location = useLocation();
-  const [visibility, setVisibility] = useState<string>('visible');
   const [zIndex, setZindex] = useState<string>('-z-10');
 
-  useEffect(() => {
-    const currentLocation = location.pathname.split('/');
-    if (currentLocation[1] === 'document') setVisibility('hidden');
-    else setVisibility('visibile');
-  }, []);
 
   useEffect(() => {
     const onScroll = () => {
@@ -28,9 +22,12 @@ const Footer: React.FC = () => {
     };
   });
 
+  const currentLocation = location.pathname.split('/');
+  if (currentLocation[1] === 'document') return null;
+
   return (
     <div
-      className={`WRAPPER fixed bottom-0 ${zIndex} flex flex-col justify-between w-full h-52 py-12 px-rootXPadd bg-primaryExtraLight text-black ${visibility}`}
+      className={`WRAPPER fixed bottom-0 ${zIndex} flex flex-col justify-between w-full h-52 py-12 px-rootXPadd bg-primaryExtraLight text-black`}
     >
       <div className="flex items-center gap-2">
         Developed with

@@ -55,8 +55,8 @@ export const modules = {
 export const Toolbar: React.FC = () => (
   <div
     id="toolbar"
-    style={{border: "none"}}
-    className="flex justify-center bg-[#CBD6F3] bg-opacity-50 rounded-full w-[90vw]"
+    style={{border: "none", boxShadow: 'rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px'}}
+    className="fixed top-20 z-50 flex justify-center w-[95vw] bg-toolbarColor rounded-full"
   >
     <span className="ql-formats">
       <select className="ql-font" defaultValue="arial">
@@ -68,8 +68,8 @@ export const Toolbar: React.FC = () => (
         <option value="lucida">Lucida</option>
       </select>
       <select className="ql-size" defaultValue="medium">
-        <option value="extra-small">Size 1</option>
-        <option value="small">Size 2</option>
+        <option value="small">Size 1</option>
+        <option value="extra-small">Size 2</option>
         <option value="medium">Size 3</option>
         <option value="large">Size 4</option>
       </select>
