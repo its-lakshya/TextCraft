@@ -14,7 +14,7 @@ const Contact = () => {
     window.scrollTo({
       top: 0,
       left: 0,
-      behavior: "smooth"
+      behavior: 'smooth',
     });
     if (nameRef.current) {
       nameRef.current.focus();
@@ -33,8 +33,8 @@ const Contact = () => {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          whileHover={{rotateZ: '2deg', rotateX: '10deg'}}
-          transition={{ duration: 0.5}}
+          whileHover={{ rotateZ: '2deg', rotateX: '10deg' }}
+          transition={{ duration: 0.5 }}
           className="INFORMATION relative flex flex-col justify-between w-[40%] h-full rounded-xl p-10 text-white overflow-hidden"
           style={{
             background: 'linear-gradient(180deg, rgba(0,0,0,1) 11%, rgba(76,29,149,1) 99%)',
@@ -87,21 +87,21 @@ const Contact = () => {
           />
           <form className="FORM flex flex-col gap-8 p-10">
             <div className="flex gap-8">
-              <div className="INPUT-CONTAINER flex flex-col justify-center items-start w-1/2 gap-4">
+              <div className="NAME-CONTAINER flex flex-col justify-center items-start w-1/2 gap-4">
                 <label className="text-sm text-[#8D8D8D] capitalize">Name</label>
                 <input
                   ref={nameRef}
                   type="text"
                   placeholder="john doe"
-                  className="NAME w-full pb-1 font-light outline-none border-b border-b-black autofocus"
+                  className="NAME w-full pb-[6px] font-light outline-none border-b focus:border-b-primary focus:pb-[5px] focus:border-b-2  border-b-black autofocus"
                 />
               </div>
-              <div className="INPUT-CONTAINER flex flex-col justify-center items-start w-1/2 gap-4">
+              <div className="EMAIL-CONTAINER flex flex-col justify-center items-start w-1/2 gap-4">
                 <label className="text-sm text-[#8D8D8D] capitalize">Email</label>
                 <input
                   type="text"
                   placeholder="john@gmail.com"
-                  className="NAME w-full pb-1 font-light outline-none border-b border-b-black"
+                  className="EMAIL w-full pb-[6px] font-light outline-none border-b focus:border-b-primary focus:pb-[5px] focus:border-b-2  border-b-black "
                 />
               </div>
             </div>
@@ -110,7 +110,7 @@ const Contact = () => {
               <textarea
                 rows={4}
                 placeholder="write your message..."
-                className="NAME w-full p-2 font-light outline-none border border-black rounded-md resize-none"
+                className="NAME w-full p-2 font-light outline-none border border-black focus:outline-primary focus:border-none rounded-md resize-none"
               />
             </div>
             <button
