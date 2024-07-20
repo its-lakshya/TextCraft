@@ -43,7 +43,6 @@ const Editor: React.FC<EditorProps> = () => {
         theme="snow"
         value={value}
         onChange={handleChange}
-        placeholder={'Write something awesome...'}
         modules={modules}
         formats={formats}
       />

@@ -7,7 +7,7 @@ const Header: React.FC = () => {
   const navigate = useNavigate()
 
   const currentLocation = location.pathname.split('/');
-  if (currentLocation[1] === 'document') return null;
+  if (currentLocation[1] === 'document' || currentLocation[1] === 'documents') return null;
 
   return (
     <div

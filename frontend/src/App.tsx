@@ -6,6 +6,7 @@ import Register from './pages/Register';
 import Contact from './pages/Contact';
 import DocumentEdit from './pages/DocumentEdit';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import Documents from './pages/Documents';
 
 const appRouter = createBrowserRouter([
   {
@@ -23,7 +24,11 @@ const appRouter = createBrowserRouter([
       {
         path: '/contact-us',
         element: <Contact/>
-      }
+      },
+      {
+        path: '/documents',
+        element: <Documents/>
+      },
     ],
   },
   {

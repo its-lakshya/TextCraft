@@ -4,7 +4,7 @@ import cookieParser from 'cookie-parser';
 import userRouter from './routes/user.routes.js';
 import documentRouter from './routes/document.routes.js';
 import collaborationRouter from './routes/collaboration.routes.js';
-
+e
 const app = express();
 
 // defining middlewares

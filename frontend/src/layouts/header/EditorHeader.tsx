@@ -13,7 +13,7 @@ const EditorHeader = () => {
   };
 
   return (
-    <div className="WRAPPER fixed top-0 z-50 flex w-[95vw] h-[4rem] justify-between items-center bg-documentBackground">
+    <div className="WRAPPER flex w-full h-[4rem] justify-between box-border items-center bg-documentBackground">
       <div className="HEADER-LEFT flex w-auto items-center">
         <Link to="/" className="LOGO text-5xl font-bold leading-none mr-1">
           <span className="text-primaryDark">
