@@ -44,6 +44,15 @@ export default {
         logoFontSize: '32px',
         logoFontSizeSmall: '26px',
       },
+      borderRadius: {
+        documentCard: '4px'
+      },
+      width: {
+        documentsPageWidth: '77vw',
+      },
+      maxWidth: {
+        documentsPageMaxWidth: '71rem',
+      },
       keyframes: {
         arrowMove: {
           '0%': { left: '0%' },
