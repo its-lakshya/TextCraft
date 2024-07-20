@@ -20,9 +20,9 @@ const CreateDocument: React.FC = () => {
         </motion.span>
       </motion.button>
       <div className="TEXT flex flex-col justify-center items-center h-full">
-        <div className="HEADING flex gap-0 text-5xl text-white font-semibold">
+        <div className="HEADING flex gap-0 text-[3vw] text-white font-semibold">
           Just click and create
-          <span className="animate-bounce text-6xl">!</span>
+          <span className="animate-bounce text-[3.2vw]">!</span>
         </div>
       </div>
     </div>
