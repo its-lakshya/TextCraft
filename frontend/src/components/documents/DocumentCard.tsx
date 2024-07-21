@@ -31,12 +31,11 @@ const DocumentCard: React.FC<DocumentCardProps> = ({ data }) => {
     'Dec',
   ];
 
-  const month = monthNames[dateObj.getMonth()]; // Get month name abbreviation
-  const day = ('0' + dateObj.getDate()).slice(-2); // Extracts day and pads with zero if necessary
-  const year = dateObj.getFullYear().toString(); // Extracts last two digits of the year
+  const month = monthNames[dateObj.getMonth()];
+  const day = ('0' + dateObj.getDate()).slice(-2);
+  const year = dateObj.getFullYear().toString();
 
   const formattedDate = `${month} ${day}, ${year}`;
-  // const time = dateObj.toISOString().split('T')[1].split('.')[0];
 
   return (
     <div className="WRAPPER w-52 h-[330px] flex flex-col rounded-documentCard border border-gray-300 hover:border-primary overflow-hidden cursor-pointer">

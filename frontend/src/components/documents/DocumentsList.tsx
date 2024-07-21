@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { IoMdArrowDropdown } from 'react-icons/io';
 import DocumentCard from './DocumentCard';
 import axios from '../../axios.config';
+import { useNavigate } from 'react-router-dom';
 
 enum Owner {
   Anyone = 'Owned by anyone',
@@ -19,6 +20,7 @@ interface Document {
 }
 
 const DocumentsList: React.FC = () => {
+  const navigate = useNavigate();
   const ownerRef = useRef<HTMLDivElement>(null);
   const [selectedOwner, setSelectedOwner] = useState<Owner>(Owner.Anyone);
   const [documents, setDocument] = useState<Document[]>();
@@ -33,6 +35,10 @@ const DocumentsList: React.FC = () => {
       ownerRef.current.style.flexDirection = 'column';
     }
   };
+
+  const handleDocumentClick = (id:string): void => {
+    navigate(`/document/${id}`)
+  }
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent): void => {
@@ -89,7 +95,7 @@ const DocumentsList: React.FC = () => {
         </div>
       </div>
       <div className="DOCUMENT-LIST flex flex-wrap  gap-[22.5px] w-full h-auto">
-        {documents && documents.map((document, index) => <DocumentCard key={index} data={document} />)}
+        {documents && documents.map((document, index) => <span key={index} onClick={() => handleDocumentClick(document._id)}><DocumentCard data={document} /></span>)}
       </div>
     </div>
   );
