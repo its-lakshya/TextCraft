@@ -7,10 +7,12 @@ const Header: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const loginRef = useRef<HTMLDivElement>(null);
+  const documentRef = useRef<HTMLAnchorElement>(null);
 
   const hideLoginSiginButton = (): void => {
-    if (loginRef.current) {
+    if (loginRef.current && documentRef.current) {
       loginRef.current.style.display = 'none';
+      documentRef.current.style.display = 'block';
     }
   };
 
@@ -30,7 +32,7 @@ const Header: React.FC = () => {
     } else {
       hideLoginSiginButton();
     }
-  }, []);
+  }, [location]);
 
   const currentLocation = location.pathname.split('/');
   if (currentLocation[1] === 'document' || currentLocation[1] === 'documents') return null;
@@ -39,7 +41,7 @@ const Header: React.FC = () => {
     <div
       className={`HEADER w-full h-20 flex justify-between items-center px-rootXPadd text-md capitalize font-medium`}
     >
-      <div className="HEADER-LEFT flex justify-between items-center gap-8 w-auto h-8 text-black">
+      <div className="HEADER-LEFT flex justify-between items-center gap-8 w-auto h-8 text-black capitalize">
         <button className="LOGO text-logoFontSize font-bold mr-4" onClick={() => navigate('/')}>
           <span className="text-primaryDark">
             Text<span className="text-primary">Craft</span>
@@ -47,6 +49,9 @@ const Header: React.FC = () => {
         </button>
         <Link to="/contact-us" className="CONTACT US">
           Contact us
+        </Link>
+        <Link ref={documentRef} to="/documents" className="CONTACT US hidden">
+          Documents
         </Link>
       </div>
       <div ref={loginRef} className="HEADER-RIGHT flex justify-center items-center gap-4 w-auto">
@@ -63,6 +68,7 @@ const Header: React.FC = () => {
           Sign up now
         </Link>
       </div>
+      <div className="size-8 bg-gray-300 rounded-full"></div>
     </div>
   );
 };
