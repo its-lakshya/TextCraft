@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { buttonHoverAnimaiton } from '../../utils/TailwindUtils';
+import { buttonHoverAnimaiton } from '../../utils/Tailwind.utils';
 import { IoEarthSharp } from 'react-icons/io5';
 
 const EditorHeader = () => {

@@ -1,5 +1,5 @@
 import { FaArrowRightLong } from "react-icons/fa6";
-import { buttonHoverAnimaiton } from "../../utils/TailwindUtils";
+import { buttonHoverAnimaiton } from "../../utils/Tailwind.utils";
 
 const JoinCommunity: React.FC = () => {
   return (

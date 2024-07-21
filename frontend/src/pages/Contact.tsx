@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import ContactUsImage from '../assets/images/ContactUsImage.svg';
 import ContactUsPlaneImage from '../assets/images/ContactUsPlaneImage.svg';
 import { useEffect, useRef } from 'react';
-import { buttonHoverAnimaiton } from '../utils/TailwindUtils';
+import { buttonHoverAnimaiton } from '../utils/Tailwind.utils';
 import { motion } from 'framer-motion';
 
 const Contact = () => {

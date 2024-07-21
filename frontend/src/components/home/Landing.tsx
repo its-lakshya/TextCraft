@@ -1,4 +1,4 @@
-import { buttonHoverAnimaiton } from '../../utils/TailwindUtils';
+import { buttonHoverAnimaiton } from '../../utils/Tailwind.utils';
 import { FaArrowRightLong } from 'react-icons/fa6';
 import LandingPageBackground from '../../assets/images/LandingPageBackground.svg';
 import LandingPageImage from '../../assets/images/LandingPageImage.avif';
