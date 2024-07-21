@@ -48,7 +48,7 @@ const DocumentsList: React.FC = () => {
           {selectedOwner} <IoMdArrowDropdown />
           <div
             ref={ownerRef}
-            className="absolute top-7 py-2 w-full h-auto bg-transparent rounded-documentCard hidden"
+            className="absolute top-7 py-2 w-full h-auto rounded-documentCard hidden bg-documentBackground"
             style={{ boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px' }}
           >
             {[Owner.Anyone, Owner.Me, Owner.Shared].map((Owner, index) => {
@@ -65,8 +65,8 @@ const DocumentsList: React.FC = () => {
           </div>
         </button>
       </div>
-      <div className='DOCUMENT-LIST flex flex-wrap justify-between gap-5 w-full h-auto'>
-          {[1,2,3,4,5,6,7,8,9,1,1,1,1,11,3].map(() => (<DocumentCard/>))}
+      <div className='DOCUMENT-LIST flex flex-wrap  gap-[22.5px] w-full h-auto'>
+          {[1,2,3,4,5,6,7,8,9,1,1,1,1,11].map(() => (<DocumentCard/>))}
       </div>
     </div>
   );
