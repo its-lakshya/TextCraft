@@ -28,7 +28,7 @@ const createDocument = asyncHandler(async (req, res) => {
     throw new apiError(500, createDocument, 'Something went wrong while creating the document');
   }
 
-  return res.status(200).json(new apiResponse(200, 'Document created successfully'));
+  return res.status(200).json(new apiResponse(200, createdDocument, 'Document created successfully'));
 });
 
 const getAllDocuments = asyncHandler(async (req, res) => {

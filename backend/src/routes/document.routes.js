@@ -6,7 +6,7 @@ const router = Router();
 
 router.use(verifyJWT);
 
-router.route('/d/').get(getAllDocuments).post(createDocument);
+router.route('/d').get(getAllDocuments).post(createDocument);
 
 router.route('/d/:documentId').get(getDocumentByID).patch(updateDocument).delete(deleteDocument);
 

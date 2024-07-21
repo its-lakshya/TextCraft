@@ -16,7 +16,7 @@ const DocumentsList: React.FC = () => {
     setSelectedOwner(Owner);
   };
 
-  const handleShowownerRefs = (): void => {
+  const handleShowOwnerRefs = (): void => {
     if (ownerRef.current){
       ownerRef.current.style.display = ownerRef.current.style.display === 'flex' ? 'none' : 'flex';
       ownerRef.current.style.flexDirection = 'column';
@@ -42,8 +42,8 @@ const DocumentsList: React.FC = () => {
     <div className="flex flex-col gap-6 w-documentsPageWidth max-w-documentsPageMaxWidth h-auto">
       <div className="HEADER flex justify-between items-center w-full h-12">
         <span className="text-lg font-medium">Documents</span>
-        <button className="relative flex justify-center items-center gap-2 outline-none w-44 h-6 text-sm text-gray-600 font-medium rounded-documentCard hover:bg-primaryLight hover:bg-opacity-30"
-        onClick={handleShowownerRefs}
+        <div className="relative flex justify-center items-center gap-2 outline-none w-44 h-6 text-sm text-gray-600 font-medium rounded-documentCard hover:bg-primaryLight hover:bg-opacity-30 cursor-pointer"
+        onClick={handleShowOwnerRefs}
         >
           {selectedOwner} <IoMdArrowDropdown />
           <div
@@ -63,10 +63,10 @@ const DocumentsList: React.FC = () => {
               );
             })}
           </div>
-        </button>
+        </div>
       </div>
       <div className='DOCUMENT-LIST flex flex-wrap  gap-[22.5px] w-full h-auto'>
-          {[1,2,3,4,5,6,7,8,9,1,1,1,1,11].map(() => (<DocumentCard/>))}
+          {[1,2,3,4,5,6,7,8,9,1,1,1,1,11].map((item, index) => (<DocumentCard key={index}/>))}
       </div>
     </div>
   );

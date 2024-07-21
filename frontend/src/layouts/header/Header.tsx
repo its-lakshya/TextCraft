@@ -1,11 +1,10 @@
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { buttonHoverAnimaiton } from '../../utils/Tailwind.utils';
 import { useEffect, useRef } from 'react';
 import { isAuthenticated } from '../../utils/Auth.utils';
 
 const Header: React.FC = () => {
   const location = useLocation();
-  const navigate = useNavigate();
   const loginRef = useRef<HTMLDivElement>(null);
   const documentRef = useRef<HTMLAnchorElement>(null);
 
@@ -41,12 +40,12 @@ const Header: React.FC = () => {
     <div
       className={`HEADER w-full h-20 flex justify-between items-center px-rootXPadd text-md capitalize font-medium`}
     >
-      <div className="HEADER-LEFT flex justify-between items-center gap-8 w-auto h-8 text-black capitalize">
-        <button className="LOGO text-logoFontSize font-bold mr-4" onClick={() => navigate('/')}>
+      <div className="HEADER-LEFT flex justify-between items-end gap-8 w-auto h-8 text-black capitalize">
+        <Link to='/' className="LOGO text-logoFontSize leading-none font-bold mr-4">
           <span className="text-primaryDark">
             Text<span className="text-primary">Craft</span>
           </span>
-        </button>
+        </Link>
         <Link to="/contact-us" className="CONTACT US">
           Contact us
         </Link>
