@@ -1,12 +1,12 @@
 import { Router } from 'express';
-import { verifyJWT } from '../middlewares/auth.middleware';
-import { getFavourieDocuments, toggelFavourite } from '../controllers/favourite.controller';
+import { verifyJWT } from '../middlewares/auth.middleware.js';
+import { getFavourieDocuments, toggleFavourite } from '../controllers/favourite.controller.js';
 
-const router = Router;
+const router = Router();
 
 router.use(verifyJWT);
 
 router.route('/d/').get(getFavourieDocuments)
-router.route('/toggle/d/:documentId').post(toggelFavourite);
+router.route('/toggle/d/:documentId').post(toggleFavourite);
 
 export default router;

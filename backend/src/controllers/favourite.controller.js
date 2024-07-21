@@ -1,9 +1,9 @@
 import mongoose, { mongo } from 'mongoose';
-import { apiError } from '../utils/apiError';
-import { apiResponse } from '../utils/apiResponse';
-import { asyncHandler } from '../utils/asyncHandler';
-import { Favourite } from '../models/favourite.model';
-import { Document } from '../models/document.model';
+import { apiError } from '../utils/apiError.js';
+import { apiResponse } from '../utils/apiResponse.js';
+import { asyncHandler } from '../utils/asyncHandler.js';
+import { Favourite } from '../models/favourite.model.js';
+import { Document } from '../models/document.model.js';
 
 const toggleFavourite = asyncHandler(async (req, res) => {
   const user = req.user;
