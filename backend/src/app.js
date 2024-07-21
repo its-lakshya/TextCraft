@@ -4,6 +4,7 @@ import cookieParser from 'cookie-parser';
 import userRouter from './routes/user.routes.js';
 import documentRouter from './routes/document.routes.js';
 import collaborationRouter from './routes/collaboration.routes.js';
+import favouriteRouter from './routes/favourite.routes.js';
 
 const app = express();
 
@@ -27,5 +28,6 @@ app.get('/', (_, res) => {
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/documents', documentRouter);
 app.use('/api/v1/collaborations', collaborationRouter);
+app.use('/api/v1/favourite', favouriteRouter);
 
 export { app };
