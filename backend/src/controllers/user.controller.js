@@ -3,6 +3,7 @@ import { apiError } from '../utils/apiError.js';
 import { apiResponse } from '../utils/apiResponse.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
 import { deleteFromCloudinary, uploadOnCloudinary } from '../utils/cloudinary.js';
+import jwt from 'jsonwebtoken'
 
 const generateAccessAndRefreshToken = async userId => {
   try {
@@ -240,13 +241,12 @@ const updateUserPassword = asyncHandler(async (req, res) => {
 
 const isLoggedIn = asyncHandler(async (req, res) => {
   const accessToken = req.cookies.accessToken;
-
   if (!accessToken) {
     return res.status(401).json({ loggedIn: false, message: 'Access token not found' });
   }
 
   try {
-    const decoded = jwt.verify(accessToken, JWT_SECRET_KEY);
+    const decoded = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
 
     res.status(200).json({ loggedIn: true, user: decoded.user });
   } catch (error) {
