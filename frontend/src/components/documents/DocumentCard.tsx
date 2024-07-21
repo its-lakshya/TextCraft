@@ -1,11 +1,48 @@
-import { BsThreeDotsVertical } from "react-icons/bs";
+import { BsThreeDotsVertical } from 'react-icons/bs';
 
-const DocumentCard: React.FC = () => {
+interface Document {
+  createdAt: string;
+  documentName: string;
+  owner: string;
+  updatedAt: string;
+  __v: number;
+  _id: string;
+}
+
+interface DocumentCardProps {
+  data: Document;
+}
+
+const DocumentCard: React.FC<DocumentCardProps> = ({ data }) => {
+  const dateObj = new Date(data.updatedAt);
+
+  const monthNames = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ];
+
+  const month = monthNames[dateObj.getMonth()]; // Get month name abbreviation
+  const day = ('0' + dateObj.getDate()).slice(-2); // Extracts day and pads with zero if necessary
+  const year = dateObj.getFullYear().toString(); // Extracts last two digits of the year
+
+  const formattedDate = `${month} ${day}, ${year}`;
+  // const time = dateObj.toISOString().split('T')[1].split('.')[0];
+
   return (
     <div className="WRAPPER w-52 h-[330px] flex flex-col rounded-documentCard border border-gray-300 hover:border-primary overflow-hidden cursor-pointer">
       <div className="DOCUMENT-OVERVIEW w-full h-full bg-white"></div>
       <div className="DOCUMENT-INFORMATION flex flex-col w-full h-20 py-3 px-4 box-border border border-t-gray-300">
-        <span className="text-sm font-medium">Untitle_Document</span>
+        <span className="text-sm font-medium">{data.documentName}</span>
         <div className="flex justify-between items-center w-full">
           <div className="flex items-end">
             <div className="LOGO text-xl font-bold leading-none mr-1">
@@ -13,7 +50,7 @@ const DocumentCard: React.FC = () => {
                 T<span className="text-primary">c</span>
               </span>
             </div>
-            <span className='text-xs text-gray-500'>Opened Jul 19, 2024</span>
+            <span className="text-xs text-gray-500 font-light">Opened {formattedDate}</span>
           </div>
           <BsThreeDotsVertical />
         </div>
