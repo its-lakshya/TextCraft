@@ -52,7 +52,7 @@ const registerUser = asyncHandler(async (req, res) => {
     password,
     // profileImage: profileImage?.url,
     mobileNumber,
-    gender: gender || 'prefer-not-to-say'
+    gender: gender || 'prefer-not-to-say',
   });
 
   const createdUser = await User.findById(user._id).select('-password -refreshToken');
@@ -81,7 +81,6 @@ const loginUser = asyncHandler(async (req, res) => {
     throw new apiError(404, 'No user found with these credentials');
   }
 
-
   const isPasswordValid = await user.isPasswordCorrect(password);
 
   if (!isPasswordValid) {
@@ -93,13 +92,15 @@ const loginUser = asyncHandler(async (req, res) => {
   const loggedInUser = await User.find(user._id).select('-password -refreshToken');
   const options = {
     httpOnly: true,
-    secure: true,
+    // secure: true,
   };
+
+  res.cookie('accessToken', accessToken, options);
+
+  res.cookie('refreshToken', refreshToken, options);
 
   return res
     .status(200)
-    .cookie('accessToken', accessToken, options)
-    .cookie('refreshToken', refreshToken, options)
     .json(
       new apiResponse(
         200,
@@ -237,6 +238,24 @@ const updateUserPassword = asyncHandler(async (req, res) => {
   return res.status(200).json(new apiResponse(200, 'Password updated successfully'));
 });
 
+const isLoggedIn = asyncHandler(async (req, res) => {
+  const accessToken = req.cookies.accessToken;
+
+  if (!accessToken) {
+    return res.status(401).json({ loggedIn: false, message: 'Access token not found' });
+  }
+
+  try {
+    const decoded = jwt.verify(accessToken, JWT_SECRET_KEY);
+
+    res.status(200).json({ loggedIn: true, user: decoded.user });
+  } catch (error) {
+    console.error('Error verifying access token:', error);
+    res.status(401).json({ loggedIn: false, message: 'Invalid access token' });
+  }
+});
+
+
 export {
   registerUser,
   loginUser,
@@ -244,4 +263,5 @@ export {
   updateProfileImage,
   updateUserDetails,
   updateUserPassword,
+  isLoggedIn
 };

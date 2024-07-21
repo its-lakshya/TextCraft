@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { verifyJWT } from '../middlewares/auth.middleware.js';
 import { upload } from '../middlewares/multer.middleware.js';
 import {
+  isLoggedIn,
   loginUser,
   logoutUser,
   registerUser,
@@ -33,5 +34,7 @@ router.route('/profile-image').patch(upload.single('profileImage'), updateProfil
 router.route('/update-account').patch(updateUserDetails);
 
 router.route("/update-password").patch(updateUserPassword);
+
+router.route('/check-auth').get(isLoggedIn);
 
 export default router;
