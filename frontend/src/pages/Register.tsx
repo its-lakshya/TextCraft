@@ -1,10 +1,59 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import AuthBackgroundImage from '../assets/images/AuthBackgroundImage.svg';
-import { buttonHoverAnimaiton } from '../utils/TailwindUtils';
+import { buttonHoverAnimaiton } from '../utils/Tailwind.utils';
+import { useState } from 'react';
+import axios from '../axios.config';
+
+type User = {
+  fullName: string;
+  userName: string;
+  mobileNumber: string;
+  email: string;
+  password: string;
+};
 
 const Register: React.FC = () => {
-  const inputStyles: string = 'w-full h-8 rounded-md px-4 border border-[#BCBEC0] text-black text-sm';
+  const navigate = useNavigate();
+  const inputStyles: string =
+    'w-full h-8 rounded-md px-4 border border-[#BCBEC0] text-black text-sm';
   const inputContainerStyles: string = 'flex flex-col gap-2 w-full';
+
+  const [user, setUser] = useState<User>({
+    fullName: '',
+    userName: '',
+    mobileNumber: '',
+    email: '',
+    password: '',
+  });
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    const { name, value } = e.target;
+    setUser(previousUser => ({
+      ...previousUser,
+      [name]: value,
+    }));
+  };
+
+  const handleRegister = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
+    e.preventDefault();
+    const userData = {
+      fullName: user.fullName,
+      userName: user.userName,
+      ...(user.mobileNumber && { mobileNumber: user.mobileNumber }),
+      email: user.email,
+      password: user.password,
+    }
+    try {
+      const response = await axios.post('/users/register', 
+        userData
+      );
+      console.log(response);
+      navigate('/auth/login')
+    } catch (error) {
+      console.log(error, 'Not registered');
+    }
+  };
+
   return (
     <div
       className="WRAPPER flex justify-center items-center w-full h-screen bg-center bg-cover bg-primaryDark text-white"
@@ -21,60 +70,76 @@ const Register: React.FC = () => {
         </button>
         <div className="FORM-CONTAINER flex flex-col gap-6 w-full">
           <div className="HEADING text-2xl font-bold">Register</div>
-          <form className="FORM flex flex-col gap-6">
+          <form className="FORM flex flex-col gap-6" onSubmit={e => handleRegister(e)} method='post'>
             <div className="flex flex-col gap-3 items-start w-full">
               <div className={`${inputContainerStyles}`}>
-                <label className="EMAIL-LABEL capitalize">Fullname</label>
+                <label className="NAME-LABEL capitalize">Fullname</label>
                 <input
                   type="text"
+                  name="fullName"
                   placeholder="John Doe"
-                  className={`EMAIL-INPUT ${inputStyles}`}
+                  className={`NAME-INPUT ${inputStyles}`}
+                  onChange={e => handleInputChange(e)}
                 />
               </div>
               <div className={`${inputContainerStyles}`}>
                 <label className="EMAIL-LABEL capitalize">username</label>
                 <input
                   type="text"
+                  name="userName"
                   placeholder="john@doe"
                   className={`EMAIL-INPUT ${inputStyles}`}
+                  onChange={e => handleInputChange(e)}
                 />
               </div>
               <div className={`${inputContainerStyles}`}>
-                <label className="EMAIL-LABEL capitalize">mobile (optional)</label>
+                <label className="MOBILE-LABEL capitalize">mobile (optional)</label>
                 <input
                   type="text"
+                  name="mobileNumber"
                   placeholder="91XXXXXXXX"
-                  className={`EMAIL-INPUT ${inputStyles}`}
+                  className={`MOBILE-INPUT ${inputStyles}`}
+                  onChange={e => handleInputChange(e)}
                 />
               </div>
               <div className={`${inputContainerStyles}`}>
                 <label className="EMAIL-LABEL capitalize">email</label>
                 <input
                   type="text"
+                  name="email"
                   placeholder="username@gmail.com"
                   className={`EMAIL-INPUT ${inputStyles}`}
+                  onChange={e => handleInputChange(e)}
                 />
               </div>
               <div className={`${inputContainerStyles}`}>
                 <label className="PASSWORD-LABEL capitalize">Password</label>
                 <input
                   type="password"
+                  name="password"
                   placeholder="password"
                   className={`PASSWORD-INPUT ${inputStyles}`}
+                  onChange={e => handleInputChange(e)}
                 />
               </div>
             </div>
-            <button className={`LOGIN-BUTTON flex justify-center items-center text-lg font-bold bg-primary py-2 rounded-lg ${buttonHoverAnimaiton} hover:-translate-y-2 hover:bg-primaryDark`}>
+            <button
+              type="submit"
+              className={`LOGIN-BUTTON flex justify-center items-center text-lg font-bold bg-primary py-2 rounded-lg ${buttonHoverAnimaiton} hover:-translate-y-2 hover:bg-primaryDark`}
+            >
               Sign up
             </button>
           </form>
           <span className="SIGN-UP text-xs text-center font-light">
-            Already have an account? <Link to='/auth/login' className="font-bold">Login</Link>
+            Already have an account?{' '}
+            <Link to="/auth/login" className="font-bold">
+              Login
+            </Link>
           </span>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Register
+export default Register;
