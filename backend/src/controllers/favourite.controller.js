@@ -43,4 +43,22 @@ const toggleFavourite = asyncHandler(async (req, res) => {
   }
 });
 
-export { toggleFavourite };
+const getFavourieDocuments = asyncHandler(async (req, res) => {
+  const user = req.user;
+
+  if (!user) {
+    throw new apiError(401, 'Unauthorized request');
+  }
+
+  const favouriteDocuments = await Favourite.find({ user });
+
+  if (!favouriteDocuments) {
+    throw new apiError(500, 'Something went wrong while fething favourite documents');
+  }
+
+  return res
+    .status(200)
+    .json(new apiResponse(200, favouriteDocuments, 'Favourite documents fetched successfully'));
+});
+
+export { toggleFavourite, getFavourieDocuments };
