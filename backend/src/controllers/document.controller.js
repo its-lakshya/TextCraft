@@ -139,9 +139,9 @@ const getSharedDocuments = asyncHandler(async (req, res) => {
 
   const sharedDocuments = await User.aggregate([
     {
-      $match:{
-      _id: new mongoose.Types.ObjectId(user._id),
-      }
+      $match: {
+        _id: new mongoose.Types.ObjectId(user._id),
+      },
     },
     {
       $lookup: {
@@ -154,29 +154,29 @@ const getSharedDocuments = asyncHandler(async (req, res) => {
             $lookup: {
               from: 'documents',
               localField: 'document',
-              foreignField: "_id",
+              foreignField: '_id',
               as: 'documents',
-            }
+            },
           },
           {
             $project: {
               documents: {
                 $arrayElemAt: ['$documents', 0], // Get the first element of the 'documents' array
               },
-              _id:0
+              _id: 0,
             },
           },
           {
             $replaceRoot: { newRoot: '$documents' }, // Replace the root document with 'documents'
           },
-        ]
+        ],
       },
     },
     {
-      $project:{
+      $project: {
         data: 1,
-        _id: 0
-      }
+        _id: 0,
+      },
     },
     {
       $unwind: '$data', // Unwind the 'data' array to access each document individually
@@ -184,7 +184,7 @@ const getSharedDocuments = asyncHandler(async (req, res) => {
     {
       $replaceRoot: { newRoot: '$data' }, // Replace the root document with 'data'
     },
-  ])
+  ]);
 
   if (!sharedDocuments) {
     throw new apiError(500, 'Something went wrong while fetching shared documents');
@@ -195,4 +195,82 @@ const getSharedDocuments = asyncHandler(async (req, res) => {
     .json(new apiResponse(200, sharedDocuments, 'Shared documents fetched successfully'));
 });
 
-export { createDocument, getUserDocuments, getDocumentByID, updateDocument, deleteDocument, getSharedDocuments };
+const getAllDocuments = asyncHandler(async (req, res) => {
+  const user = req.user;
+
+  if (!user) {
+    throw new apiError(401, 'Unauthorized request');
+  }
+
+  const documents = await Document.find({ owner: user });
+
+  if (!documents) {
+    throw new apiError(500, 'Something went wrong while fetching the documents');
+  }
+
+  const sharedDocuments = await User.aggregate([
+    {
+      $match: {
+        _id: new mongoose.Types.ObjectId(user._id),
+      },
+    },
+    {
+      $lookup: {
+        from: 'collaborations',
+        localField: '_id',
+        foreignField: 'collaborator',
+        as: 'data',
+        pipeline: [
+          {
+            $lookup: {
+              from: 'documents',
+              localField: 'document',
+              foreignField: '_id',
+              as: 'documents',
+            },
+          },
+          {
+            $project: {
+              documents: {
+                $arrayElemAt: ['$documents', 0], // Get the first element of the 'documents' array
+              },
+              _id: 0,
+            },
+          },
+          {
+            $replaceRoot: { newRoot: '$documents' }, // Replace the root document with 'documents'
+          },
+        ],
+      },
+    },
+    {
+      $project: {
+        data: 1,
+        _id: 0,
+      },
+    },
+    {
+      $unwind: '$data', // Unwind the 'data' array to access each document individually
+    },
+    {
+      $replaceRoot: { newRoot: '$data' }, // Replace the root document with 'data'
+    },
+  ]);
+
+  if (!sharedDocuments) {
+    throw new apiError(500, 'Something went wrong while fetching shared documents');
+  }
+
+  const allDocuments = [...documents, ...sharedDocuments];
+  return res.status(200).json(new apiResponse(200, allDocuments, 'Documents fetched successfully'));
+});
+
+export {
+  createDocument,
+  getUserDocuments,
+  getDocumentByID,
+  updateDocument,
+  deleteDocument,
+  getSharedDocuments,
+  getAllDocuments,
+};
