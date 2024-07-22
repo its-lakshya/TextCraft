@@ -39,21 +39,29 @@ const addCollaborator = asyncHandler(async (req, res) => {
     throw new apiError(400, 'User with this email does not exists');
   }
 
-  const collab = await Collaboration.create({
-    document,
-    collaborator,
-    accessType: accessType || 'read',
-  });
 
-  const createdCollaborator = await Collaboration.findById(collab._id);
+  const alreadyCollaborator = await Collaboration.find({collaborator});
 
-  if (!createdCollaborator) {
-    throw new apiError(500, 'Something went wrong while adding the collaborator');
+  if(alreadyCollaborator){
+    throw new apiError(400, "User is already a collaborator")
+  }else{
+    const collab = await Collaboration.create({
+      document,
+      collaborator,
+      accessType: accessType || 'read',
+    });
+  
+    const createdCollaborator = await Collaboration.findById(collab._id);
+  
+    if (!createdCollaborator) {
+      throw new apiError(500, 'Something went wrong while adding the collaborator');
+    }
+  
+    return res
+      .status(200)
+      .json(new apiResponse(200, createdCollaborator, 'Collaborator added successfully'));
   }
-
-  return res
-    .status(200)
-    .json(new apiResponse(200, createdCollaborator, 'Collaborator added successfully'));
+  
 });
 
 const removeCollaborator = asyncHandler(async (req, res) => {
