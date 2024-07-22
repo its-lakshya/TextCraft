@@ -7,6 +7,7 @@ import { RootState } from '../../store/Store';
 const Header: React.FC = () => {
   const location = useLocation();
   const loginRef = useRef<HTMLDivElement>(null);
+  const profileRef = useRef<HTMLDivElement>(null)
   const documentRef = useRef<HTMLAnchorElement>(null);
   const isAuthenticated = useSelector((store: RootState) => store.auth.isAuthenticated);
 
@@ -17,9 +18,18 @@ const Header: React.FC = () => {
     }
   };
 
+  const hideProfileButton = (): void => {
+    if (profileRef.current && documentRef.current) {
+      profileRef.current.style.display = 'none';
+    }
+  }
+
   useEffect(() => {
     if (isAuthenticated) {
       hideLoginSiginButton();
+    }
+    else{
+      hideProfileButton();
     }
   }, [isAuthenticated, location]);
 
@@ -57,7 +67,7 @@ const Header: React.FC = () => {
           Sign up now
         </Link>
       </div>
-      <div className="size-8 bg-gray-300 rounded-full"></div>
+      <div ref={profileRef} className="size-8 bg-gray-300 rounded-full"></div>
     </div>
   );
 };

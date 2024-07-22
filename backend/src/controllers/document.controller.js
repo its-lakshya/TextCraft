@@ -4,6 +4,7 @@ import { Collaboration } from '../models/collaboration.model.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
 import { apiError } from '../utils/apiError.js';
 import { apiResponse } from '../utils/apiResponse.js';
+import { User } from '../models/user.model.js';
 
 const createDocument = asyncHandler(async (req, res) => {
   const { documentName } = req.body;
@@ -136,7 +137,56 @@ const getSharedDocuments = asyncHandler(async (req, res) => {
     throw new apiError(401, 'Unauthorized request');
   }
 
-  const sharedDocuments = await Collaboration.find({ collaborator: user }).populate('document');
+  // const sharedDocuments = await Collaboration.find({ collaborator: user }).populate('document');
+
+  const sharedDocuments = await User.aggregate([
+    {
+      $match:{
+      _id: new mongoose.Types.ObjectId(user._id),
+      }
+    },
+    {
+      $lookup: {
+        from: 'collaborations',
+        localField: '_id',
+        foreignField: 'collaborator',
+        as: 'data',
+        pipeline: [
+          {
+            $lookup: {
+              from: 'documents',
+              localField: 'document',
+              foreignField: "_id",
+              as: 'documents',
+            }
+          },
+          {
+            $project: {
+              documents: {
+                $arrayElemAt: ['$documents', 0], // Get the first element of the 'documents' array
+              },
+              _id:0
+            },
+          },
+          {
+            $replaceRoot: { newRoot: '$documents' }, // Replace the root document with 'documents'
+          },
+        ]
+      },
+    },
+    {
+      $project:{
+        data: 1,
+        _id: 0
+      }
+    },
+    {
+      $unwind: '$data', // Unwind the 'collab' array to access each document individually
+    },
+    {
+      $replaceRoot: { newRoot: '$data' }, // Replace the root document with 'documents'
+    },
+  ])
 
   if (!sharedDocuments) {
     throw new apiError(500, 'Something went wrong while fetching shared documents');

@@ -25,10 +25,6 @@ const DocumentsList: React.FC = () => {
   const [selectedOwner, setSelectedOwner] = useState<Owner>(Owner.Anyone);
   const [documents, setDocument] = useState<Document[]>();
 
-  const handleOwnerSelect = (Owner: Owner): void => {
-    setSelectedOwner(Owner);
-  };
-
   const handleShowOwnerRefs = (): void => {
     if (ownerRef.current) {
       ownerRef.current.style.display = ownerRef.current.style.display === 'flex' ? 'none' : 'flex';
@@ -36,9 +32,9 @@ const DocumentsList: React.FC = () => {
     }
   };
 
-  const handleDocumentClick = (id:string): void => {
-    navigate(`/document/${id}`)
-  }
+  const handleDocumentClick = (id: string): void => {
+    navigate(`/document/${id}`);
+  };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent): void => {
@@ -54,17 +50,57 @@ const DocumentsList: React.FC = () => {
     };
   }, []);
 
+  const getAllDocuments = async () => {
+    try {
+      const response = await axios.get('/documents/d/');
+      setDocument(response.data.data);
+      console.log(response);
+    } catch (error) {
+      console.log(error, 'Error getting documents');
+    }
+  };
+
+  const getUserDocuments = async () => {
+    try {
+      const response = await axios.get('/documents/d/user');
+      setDocument(response.data.data);
+      console.log(response);
+    } catch (error) {
+      console.log(error, 'Error getting documents');
+    }
+  };
+
+  const getSharedDocuments = async () => {
+    try {
+      const response = await axios.get('/documents/d/shared');
+      setDocument(response.data.data);
+      console.log(response.data.data);
+    } catch (error) {
+      console.log(error, 'Error getting documents');
+    }
+  };
+
   useEffect(() => {
     (async () => {
-      try {
-        const response = await axios.get('/documents/d');
-        setDocument(response.data.data);
-        console.log(response);
-      } catch (error) {
-        console.log(error, 'Error getting documents');
-      }
+      await getAllDocuments();
     })();
   }, []);
+
+  const handleOwnerSelect = async (Owner: Owner): Promise<void> => {
+    setSelectedOwner(Owner);
+    switch (Owner) {
+      case 'Owned by anyone':
+        await getAllDocuments();
+        break;
+      case 'Owned by me':
+        await getUserDocuments();
+        break;
+      case 'Shared with me':
+        await getSharedDocuments();
+        break;
+      default:
+    }
+  };
 
   return (
     <div className="flex flex-col gap-6 w-documentsPageWidth max-w-documentsPageMaxWidth h-auto">
@@ -95,7 +131,12 @@ const DocumentsList: React.FC = () => {
         </div>
       </div>
       <div className="DOCUMENT-LIST flex flex-wrap  gap-[22.5px] w-full h-auto">
-        {documents && documents.map((document, index) => <span key={index} onClick={() => handleDocumentClick(document._id)}><DocumentCard data={document} /></span>)}
+        {documents &&
+          documents.map((document, index) => (
+            <span key={index} onClick={() => handleDocumentClick(document._id)}>
+              <DocumentCard data={document} />
+            </span>
+          ))}
       </div>
     </div>
   );
