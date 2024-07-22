@@ -1,16 +1,35 @@
 import { useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { buttonHoverAnimaiton } from '../../utils/Tailwind.utils';
 import { IoEarthSharp } from 'react-icons/io5';
+import axios from '../../axios.config';
 
-const EditorHeader = () => {
+interface Document {
+  createdAt: string;
+  documentName: string;
+  owner: string;
+  updatedAt: string;
+  __v: number;
+  _id: string;
+}
+
+interface DocumentProps {
+  document: Document;
+}
+
+const EditorHeader: React.FC<DocumentProps> = ({document}) => {
   const documentNameRef = useRef<HTMLDivElement>(null);
+  const location = useLocation();
+  const currentLocation = location.pathname.split('/');
+  const documentId = currentLocation[2];
 
-  const handleDocumentNameBlur = () => {
+  const handleDocumentNameBlur = async (): Promise<void> => {
     if (documentNameRef.current?.innerHTML === '') {
       documentNameRef.current.innerHTML = 'Untitled_Document';
     }
+
   };
+
 
   return (
     <div className="WRAPPER flex w-full h-[4rem] justify-between box-border items-center bg-documentBackground">
@@ -27,7 +46,7 @@ const EditorHeader = () => {
             contentEditable="true"
             onBlur={handleDocumentNameBlur}
           >
-            Untitled_Document
+            {document?.documentName}
           </div>
           <div className="flex items-center gap-0 w-auto h-auto text-sm">
             <button className="px-2 py-[2px] rounded-sm hover:bg-primaryLight hover:bg-opacity-30">
@@ -36,7 +55,10 @@ const EditorHeader = () => {
             <button className="px-2 py-[2px] rounded-sm hover:bg-primaryLight hover:bg-opacity-30">
               Download Doc
             </button>
-            <Link to='/user/documents' className="px-2 py-[2px] rounded-sm hover:bg-primaryLight hover:bg-opacity-30">
+            <Link
+              to="/user/documents"
+              className="px-2 py-[2px] rounded-sm hover:bg-primaryLight hover:bg-opacity-30"
+            >
               All Documents
             </Link>
             <span className="ml-2 text-gray-500 font-light">Last edited 2d ago</span>
@@ -50,7 +72,7 @@ const EditorHeader = () => {
           <IoEarthSharp />
           Share
         </button>
-        <span className='PROFILE size-8 rounded-full bg-gray-300'></span>
+        <span className="PROFILE size-8 rounded-full bg-gray-300"></span>
       </div>
     </div>
   );
