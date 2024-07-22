@@ -6,6 +6,7 @@ import axios from '../axios.config';
 interface Document {
   createdAt: string;
   documentName: string;
+  content: string,
   owner: string;
   updatedAt: string;
   __v: number;
@@ -28,15 +29,20 @@ const DocumentEdit = () => {
     })();
   }, []);
 
-  return (
-    <div className='WAPPER flex flex-col justify-start items-center w-full h-auto bg-documentBackground'>
-      <div className='flex flex-col fixed top-0 z-50 w-full px-10'>
-        <EditorHeader document={documentData}/>
-        <Toolbar />
+  if(documentData){
+    return (
+      <div className='WAPPER flex flex-col justify-start items-center w-full h-auto bg-documentBackground'>
+        <div className='flex flex-col fixed top-0 z-50 w-full px-10'>
+          <EditorHeader document={documentData}/>
+          <Toolbar />
+        </div>
+        <Editor document={documentData}/>
       </div>
-      <Editor/>
-    </div>
-  )
+    )
+  }
+  else{
+    return null
+  }
 }
 
 export default DocumentEdit

@@ -1,14 +1,28 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactQuill from 'react-quill';
 import { modules } from '../toolbar/Toolbar';
 import 'react-quill/dist/quill.snow.css';
-import './A4Document.css'
+import './A4Document.css';
+import axios from '../../axios.config';
 
-interface EditorProps {}
+interface Document {
+  createdAt: string;
+  documentName: string;
+  content: string;
+  owner: string;
+  updatedAt: string;
+  __v: number;
+  _id: string;
+}
 
-const Editor: React.FC<EditorProps> = () => {
+interface EditorProps {
+  document?: Document;
+}
+
+const Editor: React.FC<EditorProps> = ({ document }) => {
   const [value, setValue] = useState<string | undefined>(undefined);
-
+  const currentLocation = location.pathname.split('/');
+  const documentId = currentLocation[currentLocation.length - 1];
 
   const formats = [
     'header',
@@ -31,9 +45,22 @@ const Editor: React.FC<EditorProps> = () => {
     'code-block',
   ];
 
-  const handleChange = (value: string | undefined) => {
-    setValue(value);
+  const handleChange = (content: string) => {
+    setValue(content);
+    console.log(JSON.stringify(content))
+    setTimeout(() => {
+      (async () => {
+        await axios.patch(`/documents/d/${documentId}`, {content: JSON.stringify(content)})
+      })();
+    }, 1000);
   };
+
+  useEffect(() => {
+    console.log(document)
+    if(document?.content != undefined){
+      setValue(JSON.parse(document?.content));
+    }
+  }, []);
 
   return (
     <div className="text-editor flex flex-col justify-center items-center mt-[6.5rem]">
@@ -42,7 +69,7 @@ const Editor: React.FC<EditorProps> = () => {
         id="document"
         theme="snow"
         value={value}
-        onChange={handleChange}
+        onChange={content => handleChange(content)}
         modules={modules}
         formats={formats}
       />

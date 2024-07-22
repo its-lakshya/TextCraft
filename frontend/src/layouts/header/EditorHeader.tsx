@@ -7,6 +7,7 @@ import axios from '../../axios.config';
 interface Document {
   createdAt: string;
   documentName: string;
+  content: string,
   owner: string;
   updatedAt: string;
   __v: number;
@@ -14,14 +15,14 @@ interface Document {
 }
 
 interface DocumentProps {
-  document: Document;
+  document?: Document;
 }
 
 const EditorHeader: React.FC<DocumentProps> = ({document}) => {
   const documentNameRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
   const currentLocation = location.pathname.split('/');
-  const documentId = currentLocation[2];
+  const documentId = currentLocation[currentLocation.length - 1];
 
   const handleDocumentNameBlur = async (): Promise<void> => {
     if (documentNameRef.current?.innerHTML === '') {
@@ -34,7 +35,6 @@ const EditorHeader: React.FC<DocumentProps> = ({document}) => {
       });
     }
   };
-
 
   return (
     <div className="WRAPPER flex w-full h-[4rem] justify-between box-border items-center bg-documentBackground">
