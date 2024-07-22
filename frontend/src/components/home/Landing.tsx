@@ -3,9 +3,32 @@ import { FaArrowRightLong } from 'react-icons/fa6';
 import LandingPageBackground from '../../assets/images/LandingPageBackground.svg';
 import LandingPageImage from '../../assets/images/LandingPageImage.avif';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { isAuthenticated } from '../../utils/Auth.utils';
+
+interface StartButton {
+  text: string,
+  link: string
+}
 
 const Landing: React.FC = () => {
   const text = 'Unite Ideas. Write Together.'.split('');
+  const [linkContent, setLinkContent] = useState<StartButton>({text: 'Start for free', link:'/auth/register'});
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const isLoggedIn = await isAuthenticated();
+        if (isLoggedIn) {
+          setLinkContent({text:'Go to Docs', link: '/user/documents'})
+        }
+      } catch (error) {
+        console.error(error, 'Error checking authentication');
+      }
+    })();
+  }, [location]);
+
   return (
     <div
       className={`LANDING-PAGE flex flex-col justify-center items-center gap-20 w-screen h-auto py-20 bg-white bg-contain text-black`}
@@ -29,15 +52,16 @@ const Landing: React.FC = () => {
           every document. <br />
           Streamline teamwork with synchronized edits and real-time feedback.
         </span>
-        <button
+        <Link
+          to={`${linkContent.link}`}
           className={`START-BUTTON flex justify-center items-center gap-3 bg-primary text-2xl text-white 
             capitalize font-medium px-10 py-3 rounded-full ${buttonHoverAnimaiton} hover:-translate-y-2 hover:bg-primaryDark group`}
         >
-          Start for free
+          {linkContent.text}
           <span className="ARROW group-hover:animate-arrowMove relative">
             <FaArrowRightLong />
           </span>
-        </button>
+        </Link>
       </div>
       <motion.div
         initial={{ opacity: 0, marginTop: '20rem' }}

@@ -16,25 +16,20 @@ const Header: React.FC = () => {
   };
 
   useEffect(() => {
-    if (localStorage.getItem('isAuthenticated') !== 'true') {
-      (async () => {
-        try {
-          const isLoggedIn = await isAuthenticated();
-          if (!isLoggedIn) {
-            hideLoginSiginButton();
-          }
-        } catch (error) {
-          console.error(error, 'Error checking authentication');
+    (async () => {
+      try {
+        const isLoggedIn = await isAuthenticated();
+        if (isLoggedIn) {
           hideLoginSiginButton();
         }
-      })();
-    } else {
-      hideLoginSiginButton();
-    }
+      } catch (error) {
+        console.error(error, 'Error checking authentication');
+      }
+    })();
   }, [location]);
 
   const currentLocation = location.pathname.split('/');
-  if (currentLocation[1] === 'document' || currentLocation[1] === 'documents') return null;
+  if (currentLocation[1] === 'document' || currentLocation[2] === 'documents') return null;
 
   return (
     <div
@@ -49,7 +44,7 @@ const Header: React.FC = () => {
         <Link to="/contact-us" className="CONTACT US">
           Contact us
         </Link>
-        <Link ref={documentRef} to="/documents" className="CONTACT US hidden">
+        <Link ref={documentRef} to="/user/documents" className="CONTACT US hidden">
           Documents
         </Link>
       </div>

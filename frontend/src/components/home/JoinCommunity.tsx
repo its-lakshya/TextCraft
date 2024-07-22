@@ -1,7 +1,31 @@
 import { FaArrowRightLong } from "react-icons/fa6";
 import { buttonHoverAnimaiton } from "../../utils/Tailwind.utils";
+import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { isAuthenticated } from "../../utils/Auth.utils";
+
+interface StartButton {
+  text: string,
+  link: string
+}
 
 const JoinCommunity: React.FC = () => {
+
+  const [linkContent, setLinkContent] = useState<StartButton>({text: 'Start for free', link:'/auth/register'});
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const isLoggedIn = await isAuthenticated();
+        if (isLoggedIn) {
+          setLinkContent({text:'Go to Docs', link: '/user/documents'})
+        }
+      } catch (error) {
+        console.error(error, 'Error checking authentication');
+      }
+    })();
+  }, [location]);
+
   return (
     <div className="WRAPPER flex justify-center items-center w-full h-auto py-rootXPadd bg-white mb-52 text-white text-center">
       <div
@@ -17,16 +41,17 @@ const JoinCommunity: React.FC = () => {
           creative writer, a business collaborator, or a team leader, our platform is designed to
           empower you to collaborate, create, and achieve together.
         </p>
-        <button
+        <Link
+          to={`${linkContent.link}`}
           className={`START-BUTTON flex justify-center items-center gap-3 bg-primary text-2xl text-white 
             capitalize font-medium px-10 py-3 rounded-full ${buttonHoverAnimaiton} hover:-translate-y-2 group`}
             style={{boxShadow: `0px 25px 50px -12px rgba(0, 0, 0, 0.25), 0px 0px 15px rgba(0, 0, 0, 0.07)`}}
         >
-          Start for free
+          {linkContent.text}
           <span className="ARROW group-hover:animate-arrowMove relative">
             <FaArrowRightLong />
           </span>
-        </button>
+        </Link>
       </div>
     </div>
   );

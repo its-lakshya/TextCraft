@@ -26,7 +26,7 @@ const appRouter = createBrowserRouter([
         element: <Contact/>
       },
       {
-        path: '/documents',
+        path: '/user/documents',
         element: <Documents/>
       },
     ],

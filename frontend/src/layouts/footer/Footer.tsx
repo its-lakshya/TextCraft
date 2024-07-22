@@ -23,7 +23,7 @@ const Footer: React.FC = () => {
   });
 
   const currentLocation = location.pathname.split('/');
-  if (currentLocation[1] === 'document' || currentLocation[1] === 'documents') return null;
+  if (currentLocation[1] === 'document' || currentLocation[2] === 'documents') return null;
 
   return (
     <div
