@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
-import { User } from '../models/user.model.js';
 import { Document } from '../models/document.model.js';
+import { Collaboration } from '../models/collaboration.model.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
 import { apiError } from '../utils/apiError.js';
 import { apiResponse } from '../utils/apiResponse.js';
@@ -28,10 +28,12 @@ const createDocument = asyncHandler(async (req, res) => {
     throw new apiError(500, createDocument, 'Something went wrong while creating the document');
   }
 
-  return res.status(200).json(new apiResponse(200, createdDocument, 'Document created successfully'));
+  return res
+    .status(200)
+    .json(new apiResponse(200, createdDocument, 'Document created successfully'));
 });
 
-const getAllDocuments = asyncHandler(async (req, res) => {
+const getUserDocuments = asyncHandler(async (req, res) => {
   const user = req.user;
 
   if (!user) {
@@ -127,11 +129,22 @@ const deleteDocument = asyncHandler(async (req, res) => {
   return res.status(200).json(new apiResponse(200, 'Document deleted successfully'));
 });
 
+const getSharedDocuments = asyncHandler(async (req, res) => {
+  const user = req.user;
 
-export {
-  createDocument,
-  getAllDocuments,
-  getDocumentByID,
-  updateDocument,
-  deleteDocument,
-};
+  if (!user) {
+    throw new apiError(401, 'Unauthorized request');
+  }
+
+  const sharedDocuments = await Collaboration.find({ collaborator: user }).populate('document');
+
+  if (!sharedDocuments) {
+    throw new apiError(500, 'Something went wrong while fetching shared documents');
+  }
+
+  return res
+    .status(200)
+    .json(new apiResponse(200, sharedDocuments, 'Shared documents fetched successfully'));
+});
+
+export { createDocument, getUserDocuments, getDocumentByID, updateDocument, deleteDocument, getSharedDocuments };
