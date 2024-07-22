@@ -137,8 +137,6 @@ const getSharedDocuments = asyncHandler(async (req, res) => {
     throw new apiError(401, 'Unauthorized request');
   }
 
-  // const sharedDocuments = await Collaboration.find({ collaborator: user }).populate('document');
-
   const sharedDocuments = await User.aggregate([
     {
       $match:{
@@ -181,10 +179,10 @@ const getSharedDocuments = asyncHandler(async (req, res) => {
       }
     },
     {
-      $unwind: '$data', // Unwind the 'collab' array to access each document individually
+      $unwind: '$data', // Unwind the 'data' array to access each document individually
     },
     {
-      $replaceRoot: { newRoot: '$data' }, // Replace the root document with 'documents'
+      $replaceRoot: { newRoot: '$data' }, // Replace the root document with 'data'
     },
   ])
 
