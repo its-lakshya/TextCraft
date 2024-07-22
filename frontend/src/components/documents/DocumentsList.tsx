@@ -9,7 +9,6 @@ enum Owner {
   Me = 'Owned by me',
   Shared = 'Shared with me',
 }
-
 interface Document {
   createdAt: string;
   documentName: string;
@@ -22,14 +21,14 @@ interface Document {
 const DocumentsList: React.FC = () => {
   const navigate = useNavigate();
   const ownerRef = useRef<HTMLDivElement>(null);
+  const ownerListRef = useRef<HTMLDivElement>(null);
   const [selectedOwner, setSelectedOwner] = useState<Owner>(Owner.Anyone);
   const [documents, setDocument] = useState<Document[]>();
+  const [ownerModelVisibility, setOwnerModelVisibility] = useState<string>('hidden');
 
   const handleShowOwnerRefs = (): void => {
-    if (ownerRef.current) {
-      ownerRef.current.style.display = ownerRef.current.style.display === 'flex' ? 'none' : 'flex';
-      ownerRef.current.style.flexDirection = 'column';
-    }
+    if (ownerModelVisibility === 'hidden') setOwnerModelVisibility('visible');
+    else setOwnerModelVisibility('hidden');
   };
 
   const handleDocumentClick = (id: string): void => {
@@ -38,8 +37,12 @@ const DocumentsList: React.FC = () => {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent): void => {
-      if (ownerRef.current && !ownerRef.current.contains(event.target as Node)) {
-        ownerRef.current.style.display = 'none';
+      if (
+        ownerRef.current != event.target &&
+        ownerListRef.current &&
+        !ownerListRef.current.contains(event.target as Node)
+      ) {
+        setOwnerModelVisibility('hidden');
       }
     };
 
@@ -50,31 +53,10 @@ const DocumentsList: React.FC = () => {
     };
   }, []);
 
-  const getAllDocuments = async () => {
+  const getDocuments = async (type: string): Promise<void> => {
     try {
-      const response = await axios.get('/documents/d/');
+      const response = await axios.get(`/documents/d/${type}`);
       setDocument(response.data.data);
-      console.log(response);
-    } catch (error) {
-      console.log(error, 'Error getting documents');
-    }
-  };
-
-  const getUserDocuments = async () => {
-    try {
-      const response = await axios.get('/documents/d/user');
-      setDocument(response.data.data);
-      console.log(response);
-    } catch (error) {
-      console.log(error, 'Error getting documents');
-    }
-  };
-
-  const getSharedDocuments = async () => {
-    try {
-      const response = await axios.get('/documents/d/shared');
-      setDocument(response.data.data);
-      console.log(response.data.data);
     } catch (error) {
       console.log(error, 'Error getting documents');
     }
@@ -82,7 +64,7 @@ const DocumentsList: React.FC = () => {
 
   useEffect(() => {
     (async () => {
-      await getAllDocuments();
+      await getDocuments('');
     })();
   }, []);
 
@@ -90,13 +72,13 @@ const DocumentsList: React.FC = () => {
     setSelectedOwner(Owner);
     switch (Owner) {
       case 'Owned by anyone':
-        await getAllDocuments();
+        await getDocuments('');
         break;
       case 'Owned by me':
-        await getUserDocuments();
+        await getDocuments('user');
         break;
       case 'Shared with me':
-        await getSharedDocuments();
+        await getDocuments('shared');
         break;
       default:
     }
@@ -107,14 +89,15 @@ const DocumentsList: React.FC = () => {
       <div className="HEADER flex justify-between items-center w-full h-12">
         <span className="text-lg font-medium">Documents</span>
         <div
-          className="relative flex justify-center items-center gap-2 outline-none w-44 h-6 text-sm text-gray-600 font-medium rounded-documentCard hover:bg-primaryLight hover:bg-opacity-30 cursor-pointer"
-          onClick={handleShowOwnerRefs}
+          className="relative flex justify-center items-center gap-2 outline-none w-44 h-6 text-sm text-gray-600 font-medium rounded-documentCard hover:bg-primaryLight hover:bg-opacity-30 cursor-pointer select-none"
+          onClick={() => handleShowOwnerRefs()}
+          ref={ownerRef}
         >
           {selectedOwner} <IoMdArrowDropdown />
           <div
-            ref={ownerRef}
-            className="absolute top-7 py-2 w-full h-auto rounded-documentCard hidden bg-documentBackground"
+            className={`absolute top-7 py-2 w-full h-auto rounded-documentCard ${ownerModelVisibility} bg-documentBackground`}
             style={{ boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px' }}
+            ref={ownerListRef}
           >
             {[Owner.Anyone, Owner.Me, Owner.Shared].map((Owner, index) => {
               return (
