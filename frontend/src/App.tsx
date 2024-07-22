@@ -7,6 +7,8 @@ import Contact from './pages/Contact';
 import DocumentEdit from './pages/DocumentEdit';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Documents from './pages/Documents';
+import { Provider } from 'react-redux';
+import Store from './store/Store';
 
 const appRouter = createBrowserRouter([
   {
@@ -42,7 +44,11 @@ const appRouter = createBrowserRouter([
 ]);
 
 function App() {
-  return <RouterProvider router={appRouter} />;
+  return (
+    <Provider store = {Store}>
+      <RouterProvider router={appRouter} />
+    </Provider>
+  );
 }
 
 export default App;

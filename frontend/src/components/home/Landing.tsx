@@ -5,7 +5,8 @@ import LandingPageImage from '../../assets/images/LandingPageImage.avif';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { isAuthenticated } from '../../utils/Auth.utils';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/Store';
 
 interface StartButton {
   text: string,
@@ -15,19 +16,14 @@ interface StartButton {
 const Landing: React.FC = () => {
   const text = 'Unite Ideas. Write Together.'.split('');
   const [linkContent, setLinkContent] = useState<StartButton>({text: 'Start for free', link:'/auth/register'});
+  const isAuthenticated = useSelector((store: RootState) => store.auth.isAuthenticated);
+
 
   useEffect(() => {
-    (async () => {
-      try {
-        const isLoggedIn = await isAuthenticated();
-        if (isLoggedIn) {
-          setLinkContent({text:'Go to Docs', link: '/user/documents'})
-        }
-      } catch (error) {
-        console.error(error, 'Error checking authentication');
-      }
-    })();
-  }, [location]);
+    if(isAuthenticated){
+      setLinkContent({text:'Go to Docs', link: '/user/documents'})
+    }
+  }, [isAuthenticated]);
 
   return (
     <div

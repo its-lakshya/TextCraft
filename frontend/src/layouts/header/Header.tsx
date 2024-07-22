@@ -1,12 +1,14 @@
 import { Link, useLocation } from 'react-router-dom';
 import { buttonHoverAnimaiton } from '../../utils/Tailwind.utils';
 import { useEffect, useRef } from 'react';
-import { isAuthenticated } from '../../utils/Auth.utils';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/Store';
 
 const Header: React.FC = () => {
   const location = useLocation();
   const loginRef = useRef<HTMLDivElement>(null);
   const documentRef = useRef<HTMLAnchorElement>(null);
+  const isAuthenticated = useSelector((store: RootState) => store.auth.isAuthenticated);
 
   const hideLoginSiginButton = (): void => {
     if (loginRef.current && documentRef.current) {
@@ -16,17 +18,10 @@ const Header: React.FC = () => {
   };
 
   useEffect(() => {
-    (async () => {
-      try {
-        const isLoggedIn = await isAuthenticated();
-        if (isLoggedIn) {
-          hideLoginSiginButton();
-        }
-      } catch (error) {
-        console.error(error, 'Error checking authentication');
-      }
-    })();
-  }, [location]);
+    if (isAuthenticated) {
+      hideLoginSiginButton();
+    }
+  }, [isAuthenticated, location]);
 
   const currentLocation = location.pathname.split('/');
   if (currentLocation[1] === 'document' || currentLocation[2] === 'documents') return null;
@@ -36,7 +31,7 @@ const Header: React.FC = () => {
       className={`HEADER w-full h-20 flex justify-between items-center px-rootXPadd text-md capitalize font-medium`}
     >
       <div className="HEADER-LEFT flex justify-between items-end gap-8 w-auto h-8 text-black capitalize">
-        <Link to='/' className="LOGO text-logoFontSize leading-none font-bold mr-4">
+        <Link to="/" className="LOGO text-logoFontSize leading-none font-bold mr-4">
           <span className="text-primaryDark">
             Text<span className="text-primary">Craft</span>
           </span>

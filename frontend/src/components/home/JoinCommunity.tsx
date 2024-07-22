@@ -2,7 +2,8 @@ import { FaArrowRightLong } from "react-icons/fa6";
 import { buttonHoverAnimaiton } from "../../utils/Tailwind.utils";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { isAuthenticated } from "../../utils/Auth.utils";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store/Store";
 
 interface StartButton {
   text: string,
@@ -12,19 +13,14 @@ interface StartButton {
 const JoinCommunity: React.FC = () => {
 
   const [linkContent, setLinkContent] = useState<StartButton>({text: 'Start for free', link:'/auth/register'});
+  const isAuthenticated = useSelector((store: RootState) => store.auth.isAuthenticated);
+
 
   useEffect(() => {
-    (async () => {
-      try {
-        const isLoggedIn = await isAuthenticated();
-        if (isLoggedIn) {
-          setLinkContent({text:'Go to Docs', link: '/user/documents'})
-        }
-      } catch (error) {
-        console.error(error, 'Error checking authentication');
-      }
-    })();
-  }, [location]);
+    if(isAuthenticated){
+      setLinkContent({text:'Go to Docs', link: '/user/documents'})
+    }
+  }, [isAuthenticated]);
 
   return (
     <div className="WRAPPER flex justify-center items-center w-full h-auto py-rootXPadd bg-white mb-52 text-white text-center">
