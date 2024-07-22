@@ -17,7 +17,6 @@ const Layout: React.FC = () => {
       try {
         const isLoggedIn: boolean = await isAuthenticated();
         dispatch(setAuthStatus(isLoggedIn));
-        console.log(currentLocation)
         if(!isLoggedIn && currentLocation[1] !== '' && currentLocation[1] !== 'contact-us'){
           navigate('/auth/login')
         }

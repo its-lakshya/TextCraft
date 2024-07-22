@@ -28,6 +28,11 @@ const EditorHeader: React.FC<DocumentProps> = ({document}) => {
       documentNameRef.current.innerHTML = 'Untitled_Document';
     }
 
+    if (documentNameRef.current?.innerHTML) {
+      await axios.patch(`/documents/d/${documentId}`, {
+        documentName: documentNameRef.current.innerHTML,
+      });
+    }
   };
 
 
