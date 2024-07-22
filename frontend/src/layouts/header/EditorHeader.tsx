@@ -36,9 +36,9 @@ const EditorHeader = () => {
             <button className="px-2 py-[2px] rounded-sm hover:bg-primaryLight hover:bg-opacity-30">
               Download Doc
             </button>
-            <button className="px-2 py-[2px] rounded-sm hover:bg-primaryLight hover:bg-opacity-30">
+            <Link to='/user/documents' className="px-2 py-[2px] rounded-sm hover:bg-primaryLight hover:bg-opacity-30">
               All Documents
-            </button>
+            </Link>
             <span className="ml-2 text-gray-500 font-light">Last edited 2d ago</span>
           </div>
         </div>
