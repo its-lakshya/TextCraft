@@ -240,7 +240,7 @@ const updateUserPassword = asyncHandler(async (req, res) => {
 });
 
 const isLoggedIn = asyncHandler(async (req, res) => {
-  const accessToken = req.cookies.accessToken;
+  const accessToken = req?.cookies?.accessToken;
   if (!accessToken) {
     return res.status(401).json({ loggedIn: false, message: 'Access token not found' });
   }

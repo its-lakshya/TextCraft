@@ -25,6 +25,8 @@ router.route('/register').post(
 
 router.route('/login').post(loginUser);
 
+router.route('/check-auth').get(isLoggedIn);
+
 router.use(verifyJWT);
 
 router.route('/logout').post(logoutUser);
@@ -35,6 +37,5 @@ router.route('/update-account').patch(updateUserDetails);
 
 router.route("/update-password").patch(updateUserPassword);
 
-router.route('/check-auth').get(isLoggedIn);
 
 export default router;
