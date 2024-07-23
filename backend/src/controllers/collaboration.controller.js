@@ -40,7 +40,7 @@ const addCollaborator = asyncHandler(async (req, res) => {
   }
 
 
-  const alreadyCollaborator = await Collaboration.find({collaborator});
+  const alreadyCollaborator = await Collaboration.findOne({document, collaborator});
 
   if(alreadyCollaborator){
     throw new apiError(400, "User is already a collaborator")
