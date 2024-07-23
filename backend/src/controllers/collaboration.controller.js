@@ -223,7 +223,7 @@ const getCollaboratorsAccessType = asyncHandler(async (req, res) => {
 
   return res
     .status(200)
-    .json(new apiResponse(200, AccessType, 'Collaborator access types fetched successfully'));
+    .json(new apiResponse(200, AccessType.accessType, 'Collaborator access types fetched successfully'));
 });
 
 const toggleIsPublic = asyncHandler(async (req, res) => {
@@ -241,7 +241,6 @@ const toggleIsPublic = asyncHandler(async (req, res) => {
 
   const document = await Document.findById(documentId);
 
-  console.log(isPublic)
   if (isPublic === true) {
     const alreadyPublic = await Collaboration.findOne({ document, isPublic: true });
     if (alreadyPublic) {

@@ -64,13 +64,67 @@ const getDocumentByID = asyncHandler(async (req, res) => {
 
   const document = await Document.findById(documentId);
 
-  if (!document) {
-    throw new apiError(500, 'Something went wrong while fetching the document');
+  // const document = await Document.aggregate([
+  //   {
+  //     $match: {
+  //       _id: new mongoose.Types.ObjectId(documentId),
+  //     },
+  //   },
+  //   {
+  //     $lookup: {
+  //       from: 'collaborations',
+  //       localField: '_id',
+  //       foreignField: 'document',
+  //       as: 'collaborators',
+  //       pipeline: [
+  //         {
+  //           $project: {
+  //             _id: 0,
+  //             document: 0,
+  //           },
+  //         },
+  //       ],
+  //     },
+  //   },
+  // ]);
+  const collaborators = await Collaboration.find({ document: document });
+
+  if (document.owner.equals(user._id)) {
+    return res
+      .status(200)
+      .json(new apiResponse(200, { document, isOwner: true }, 'Document fetched successfully'));
   }
 
-  return res.status(200).json(new apiResponse(200, document, 'Document fetched successfully'));
-});
+  const collaboration = await Collaboration.findOne({ document, collaborator: user });
 
+  if (collaboration) {
+    return res
+      .status(200)
+      .json(
+        new apiResponse(
+          200,
+          { document, isOwner: false, accessType: collaboration.accessType },
+          'Document fetched successfully',
+        ),
+      );
+  }
+
+  const isPublic = await Collaboration.findOne({ document, isPublic: true });
+
+  if (!isPublic) {
+    throw new apiError(400, 'User have no access to the document');
+  }
+
+  return res
+    .status(200)
+    .json(
+      new apiResponse(
+        200,
+        { document, isOwner: false, accessType: isPublic.publicAccessType },
+        'Document is public',
+      ),
+    );
+});
 const updateDocument = asyncHandler(async (req, res) => {
   const { documentId } = req.params;
 
