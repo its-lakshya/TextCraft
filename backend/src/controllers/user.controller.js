@@ -255,6 +255,24 @@ const isLoggedIn = asyncHandler(async (req, res) => {
   }
 });
 
+const getUserDetails = asyncHandler(async (req, res) => {
+  const user = req.user;
+
+  if(!user){
+    throw new apiError(401, "Unauthorized request");
+  }
+
+  const userDetails = await User.findById(user._id);
+
+  if(!userDetails){
+    throw new apiError(500, "Something went wrong while fetching user's details");
+  }
+
+  return res
+    .status(200)
+    .json(new apiResponse(200, userDetails, "User details fetched successfully"));
+})
+
 
 export {
   registerUser,
@@ -263,5 +281,6 @@ export {
   updateProfileImage,
   updateUserDetails,
   updateUserPassword,
-  isLoggedIn
+  isLoggedIn,
+  getUserDetails,
 };
