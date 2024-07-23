@@ -262,7 +262,7 @@ const getUserDetails = asyncHandler(async (req, res) => {
     throw new apiError(401, "Unauthorized request");
   }
 
-  const userDetails = await User.findById(user._id);
+  const userDetails = await User.findById(user._id).select("-password -refreshToken -__v");
 
   if(!userDetails){
     throw new apiError(500, "Something went wrong while fetching user's details");

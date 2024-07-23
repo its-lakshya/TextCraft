@@ -22,22 +22,22 @@ io.on('connection', socket => {
     socket.to(documentId).emit('document-changes', changes);
   });
 
-  socket.on('join-document', ({ documentId, userInformation }) => {
-    console.log(`User joind the room ${userInformation}`);
+  socket.on('join-document', ({ documentId, userDetails }) => {
+    console.log(`User joind the room ${userDetails.userName}`);
     socket.join(documentId);
-    activeUser[socket.id] = userInformation;
-    socket.to(documentId).emit('user-joined', userInformation);
+    activeUser[socket.id] = userDetails;
+    socket.to(documentId).emit('user-joined', userDetails);
     io.to(documentId).emit('update-active-users', Object.values(activeUser));
   });
 
   socket.on('disconnect', () => {
     console.log(`User disconnected ${socket.id}`);
-    // const userInformation = activeUser(socket.id);
-    // if (userInformation) {
-    //   socket.to(documentId).emit('user-disconnected', userInformation);
-    //   io.emmit('update-active-users', Object.values(activeUser));
-    //   delete activeUser[socket.id];
-    // }
+    const userDetails = activeUser[socket.id];
+    if (userDetails) {
+      // socket.to(documentId).emit('user-disconnected', userDetails);
+      // io.emmit('update-active-users', Object.values(activeUser));
+      delete activeUser[socket.id];
+    }
   });
 
   socket.on('error', error => {

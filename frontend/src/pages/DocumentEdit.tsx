@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Editor from '../components/editor/Editor';
 import { Toolbar } from '../components/toolbar/Toolbar';
 import EditorHeader from '../layouts/header/EditorHeader';
@@ -15,42 +15,64 @@ interface Document {
   _id: string;
 }
 
+interface User {
+  createdAt: string;
+  email: string;
+  fullName: string;
+  gender: string;
+  updatedAt: string;
+  userName: string;
+  _id: string;
+}
+
 const DocumentEdit = () => {
   const currentLocation = location.pathname.split('/');
   const documentId = currentLocation[2];
   const navigate = useNavigate();
   const [documentData, setDocumentData] = useState<Document>();
+  const [userDetails, setUserDetails] = useState<User>();
+  const socket = useMemo(() => io('http://localhost:8000'), []);
 
+  // Api calls for getting document and user details
   useEffect(() => {
     (async () => {
       try {
         const response = await axios.get(`/documents/d/${documentId}`);
-        console.log(response);
+        const details = await axios.get(`/users/details`);
+        setUserDetails(details.data.data);
         setDocumentData(response.data.data.document);
       } catch (error) {
         console.log(error, 'Error fetching document details');
-        navigate(
-          '/error',
-          { replace: true, state: { text: "Oops, You don't have access to the document!" }  },
-        );
+        navigate('/error', {
+          replace: true,
+          state: { text: "Oops, You don't have access to the document!" },
+        });
       }
     })();
   }, []);
 
+  // Handling the socket connect and dissconnect events
   useEffect(() => {
-    const socket = io('http://localhost:8000');
     socket.on('connect', () => {
       console.log('Connected to server');
     });
-
+    
     socket.on('disconnect', () => {
       console.log('Disconnected from server');
     });
-
+    
     return () => {
       socket.disconnect();
     };
   }, []);
+  
+  
+  useEffect(() => {
+    if(userDetails !== undefined){
+      console.log(userDetails.userName)
+      socket.emit('join-document', { documentId, userDetails });
+    }
+  },[userDetails])
 
   if (documentData) {
     return (

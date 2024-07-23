@@ -47,7 +47,7 @@ const Editor: React.FC<EditorProps> = ({ document }) => {
 
   const handleChange = (content: string) => {
     setValue(content);
-    console.log(JSON.stringify(content))
+    // console.log(JSON.stringify(content))
     setTimeout(() => {
       (async () => {
         await axios.patch(`/documents/d/${documentId}`, {content: JSON.stringify(content)})
