@@ -39,29 +39,27 @@ const addCollaborator = asyncHandler(async (req, res) => {
     throw new apiError(400, 'User with this email does not exists');
   }
 
+  const alreadyCollaborator = await Collaboration.findOne({ document, collaborator });
 
-  const alreadyCollaborator = await Collaboration.findOne({document, collaborator});
-
-  if(alreadyCollaborator){
-    throw new apiError(400, "User is already a collaborator")
-  }else{
+  if (alreadyCollaborator) {
+    throw new apiError(400, 'User is already a collaborator');
+  } else {
     const collab = await Collaboration.create({
       document,
       collaborator,
       accessType: accessType || 'read',
     });
-  
+
     const createdCollaborator = await Collaboration.findById(collab._id);
-  
+
     if (!createdCollaborator) {
       throw new apiError(500, 'Something went wrong while adding the collaborator');
     }
-  
+
     return res
       .status(200)
       .json(new apiResponse(200, createdCollaborator, 'Collaborator added successfully'));
   }
-  
 });
 
 const removeCollaborator = asyncHandler(async (req, res) => {
@@ -163,31 +161,30 @@ const getAllCollaborators = asyncHandler(async (req, res) => {
   const { documentId } = req.params;
   const user = req.user;
 
-  if(!user){
-    throw new apiError(401, "Unauthorized request");
+  if (!user) {
+    throw new apiError(401, 'Unauthorized request');
   }
 
-  if(!mongoose.isValidObjectId(documentId)){
-    throw new apiError(400, "Invalid or missing documentId");
+  if (!mongoose.isValidObjectId(documentId)) {
+    throw new apiError(400, 'Invalid or missing documentId');
   }
 
   const document = await Document.findById(documentId);
 
-  if(!document){
-    throw new apiError(400, "No such document exists");
+  if (!document) {
+    throw new apiError(400, 'No such document exists');
   }
 
-  const collaborators = await Collaboration.find({document}).populate('collaborator');
+  const collaborators = await Collaboration.find({ document }).populate('collaborator');
 
-  if(!collaborators){
-    throw new apiError(500, "Something went wrong while fetching the collaborators");
+  if (!collaborators) {
+    throw new apiError(500, 'Something went wrong while fetching the collaborators');
   }
 
   return res
     .status(200)
-    .json(new apiResponse(200, collaborators, "Collaborators fetched successfully"));
-
-})
+    .json(new apiResponse(200, collaborators, 'Collaborators fetched successfully'));
+});
 
 const getCollaboratorsAccessType = asyncHandler(async (req, res) => {
   const { documentId } = req.params;
@@ -218,15 +215,65 @@ const getCollaboratorsAccessType = asyncHandler(async (req, res) => {
     throw new apiError(400, 'No such collaborator exists');
   }
 
-  const AccessType = await Collaboration.findOne({document, collaborator});
+  const AccessType = await Collaboration.findOne({ document, collaborator });
 
-  if(!AccessType){
-    throw new apiError(500, "Something went wrong while fetching the collaborators access type")
+  if (!AccessType) {
+    throw new apiError(500, 'Something went wrong while fetching the collaborators access type');
   }
 
   return res
     .status(200)
-    .json(new apiResponse(200, AccessType, "Collaborator access types fetched successfully"));
-})
+    .json(new apiResponse(200, AccessType, 'Collaborator access types fetched successfully'));
+});
 
-export { addCollaborator, removeCollaborator, updateAccessTypes, getAllCollaborators, getCollaboratorsAccessType };
+const toggleIsPublic = asyncHandler(async (req, res) => {
+  const { documentId } = req.params;
+  const { isPublic, publicAccessType } = req.body;
+  const user = req.user;
+
+  if (!user) {
+    throw new apiError(401, 'Unauthorized request');
+  }
+
+  if (!mongoose.isValidObjectId(documentId)) {
+    throw new apiError(400, 'Invalid or missing documentId');
+  }
+
+  const document = await Document.findById(documentId);
+
+  console.log(isPublic)
+  if (isPublic === true) {
+    const alreadyPublic = await Collaboration.findOne({ document, isPublic: true });
+    if (alreadyPublic) {
+      throw new apiError(400, 'Document is already public');
+    }
+
+    const publicDocument = await Collaboration.create({ document, isPublic, publicAccessType });
+
+    if(!publicDocument){
+      throw new apiError(400, "Something went wrong while setting document to public")
+    }
+    return res
+    .status(200)
+    .json(new apiResponse(200, "Access Status is set to public successfully"))
+  }
+  
+  const deletePublic = await Collaboration.findOneAndDelete({ document, isPublic: true });
+  if(!deletePublic){
+    throw new apiError(400, "Something went wrong while removing document access from public")
+  }
+
+  return res
+    .status(200)
+    .json(new apiResponse(200, "Doument is successfuly removed from public access"));
+
+});
+
+export {
+  addCollaborator,
+  removeCollaborator,
+  updateAccessTypes,
+  getAllCollaborators,
+  getCollaboratorsAccessType,
+  toggleIsPublic,
+};
