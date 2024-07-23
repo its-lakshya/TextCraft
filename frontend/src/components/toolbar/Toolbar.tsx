@@ -37,6 +37,7 @@ function redoChange() {
   this.quill.history.redo();
 }
 
+// eslint-disable-next-line
 export const modules = {
   toolbar: {
     container: '#toolbar',

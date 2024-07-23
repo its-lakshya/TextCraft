@@ -27,11 +27,10 @@ const Login: React.FC = () => {
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     try {
-      const response = await axios.post('/users/login', {
+      await axios.post('/users/login', {
         email: user.email,
         password: user.password,
       });
-      console.log(response);
       localStorage.setItem('isAuthenticated', 'true');
       navigate('/');
     } catch (error) {

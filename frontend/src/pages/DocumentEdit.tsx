@@ -3,6 +3,7 @@ import Editor from "../components/editor/Editor"
 import { Toolbar } from "../components/toolbar/Toolbar"
 import EditorHeader from "../layouts/header/EditorHeader"
 import axios from '../axios.config';
+import io from 'socket.io-client';
 interface Document {
   createdAt: string;
   documentName: string;
@@ -14,10 +15,11 @@ interface Document {
 }
 
 const DocumentEdit = () => {
+
   const currentLocation = location.pathname.split('/');
   const documentId = currentLocation[2];
   const [documentData, setDocumentData] = useState<Document>();
-
+  
   useEffect(() => {
     (async () => {
       try {
@@ -27,6 +29,21 @@ const DocumentEdit = () => {
         console.log(error, 'Error fetching document details');
       }
     })();
+  }, []);
+  
+  useEffect(() => {
+    const socket = io('http://localhost:8000');
+    socket.on('connect', () => {
+      console.log('Connected to server');
+    });
+
+    socket.on('disconnect', () => {
+      console.log('Disconnected from server');
+    });
+
+    return () => {
+      socket.disconnect();
+    };
   }, []);
 
   if(documentData){

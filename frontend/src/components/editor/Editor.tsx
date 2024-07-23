@@ -56,10 +56,10 @@ const Editor: React.FC<EditorProps> = ({ document }) => {
   };
 
   useEffect(() => {
-    console.log(document)
     if(document?.content != undefined){
       setValue(JSON.parse(document?.content));
     }
+    // eslint-disable-next-line
   }, []);
 
   return (
