@@ -1,4 +1,5 @@
 import { BsThreeDotsVertical } from 'react-icons/bs';
+import { getDate } from '../../utils/Date.utils';
 
 interface Document {
   createdAt: string;
@@ -14,28 +15,7 @@ interface DocumentCardProps {
 }
 
 const DocumentCard: React.FC<DocumentCardProps> = ({ data }) => {
-  const dateObj = new Date(data.updatedAt);
-
-  const monthNames = [
-    'Jan',
-    'Feb',
-    'Mar',
-    'Apr',
-    'May',
-    'Jun',
-    'Jul',
-    'Aug',
-    'Sep',
-    'Oct',
-    'Nov',
-    'Dec',
-  ];
-
-  const month = monthNames[dateObj.getMonth()];
-  const day = ('0' + dateObj.getDate()).slice(-2);
-  const year = dateObj.getFullYear().toString();
-
-  const formattedDate = `${month} ${day}, ${year}`;
+  const lastUpdatedAt = getDate(data?.updatedAt);
 
   return (
     <div className="WRAPPER w-52 h-[330px] flex flex-col rounded-documentCard border border-gray-300 hover:border-primary overflow-hidden cursor-pointer">
@@ -49,7 +29,7 @@ const DocumentCard: React.FC<DocumentCardProps> = ({ data }) => {
                 T<span className="text-primary">c</span>
               </span>
             </div>
-            <span className="text-xs text-gray-500 font-light">Opened {formattedDate}</span>
+            <span className="text-xs text-gray-500 font-light">Opened {lastUpdatedAt}</span>
           </div>
           <BsThreeDotsVertical />
         </div>
