@@ -9,6 +9,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Documents from './pages/Documents';
 import { Provider } from 'react-redux';
 import Store from './store/Store';
+import Error404 from './pages/Error404';
 
 const appRouter = createBrowserRouter([
   {
@@ -40,6 +41,10 @@ const appRouter = createBrowserRouter([
   {
     path:'/auth/register',
     element: <Register/>
+  },
+  {
+    path: '/error',
+    element: <Error404/>
   }
 ]);
 
