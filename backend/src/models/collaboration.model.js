@@ -6,6 +6,10 @@ const collaborationSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: 'Document',
     },
+    isPublic: {
+      type: Boolean,
+      defaut: false,
+    },
     collaborator: {
       type: Schema.Types.ObjectId,
       ref: 'User',
