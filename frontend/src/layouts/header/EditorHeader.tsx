@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { buttonHoverAnimaiton } from '../../utils/Tailwind.utils';
 import { IoEarthSharp } from 'react-icons/io5';
 import axios from '../../axios.config';
+import { getDate } from '../../utils/Date.utils';
 
 interface Document {
   createdAt: string;
@@ -23,6 +24,12 @@ const EditorHeader: React.FC<DocumentProps> = ({document}) => {
   const location = useLocation();
   const currentLocation = location.pathname.split('/');
   const documentId = currentLocation[currentLocation.length - 1];
+  let lastUpdatedAt:string = '';
+  
+  if(document?.updatedAt){
+    lastUpdatedAt = getDate(document?.updatedAt);
+  }
+
 
   const handleDocumentNameBlur = async (): Promise<void> => {
     if (documentNameRef.current?.innerHTML === '') {
@@ -66,7 +73,7 @@ const EditorHeader: React.FC<DocumentProps> = ({document}) => {
             >
               All Documents
             </Link>
-            <span className="ml-2 text-gray-500 font-light">Last edited 2d ago</span>
+            <span className="ml-2 text-gray-500 font-light">Last updated at {lastUpdatedAt}</span>
           </div>
         </div>
       </div>
