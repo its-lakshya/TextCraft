@@ -10,6 +10,11 @@ const collaborationSchema = new Schema(
       type: Boolean,
       defaut: false,
     },
+    publicAccessType: {
+      type: String,
+      enum: ['read', 'write'],
+      default: 'read',
+    },
     collaborator: {
       type: Schema.Types.ObjectId,
       ref: 'User',
