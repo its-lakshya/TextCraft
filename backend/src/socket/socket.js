@@ -7,7 +7,7 @@ const server = createServer(app);
 const io = new Server(server, {
   cors: {
     origin: process.env.CORS_ORIGIN,
-    methods: ['GET', 'POST', 'GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     credentials: true,
   },
 });
@@ -19,7 +19,7 @@ io.on('connection', socket => {
 
   socket.on('edit-document', ({ documentId, changes }) => {
     console.log(`${socket.id} is editing the document`);
-    socket.to(documentId).emit('document-changes', changes);
+    socket.to(documentId).emit('document-changes', {socketId:socket.id, changes});
   });
 
   socket.on('join-document', ({ documentId, userDetails }) => {

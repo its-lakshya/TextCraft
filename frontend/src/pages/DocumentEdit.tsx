@@ -26,12 +26,12 @@ interface User {
 }
 
 const DocumentEdit = () => {
+  const socket = useMemo(() => io('http://localhost:8000'), []);
   const currentLocation = location.pathname.split('/');
-  const documentId = currentLocation[2];
+  const documentId = currentLocation[currentLocation.length - 1];
   const navigate = useNavigate();
   const [documentData, setDocumentData] = useState<Document>();
   const [userDetails, setUserDetails] = useState<User>();
-  const socket = useMemo(() => io('http://localhost:8000'), []);
 
   // Api calls for getting document and user details
   useEffect(() => {
@@ -64,6 +64,7 @@ const DocumentEdit = () => {
     return () => {
       socket.disconnect();
     };
+    // eslint-disable-next-line
   }, []);
   
   
@@ -72,6 +73,7 @@ const DocumentEdit = () => {
       console.log(userDetails.userName)
       socket.emit('join-document', { documentId, userDetails });
     }
+    // eslint-disable-next-line
   },[userDetails])
 
   if (documentData) {
@@ -81,7 +83,7 @@ const DocumentEdit = () => {
           <EditorHeader document={documentData} />
           <Toolbar />
         </div>
-        <Editor document={documentData} />
+          <Editor documentData={documentData} socket={socket} />
       </div>
     );
   } else {
