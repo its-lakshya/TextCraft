@@ -15,19 +15,27 @@ const Header: React.FC = () => {
   const [profileModal, setProfileModal] = useState<boolean>(false);
   const [showProfileImage, setShowProfileImage] = useState<boolean>(false);
 
-  const hideLoginSiginButton = (): void => {
+  const hideLoginSigninButton = (): void => {
     if (loginRef.current && documentRef.current) {
       loginRef.current.style.display = 'none';
       documentRef.current.style.display = 'block';
     }
   };
 
+  const showLoginSigninButton = (): void => {
+    if (loginRef.current && documentRef.current) {
+      loginRef.current.style.display = 'block';
+      documentRef.current.style.display = 'none';
+    }
+  };
+
   useEffect(() => {
     if (user.isAuthenticated) {
-      hideLoginSiginButton();
+      hideLoginSigninButton();
       setShowProfileImage(true);
     } else {
       setShowProfileImage(false);
+      showLoginSigninButton();
     }
   }, [user, location]);
 

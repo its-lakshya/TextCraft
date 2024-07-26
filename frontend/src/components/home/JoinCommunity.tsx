@@ -20,6 +20,9 @@ const JoinCommunity: React.FC = () => {
     if(isAuthenticated){
       setLinkContent({text:'Go to Docs', link: '/user/documents'})
     }
+    else{
+      setLinkContent({text: 'Start for free', link: "/auth/register"})
+    }
   }, [isAuthenticated]);
 
   return (

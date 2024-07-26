@@ -26,9 +26,9 @@ const Layout: React.FC = () => {
   const location = useLocation();
   const currentLocation = location.pathname.split('/');
   const toast = useSelector((store: RootState) => store.toast);
+  const authStatus = useSelector((store: RootState) => store.auth)
 
   useEffect(() => {
-    // console.log(currentLocation);
     (async () => {
       try {
         const data: VerifiedUser | boolean = await isAuthenticated();
@@ -59,7 +59,7 @@ const Layout: React.FC = () => {
           navigate('/auth/login');
       }
     })();
-  }, []);
+  }, [authStatus]);
 
   return (
     <div className="flex flex-col">
