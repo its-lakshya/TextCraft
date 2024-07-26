@@ -12,6 +12,7 @@ import { User } from '../../pages/DocumentEdit';
 import { FaUserGroup } from 'react-icons/fa6';
 import { motion } from 'framer-motion';
 import ActiveUsersModal from '../../modals/ActiveUsers.modal';
+import { MdOutlineCloudDone } from 'react-icons/md';
 
 interface Document {
   createdAt: string;
@@ -132,7 +133,7 @@ const EditorHeader: React.FC<DocumentProps> = ({ document, socket }) => {
                 <CircularLoader size={'size-4'} border="border border-[3px]" /> saving...
               </span>
             ) : (
-              <span className="text-sm text-gray-500">Saved to cloud</span>
+              <span className="flex items-center gap-2 text-sm text-gray-500"><MdOutlineCloudDone /> Saved to cloud</span>
             )}
           </div>
           <div className="flex items-center gap-0 w-auto h-auto text-sm">
