@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose, { mongo } from 'mongoose';
 import { Document } from '../models/document.model.js';
 import { Collaboration } from '../models/collaboration.model.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
@@ -125,10 +125,35 @@ const getDocumentByID = asyncHandler(async (req, res) => {
       ),
     );
 });
-const updateDocument = asyncHandler(async (req, res) => {
+
+const renameDocument = asyncHandler(async (req, res) => {
+  const {documentId} = req.params;
+  const {documentName} = req.body;
+
+  const user = req.user;
+
+  if(!user) {
+    throw new apiError(401, "Unaithorized request");
+  }
+
+  if(!mongoose.isValidObjectId(documentId)){
+    throw new apiError(400, "Either invalid of missing document id");
+  }
+
+  const document = await Document.findByIdAndUpdate(documentId, documentName, { new: true });
+
+  if (!document) {
+    throw new apiError(500, 'Something went wrong while renaming the document');
+  }
+
+  return res.status(200).json(new apiResponse(200, document, 'Document renamed successfully'));
+
+})
+
+const updateDocumentContent = asyncHandler(async (req, res) => {
   const { documentId } = req.params;
 
-  const { documentName, content } = req.body;
+  const { content } = req.body;
 
   const user = req.user;
 
@@ -140,27 +165,17 @@ const updateDocument = asyncHandler(async (req, res) => {
     throw new apiError(400, 'Invalid or missing document id');
   }
 
-  if (!documentName && !content) {
-    throw new apiError(400, 'Atleast one from the documentName or content is required');
+  if (!content) {
+    throw new apiError(400, 'Change content is required');
   }
 
-  const fieldsToBeUpdated = {};
-
-  if (documentName && documentName.trim() !== '') {
-    fieldsToBeUpdated.documentName = documentName;
-  }
-
-  if (content && content.trim() !== '') {
-    fieldsToBeUpdated.content = content;
-  }
-
-  const document = await Document.findByIdAndUpdate(documentId, fieldsToBeUpdated, { new: true });
+  const document = await Document.findByIdAndUpdate(documentId, content, { new: true });
 
   if (!document) {
-    throw new apiError(500, 'Something went wrong while updating the document');
+    throw new apiError(500, 'Something went wrong while updating the content of the document');
   }
 
-  return res.status(200).json(new apiResponse(200, document, 'Document updated successfully'));
+  return res.status(200).json(new apiResponse(200, document, "Document's content updated successfully"));
 });
 
 const deleteDocument = asyncHandler(async (req, res) => {
@@ -334,8 +349,9 @@ export {
   createDocument,
   getUserDocuments,
   getDocumentByID,
-  updateDocument,
   deleteDocument,
   getSharedDocuments,
   getAllDocuments,
+  renameDocument,
+  updateDocumentContent
 };
