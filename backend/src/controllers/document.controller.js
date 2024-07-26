@@ -316,6 +316,7 @@ const getAllDocuments = asyncHandler(async (req, res) => {
   }
 
   const allDocuments = [...documents, ...sharedDocuments];
+
   return res.status(200).json(new apiResponse(200, allDocuments, 'Documents fetched successfully'));
 });
 

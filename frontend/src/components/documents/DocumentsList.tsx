@@ -25,6 +25,7 @@ const DocumentsList: React.FC = () => {
   const [selectedOwner, setSelectedOwner] = useState<Owner>(Owner.Anyone);
   const [documents, setDocument] = useState<Document[]>();
   const [ownerModelVisibility, setOwnerModelVisibility] = useState<string>('hidden');
+  const [callApi, setCallApi] = useState<boolean>(false);
 
   const handleShowOwnerRefs = (): void => {
     if (ownerModelVisibility === 'hidden') setOwnerModelVisibility('visible');
@@ -35,6 +36,7 @@ const DocumentsList: React.FC = () => {
     navigate(`/document/${id}`);
   };
 
+  // Handling clicking outside of the owners modal or button
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent): void => {
       if (
@@ -66,7 +68,7 @@ const DocumentsList: React.FC = () => {
     (async () => {
       await getDocuments('');
     })();
-  }, []);
+  }, [callApi]);
 
   const handleOwnerSelect = async (Owner: Owner): Promise<void> => {
     setSelectedOwner(Owner);
@@ -117,7 +119,7 @@ const DocumentsList: React.FC = () => {
         {documents &&
           documents.map((document, index) => (
             <span key={index} onClick={() => handleDocumentClick(document._id)}>
-              <DocumentCard data={document} />
+              <DocumentCard data={document} setCallApi={setCallApi} />
             </span>
           ))}
       </div>

@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { MdEditDocument } from 'react-icons/md';
 import { AiFillDelete } from 'react-icons/ai';
 import RenameModel from '../../modals/Rename.model';
+import axios from '../../axios.config';
 
 interface Document {
   createdAt: string;
@@ -16,9 +17,10 @@ interface Document {
 
 interface DocumentCardProps {
   data: Document;
+  setCallApi: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const DocumentCard: React.FC<DocumentCardProps> = ({ data }) => {
+const DocumentCard: React.FC<DocumentCardProps> = ({ data, setCallApi }) => {
   const lastUpdatedAt = getDate(data?.updatedAt);
   const moreOptionsRef = useRef<HTMLSpanElement>(null);
   const documentNameRef = useRef<HTMLSpanElement>(null);
@@ -32,7 +34,7 @@ const DocumentCard: React.FC<DocumentCardProps> = ({ data }) => {
     setShowMoreOptions(!showMoreOptions);
   };
 
-  // Handeling closing of the more options modal when click outside the button
+  // Handling closing of the more options modal when click outside the button
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent): void => {
       if (
@@ -52,11 +54,24 @@ const DocumentCard: React.FC<DocumentCardProps> = ({ data }) => {
     };
   }, []);
 
+  // Handling renaming of the document
   const handleRename = (event: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
     event.stopPropagation();
     setShowRenameModal(true);
     setShowMoreOptions(false)
   };
+  
+  // Handling deletion of the document
+  const handleDelete = async(event: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
+    event.stopPropagation();
+    try{
+      await axios.delete(`/documents/d/${data._id}`);
+      setCallApi(true);
+    }catch(error){
+      console.log(error, "Error while deleting the document")
+    }
+    setShowMoreOptions(false)
+  }
 
   return (
     <div className="WRAPPER relative w-52 h-[330px] flex flex-col rounded-documentCard border border-gray-300 hover:border-primary cursor-pointer">
@@ -95,7 +110,9 @@ const DocumentCard: React.FC<DocumentCardProps> = ({ data }) => {
           >
             <MdEditDocument /> <span className="text-sm">Rename</span>
           </div>
-          <div className="w-full flex justify-start items-center gap-4 h-9 px-4 hover:bg-primaryExtraLight">
+          <div className="w-full flex justify-start items-center gap-4 h-9 px-4 hover:bg-primaryExtraLight"
+          onClick={(e) => handleDelete(e)}
+          >
             <AiFillDelete /> <span className="text-sm">Remove</span>
           </div>
         </div>
