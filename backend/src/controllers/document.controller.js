@@ -140,7 +140,7 @@ const renameDocument = asyncHandler(async (req, res) => {
     throw new apiError(400, "Either invalid of missing document id");
   }
 
-  const document = await Document.findByIdAndUpdate(documentId, documentName, { new: true });
+  const document = await Document.findByIdAndUpdate(documentId, {documentName}, { new: true });
 
   if (!document) {
     throw new apiError(500, 'Something went wrong while renaming the document');

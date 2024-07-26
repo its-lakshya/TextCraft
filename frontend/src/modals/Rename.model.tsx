@@ -21,7 +21,7 @@ const RenameModel: React.FC<props> = ({ name, documentId, setShowRenameModal, se
     event.preventDefault();
     try {
       if (nameRef.current && name !== nameRef.current.value) {
-        await axios.patch(`/documents/d/${documentId}`, {
+        await axios.patch(`/documents/d/rename/${documentId}`, {
           documentName: nameRef.current.value,
         });
         setNewName(nameRef.current.value)

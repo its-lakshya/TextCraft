@@ -37,7 +37,7 @@ const EditorHeader: React.FC<DocumentProps> = ({document}) => {
     }
 
     if (documentNameRef.current?.innerHTML) {
-      await axios.patch(`/documents/d/${documentId}`, {
+      await axios.patch(`/documents/d/rename/${documentId}`, {
         documentName: documentNameRef.current.innerHTML,
       });
     }
