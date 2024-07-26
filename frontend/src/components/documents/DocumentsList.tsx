@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { IoMdArrowDropdown } from 'react-icons/io';
 import DocumentCard from './DocumentCard';
 import axios from '../../axios.config';
+import Loader from '../loader/Loader';
 
 enum Owner {
   Anyone = 'Owned by anyone',
@@ -20,6 +21,7 @@ interface Document {
 const DocumentsList: React.FC = () => {
   const ownerRef = useRef<HTMLDivElement>(null);
   const ownerListRef = useRef<HTMLDivElement>(null);
+  const [isLoading, setIsLoading] = useState<boolean>();
   const [documents, setDocument] = useState<Document[]>();
   const [deletedDocument, setDeletedDocument] = useState<string>('');
   const [selectedOwner, setSelectedOwner] = useState<Owner>(Owner.Anyone);
@@ -58,10 +60,12 @@ const DocumentsList: React.FC = () => {
     } catch (error) {
       console.log(error, 'Error getting documents');
     }
+    setIsLoading(false);
   };
 
   // Calling documents api on page load
   useEffect(() => {
+    setIsLoading(true);
     (async () => {
       await getDocuments('');
     })();
@@ -70,11 +74,11 @@ const DocumentsList: React.FC = () => {
   // Handling removal of document from the list when successfully deleted
   useEffect(() => {
     setDocument(prevDocuments => prevDocuments?.filter(doc => doc._id !== deletedDocument));
-  },[deletedDocument])
-
+  }, [deletedDocument]);
 
   // Handling the selection of the owner type
   const handleOwnerSelect = async (Owner: Owner): Promise<void> => {
+    setIsLoading(true);
     setSelectedOwner(Owner);
     switch (Owner) {
       case 'Owned by anyone':
@@ -120,11 +124,19 @@ const DocumentsList: React.FC = () => {
         </div>
       </div>
       <div className="DOCUMENT-LIST flex flex-wrap  gap-[22.5px] w-full h-auto">
-        {documents
-          ? documents.map((document) => (
-                <DocumentCard data={document} setDeletedDocument={setDeletedDocument} key={document._id} />
-            ))
-          : null}
+        {isLoading ? (
+          <div className='w-full h-[340px] flex items-center justify-center'>
+            <Loader />
+          </div>
+        ) : documents ? (
+          documents.map(document => (
+            <DocumentCard
+              data={document}
+              setDeletedDocument={setDeletedDocument}
+              key={document._id}
+            />
+          ))
+        ) : null}
       </div>
     </div>
   );

@@ -40,8 +40,7 @@ const Login: React.FC = () => {
 
   return (
     <div
-      className="WRAPPER relative flex justify-center items-center w-full h-screen bg-center bg-cover text-white overflow-hidden"
-      style={{ background: 'linear-gradient(180deg, rgba(0,0,0,1) 11%, rgba(76,29,149,1) 99%)' }}
+      className="WRAPPER relative flex justify-center items-center w-full h-screen bg-center bg-cover text-white overflow-hidden bg-primaryDark"
     >
       <img src={AuthBackgroundImage} alt="img" className="absolute" />
       <div
