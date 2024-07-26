@@ -41,6 +41,7 @@ const userSchema = new Schema(
     },
     profileImage: {
       type: String,
+      default: 'http://res.cloudinary.com/dhaoqsmcn/image/upload/v1720983113/TextCraft/ej3ct0fdlvndjacxkeyi.jpg'
     },
     refreshToken: {
       type: String,
