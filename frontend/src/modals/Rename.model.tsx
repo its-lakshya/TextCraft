@@ -32,6 +32,7 @@ const RenameModel: React.FC<props> = ({ name, documentId, setShowRenameModal, se
             showToast: true,
             message: 'Document is renamed successfully',
             type: 'SUCCESS',
+            timing: 5000,
           }),
         );
       }
@@ -42,11 +43,17 @@ const RenameModel: React.FC<props> = ({ name, documentId, setShowRenameModal, se
             showToast: true,
             message: 'No permission to rename document',
             type: 'UNAUTHORIZED',
+            timing: 5000,
           }),
         );
       } else {
         dispatch(
-          setShowToast({ showToast: true, message: 'Oops! Please try again', type: 'FAILED' }),
+          setShowToast({
+            showToast: true,
+            message: 'Oops! Please try again',
+            type: 'FAILED',
+            timing: 5000,
+          }),
         );
       }
       console.log(error, 'Error renaming the document');

@@ -78,6 +78,7 @@ const DocumentCard: React.FC<DocumentCardProps> = ({ data, setDeletedDocument })
           showToast: true,
           message: 'Document is deleted successfully',
           type: 'SUCCESS',
+          timing: 5000,
         }),
       );
     } catch (error) {
@@ -87,6 +88,7 @@ const DocumentCard: React.FC<DocumentCardProps> = ({ data, setDeletedDocument })
             showToast: true,
             message: 'No permission to delete document',
             type: 'UNAUTHORIZED',
+            timing: 5000,
           }),
         );
       } else {
@@ -95,6 +97,7 @@ const DocumentCard: React.FC<DocumentCardProps> = ({ data, setDeletedDocument })
             showToast: true,
             message: 'Oops! please try again',
             type: 'UNAUTHORIZED',
+            timing: 5000,
           }),
         );
       }

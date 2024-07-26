@@ -3,7 +3,8 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 export interface ToastState {
   showToast: boolean,
   message: string,
-  type: 'SUCCESS'| 'FAILED' | 'UNAUTHORIZED' | 'DEFAULT'
+  type: 'SUCCESS'| 'FAILED' | 'UNAUTHORIZED' | 'DEFAULT',
+  timing: number
 }
 
 const initialState: ToastState = {
@@ -21,6 +22,7 @@ const toastSlice = createSlice({
       state.showToast = action.payload.showToast;
       state.message = action.payload.message;
       state.type = action.payload.type;
+      state.timing = action.payload.timing
     },
   },
 });

@@ -13,8 +13,8 @@ const Toast: React.FC = () => {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      dispatch(setShowToast({ showToast: false, message: '', type: 'DEFAULT' }));
-    }, 8000);
+      dispatch(setShowToast({ showToast: false, message: '', type: 'DEFAULT', timing: 0 }));
+    }, toast.timing);
 
     return () => clearTimeout(timer);
   }, []);
