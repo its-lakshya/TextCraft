@@ -29,13 +29,13 @@ const Toast: React.FC = () => {
         };
       case 'FAILED':
         return {
-          bordeBottom: '6px solid #BB2124',
+          borderBottom: '6px solid #BB2124',
           boxShadow:
             'rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px',
         };
       case 'UNAUTHORIZED':
         return {
-          bordeBottom: '6px solid #F0AD4E',
+          borderBottom: '6px solid #F0AD4E',
           boxShadow:
             'rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px',
         };

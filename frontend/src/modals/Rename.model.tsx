@@ -27,9 +27,28 @@ const RenameModel: React.FC<props> = ({ name, documentId, setShowRenameModal, se
           documentName: nameRef.current.value,
         });
         setNewName(nameRef.current.value);
-        dispatch(setShowToast({showToast:true, message:"Document is renamed successfully", type:'SUCCESS'}))
+        dispatch(
+          setShowToast({
+            showToast: true,
+            message: 'Document is renamed successfully',
+            type: 'SUCCESS',
+          }),
+        );
       }
     } catch (error) {
+      if ((error as Error)?.message === 'Request failed with status code 401') {
+        dispatch(
+          setShowToast({
+            showToast: true,
+            message: 'No permission to rename document',
+            type: 'UNAUTHORIZED',
+          }),
+        );
+      } else {
+        dispatch(
+          setShowToast({ showToast: true, message: 'Oops! Please try again', type: 'FAILED' }),
+        );
+      }
       console.log(error, 'Error renaming the document');
     }
     setShowRenameModal(false);

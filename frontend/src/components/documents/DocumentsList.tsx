@@ -25,6 +25,7 @@ const DocumentsList: React.FC = () => {
   const [selectedOwner, setSelectedOwner] = useState<Owner>(Owner.Anyone);
   const [ownerModelVisibility, setOwnerModelVisibility] = useState<string>('hidden');
 
+  // Handling the owner type modal
   const handleShowOwnerRefs = (): void => {
     if (ownerModelVisibility === 'hidden') setOwnerModelVisibility('visible');
     else setOwnerModelVisibility('hidden');
@@ -49,6 +50,7 @@ const DocumentsList: React.FC = () => {
     };
   }, []);
 
+  // Calling api based on owner type selection by user
   const getDocuments = async (type: string): Promise<void> => {
     try {
       const response = await axios.get(`/documents/d/${type}`);
@@ -58,16 +60,20 @@ const DocumentsList: React.FC = () => {
     }
   };
 
+  // Calling documents api on page load
   useEffect(() => {
     (async () => {
       await getDocuments('');
     })();
   }, []);
 
+  // Handling removal of document from the list when successfully deleted
   useEffect(() => {
     setDocument(prevDocuments => prevDocuments?.filter(doc => doc._id !== deletedDocument));
   },[deletedDocument])
 
+
+  // Handling the selection of the owner type
   const handleOwnerSelect = async (Owner: Owner): Promise<void> => {
     setSelectedOwner(Owner);
     switch (Owner) {
