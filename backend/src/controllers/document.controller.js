@@ -175,6 +175,16 @@ const deleteDocument = asyncHandler(async (req, res) => {
     throw new apiError(400, 'Invalid or missing document id');
   }
 
+  if (document.owner !== user) {
+    throw new apiError(401, 'User is not authorized to delete the document');
+  }
+
+  const collaborations = await Collaboration.deleteMany({ document });
+
+  if (!collaborations) {
+    throw new apiError(500, 'Something went wrong while deleting the document');
+  }
+
   const document = await Document.findByIdAndDelete(documentId);
 
   if (!document) {
