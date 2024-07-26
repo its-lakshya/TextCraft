@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store/Store';
 import { setShowToast } from '../../store/slices/Toast.slice';
 import { motion } from 'framer-motion';
+import { FaUser } from 'react-icons/fa6';
 
 const Toast: React.FC = () => {
   const dispatch = useDispatch();
@@ -39,6 +40,12 @@ const Toast: React.FC = () => {
           boxShadow:
             'rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px',
         };
+      case 'DEFAULT':
+        return {
+          borderBottom: '6px solid #7C3AED',
+          boxShadow: 
+            'rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px',
+        }
       default:
         return {
           bordeBottom: '6px solid gray',
@@ -64,11 +71,15 @@ const Toast: React.FC = () => {
         <span className="text-[#BB2124] text-2xl">
           <MdError />
         </span>
-      ) : (
+      ) : toast.type === 'UNAUTHORIZED' ? (
         <span>
           <IoIosWarning className="text-[#F0AD4E] text-2xl" />
         </span>
-      )}
+      ): 
+        <span>
+          <FaUser className='text-primary text-2xl' />
+        </span>
+      }
       {toast.message}
     </motion.div>
   );

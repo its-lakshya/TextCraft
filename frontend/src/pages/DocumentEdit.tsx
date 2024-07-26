@@ -6,6 +6,8 @@ import axios from '../axios.config';
 import io from 'socket.io-client';
 import { useNavigate } from 'react-router-dom';
 import Loader from '../components/loader/Loader';
+import { useDispatch } from 'react-redux';
+import { setShowToast } from '../store/slices/Toast.slice';
 interface Document {
   createdAt: string;
   documentName: string;
@@ -27,12 +29,13 @@ interface User {
 }
 
 const DocumentEdit = () => {
-  const socket = useMemo(() => io('http://localhost:8000'), []);
-  const currentLocation = location.pathname.split('/');
-  const documentId = currentLocation[currentLocation.length - 1];
   const navigate = useNavigate();
-  const [documentData, setDocumentData] = useState<Document>();
+  const dispatch = useDispatch();
+  const currentLocation = location.pathname.split('/');
   const [userDetails, setUserDetails] = useState<User>();
+  const [documentData, setDocumentData] = useState<Document>();
+  const socket = useMemo(() => io('http://localhost:8000'), []);
+  const documentId = currentLocation[currentLocation.length - 1];
 
   // Api calls for getting document and user details
   useEffect(() => {
@@ -76,6 +79,28 @@ const DocumentEdit = () => {
     // eslint-disable-next-line
   }, [userDetails]);
 
+  socket.on('disconnected-user', userDetails => {
+    dispatch(
+      setShowToast({
+        showToast: true,
+        message: `${userDetails.userName} dissconnected`,
+        type: 'DEFAULT',
+        timing: 3000
+      }),
+    );
+  });
+
+  socket.on('joined-user', userDetails => {
+    dispatch(
+      setShowToast({
+        showToast: true,
+        message: `${userDetails.userName} joined`,
+        type: 'DEFAULT',
+        timing: 3000
+      }),
+    );
+  });
+
   if (documentData) {
     return (
       <div className="WAPPER flex flex-col justify-start items-center w-full h-auto bg-documentBackground">
@@ -88,7 +113,10 @@ const DocumentEdit = () => {
     );
   } else {
     return (
-      <div className='w-screen h-screen flex justify-center items-center' style={{backdropFilter: 'blur(5px)',}}>
+      <div
+        className="w-screen h-screen flex justify-center items-center"
+        style={{ backdropFilter: 'blur(5px)' }}
+      >
         <Loader />
       </div>
     );

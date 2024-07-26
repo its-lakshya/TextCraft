@@ -25,17 +25,16 @@ io.on('connection', socket => {
   socket.on('join-document', ({ documentId, userDetails }) => {
     console.log(`User joind the room ${userDetails.userName}`);
     socket.join(documentId);
-    activeUser[socket.id] = userDetails;
-    socket.to(documentId).emit('user-joined', userDetails);
+    activeUser[socket.id] = {userDetails, documentId};
+    socket.to(documentId).emit('joined-user', userDetails);
     io.to(documentId).emit('update-active-users', Object.values(activeUser));
   });
 
   socket.on('disconnect', () => {
-    console.log(`User disconnected ${socket.id}`);
-    const userDetails = activeUser[socket.id];
+    const {userDetails, documentId} = activeUser[socket.id];
     if (userDetails) {
-      // socket.to(documentId).emit('user-disconnected', userDetails);
-      // io.emmit('update-active-users', Object.values(activeUser));
+      socket.to(documentId).emit('disconnected-user', userDetails);
+      io.to(documentId).emit('update-active-users', Object.values(activeUser));
       delete activeUser[socket.id];
     }
   });
