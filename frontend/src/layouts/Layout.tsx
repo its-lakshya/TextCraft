@@ -28,6 +28,7 @@ const Layout: React.FC = () => {
   const toast = useSelector((store: RootState) => store.toast);
 
   useEffect(() => {
+    // console.log(currentLocation);
     (async () => {
       try {
         const data: VerifiedUser | boolean = await isAuthenticated();
@@ -36,15 +37,21 @@ const Layout: React.FC = () => {
           dispatch(setAuthStatus(verifiedUser.isLoggedIn));
           dispatch(setUserDetails(verifiedUser.user));
           if (
-            !verifiedUser.isLoggedIn &&
+            currentLocation[1] !== 'contact-us' &&
             currentLocation[1] !== '' &&
-            currentLocation[1] !== 'contact-us'
+            !verifiedUser.isLoggedIn
           ) {
             navigate('/auth/login');
           }
         }
 
-        if (typeof data === 'boolean') navigate('/auth/login');
+        if (
+          typeof data === 'boolean' &&
+          currentLocation[1] !== '' &&
+          currentLocation[1] !== 'contact-us'
+        ) {
+          navigate('/auth/login');
+        }
       } catch (error) {
         console.error(error, 'Error checking authentication');
         dispatch(setAuthStatus(false));
