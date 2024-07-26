@@ -1,15 +1,15 @@
-import { User } from "../pages/DocumentEdit";
+import { User } from '../pages/DocumentEdit';
 
 interface ActiveUsers {
-  documentId: string,
-  userDetails: User,
+  documentId: string;
+  userDetails: User;
 }
 
 interface props {
-  activeUsers: ActiveUsers[] | undefined
+  activeUsers: ActiveUsers[] | undefined;
 }
 
-const ActiveUsersModal: React.FC<props> = ({activeUsers}) => {
+const ActiveUsersModal: React.FC<props> = ({ activeUsers }) => {
   return (
     <div
       className="WRAPPER absolute top-10 right-2 flex flex-col w-44 min-auto max-h-64 rounded-[4px] py-2 bg-white overflow-y-scroll overflow-x-hidden select-none"
@@ -19,8 +19,14 @@ const ActiveUsersModal: React.FC<props> = ({activeUsers}) => {
     >
       {activeUsers?.map((data, index) => {
         return (
-          <span key={index} className='flex items-center w-full h-8 px-4 overflow-auto hover:bg-primaryExtraLight cursor-pointer'>{data.userDetails.userName}</span>
-        )
+          <span
+            key={index}
+            className="flex items-center gap-2 w-full h-8 px-4 overflow-auto hover:bg-primaryExtraLight cursor-pointer"
+          >
+            <img src={data.userDetails.profileImage} alt='img' className='size-6 rounded-full'/>
+            {data.userDetails.userName}
+          </span>
+        );
       })}
     </div>
   );

@@ -35,6 +35,7 @@ interface ActiveUsers {
 
 const EditorHeader: React.FC<DocumentProps> = ({ document, socket }) => {
   const location = useLocation();
+  const activeUsersRef = useRef<HTMLSpanElement>(null);
   const documentNameRef = useRef<HTMLDivElement>(null);
   const currentLocation = location.pathname.split('/');
   const [activeUsers, setActiveUsers] = useState<ActiveUsers[]>();
@@ -90,6 +91,24 @@ const EditorHeader: React.FC<DocumentProps> = ({ document, socket }) => {
     setActiveUsers(data);
   });
 
+  // Handling closing of the more options modal when click outside the button
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent): void => {
+      if (
+        activeUsersRef.current &&
+        !activeUsersRef.current.contains(event.target as Node)
+      ) {
+        setActiveUsersVisibility(false);
+      }
+    };
+
+    window.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      window.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   return (
     <div className="WRAPPER flex w-full h-[4rem] justify-between items-center box-border z-10 bg-documentBackground">
       <div className="HEADER-LEFT flex w-auto items-center">
@@ -142,7 +161,7 @@ const EditorHeader: React.FC<DocumentProps> = ({ document, socket }) => {
           >
             <FaUserGroup />
           </motion.button>
-          {activeUsersVisibility ? <ActiveUsersModal activeUsers={activeUsers}/> : null}
+          {activeUsersVisibility ? <span ref={activeUsersRef}><ActiveUsersModal activeUsers={activeUsers}/></span> : null}
         </div>
         <button
           className={`SHARE flex justify-center items-center gap-2 w-32 h-10 bg-primary ${buttonHoverAnimaiton} hover:bg-primaryDark text-white rounded-full`}

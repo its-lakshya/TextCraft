@@ -25,6 +25,7 @@ export interface User {
   gender: string;
   updatedAt: string;
   userName: string;
+  profileImage: string,
   _id: string;
 }
 
