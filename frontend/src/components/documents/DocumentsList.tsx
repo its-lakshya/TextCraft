@@ -52,7 +52,6 @@ const DocumentsList: React.FC = () => {
   const getDocuments = async (type: string): Promise<void> => {
     try {
       const response = await axios.get(`/documents/d/${type}`);
-      console.log('called');
       setDocument(response.data.data);
     } catch (error) {
       console.log(error, 'Error getting documents');
@@ -66,7 +65,6 @@ const DocumentsList: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    console.log('called')
     setDocument(prevDocuments => prevDocuments?.filter(doc => doc._id !== deletedDocument));
   },[deletedDocument])
 
@@ -118,10 +116,7 @@ const DocumentsList: React.FC = () => {
       <div className="DOCUMENT-LIST flex flex-wrap  gap-[22.5px] w-full h-auto">
         {documents
           ? documents.map((document) => (
-              <>
-                {console.log(document.documentName)}
                 <DocumentCard data={document} setDeletedDocument={setDeletedDocument} key={document._id} />
-              </>
             ))
           : null}
       </div>

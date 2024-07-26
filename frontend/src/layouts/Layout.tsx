@@ -3,8 +3,10 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import Header from './header/Header.tsx';
 import Footer from './footer/Footer.tsx';
 import { isAuthenticated } from '../utils/Auth.utils.ts';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setAuthStatus, setUserDetails } from '../store/slices/Auth.slice.ts';
+import Toast from '../components/toast/Toast.tsx';
+import { RootState } from '../store/Store.ts';
 
 interface VerifiedUser {
   isLoggedIn: boolean;
@@ -23,6 +25,7 @@ const Layout: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const currentLocation = location.pathname.split('/');
+  const toast = useSelector((store: RootState) => store.toast);
 
   useEffect(() => {
     (async () => {
@@ -56,6 +59,7 @@ const Layout: React.FC = () => {
       <Header />
       <Outlet />
       <Footer />
+      {toast.showToast ? <Toast /> : null}
     </div>
   );
 };

@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 import axios from '../axios.config';
-
+import { useDispatch } from 'react-redux';
+import { setShowToast } from '../store/slices/Toast.slice';
 interface props {
   name: string | undefined;
   documentId: string;
@@ -10,6 +11,7 @@ interface props {
 
 const RenameModel: React.FC<props> = ({ name, documentId, setShowRenameModal, setNewName }) => {
   const nameRef = useRef<HTMLInputElement>(null);
+  const dispatch = useDispatch();
 
   // Handling click propogation
   const handleClick = (event: React.MouseEvent) => {
@@ -24,7 +26,8 @@ const RenameModel: React.FC<props> = ({ name, documentId, setShowRenameModal, se
         await axios.patch(`/documents/d/rename/${documentId}`, {
           documentName: nameRef.current.value,
         });
-        setNewName(nameRef.current.value)
+        setNewName(nameRef.current.value);
+        dispatch(setShowToast({showToast:true, message:"Document is renamed successfully", type:'SUCCESS'}))
       }
     } catch (error) {
       console.log(error, 'Error renaming the document');
