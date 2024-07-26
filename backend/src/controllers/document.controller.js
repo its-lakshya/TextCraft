@@ -140,13 +140,18 @@ const renameDocument = asyncHandler(async (req, res) => {
     throw new apiError(400, "Either invalid of missing document id");
   }
 
-  const document = await Document.findByIdAndUpdate(documentId, {documentName}, { new: true });
+  const document = await Document.findById(documentId);
+  if(!(document.owner).equals(user._id)){
+    throw new apiError(401, "User is unauthorized to rename this document")
+  }
 
-  if (!document) {
+  const documentRenamed = await Document.findByIdAndUpdate(documentId, {documentName}, { new: true });
+
+  if (!documentRenamed) {
     throw new apiError(500, 'Something went wrong while renaming the document');
   }
 
-  return res.status(200).json(new apiResponse(200, document, 'Document renamed successfully'));
+  return res.status(200).json(new apiResponse(200, documentRenamed, 'Document renamed successfully'));
 
 })
 
@@ -188,7 +193,8 @@ const deleteDocument = asyncHandler(async (req, res) => {
     throw new apiError(400, 'Invalid or missing document id');
   }
 
-  if (document.owner !== user) {
+  const document = await Document.findById(documentId);
+  if (!(document.owner).equals(user._id)) {
     throw new apiError(401, 'User is not authorized to delete the document');
   }
 
@@ -198,9 +204,9 @@ const deleteDocument = asyncHandler(async (req, res) => {
     throw new apiError(500, 'Something went wrong while deleting the document');
   }
 
-  const document = await Document.findByIdAndDelete(documentId);
+  const documentDeleted = await Document.findByIdAndDelete(documentId);
 
-  if (!document) {
+  if (!documentDeleted) {
     throw new apiError(500, 'Something went wrong while deleting the document');
   }
 
