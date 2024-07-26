@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react';
 import { IoMdArrowDropdown } from 'react-icons/io';
 import DocumentCard from './DocumentCard';
 import axios from '../../axios.config';
-import { useNavigate } from 'react-router-dom';
 
 enum Owner {
   Anyone = 'Owned by anyone',
@@ -19,21 +18,16 @@ interface Document {
 }
 
 const DocumentsList: React.FC = () => {
-  const navigate = useNavigate();
   const ownerRef = useRef<HTMLDivElement>(null);
   const ownerListRef = useRef<HTMLDivElement>(null);
-  const [selectedOwner, setSelectedOwner] = useState<Owner>(Owner.Anyone);
   const [documents, setDocument] = useState<Document[]>();
+  const [deletedDocument, setDeletedDocument] = useState<string>('');
+  const [selectedOwner, setSelectedOwner] = useState<Owner>(Owner.Anyone);
   const [ownerModelVisibility, setOwnerModelVisibility] = useState<string>('hidden');
-  const [callApi, setCallApi] = useState<boolean>(false);
 
   const handleShowOwnerRefs = (): void => {
     if (ownerModelVisibility === 'hidden') setOwnerModelVisibility('visible');
     else setOwnerModelVisibility('hidden');
-  };
-
-  const handleDocumentClick = (id: string): void => {
-    navigate(`/document/${id}`);
   };
 
   // Handling clicking outside of the owners modal or button
@@ -58,6 +52,7 @@ const DocumentsList: React.FC = () => {
   const getDocuments = async (type: string): Promise<void> => {
     try {
       const response = await axios.get(`/documents/d/${type}`);
+      console.log('called');
       setDocument(response.data.data);
     } catch (error) {
       console.log(error, 'Error getting documents');
@@ -68,7 +63,12 @@ const DocumentsList: React.FC = () => {
     (async () => {
       await getDocuments('');
     })();
-  }, [callApi]);
+  }, []);
+
+  useEffect(() => {
+    console.log('called')
+    setDocument(prevDocuments => prevDocuments?.filter(doc => doc._id !== deletedDocument));
+  },[deletedDocument])
 
   const handleOwnerSelect = async (Owner: Owner): Promise<void> => {
     setSelectedOwner(Owner);
@@ -116,12 +116,14 @@ const DocumentsList: React.FC = () => {
         </div>
       </div>
       <div className="DOCUMENT-LIST flex flex-wrap  gap-[22.5px] w-full h-auto">
-        {documents &&
-          documents.map((document, index) => (
-            <span key={index} onClick={() => handleDocumentClick(document._id)}>
-              <DocumentCard data={document} setCallApi={setCallApi} />
-            </span>
-          ))}
+        {documents
+          ? documents.map((document) => (
+              <>
+                {console.log(document.documentName)}
+                <DocumentCard data={document} setDeletedDocument={setDeletedDocument} key={document._id} />
+              </>
+            ))
+          : null}
       </div>
     </div>
   );

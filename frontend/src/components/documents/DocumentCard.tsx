@@ -5,6 +5,7 @@ import { MdEditDocument } from 'react-icons/md';
 import { AiFillDelete } from 'react-icons/ai';
 import RenameModel from '../../modals/Rename.model';
 import axios from '../../axios.config';
+import { useNavigate } from 'react-router-dom';
 
 interface Document {
   createdAt: string;
@@ -17,17 +18,18 @@ interface Document {
 
 interface DocumentCardProps {
   data: Document;
-  setCallApi: React.Dispatch<React.SetStateAction<boolean>>
+  setDeletedDocument: React.Dispatch<React.SetStateAction<string>>
 }
 
-const DocumentCard: React.FC<DocumentCardProps> = ({ data, setCallApi }) => {
+const DocumentCard: React.FC<DocumentCardProps> = ({ data, setDeletedDocument }) => {
+  const navigate = useNavigate();
   const lastUpdatedAt = getDate(data?.updatedAt);
+  const modalRef = useRef<HTMLDivElement>(null);
   const moreOptionsRef = useRef<HTMLSpanElement>(null);
   const documentNameRef = useRef<HTMLSpanElement>(null);
-  const modalRef = useRef<HTMLDivElement>(null);
+  const [newName, setNewName] = useState<string>(data.documentName)
   const [showMoreOptions, setShowMoreOptions] = useState<boolean>(false);
   const [showRenameModal, setShowRenameModal] = useState<boolean>(false);
-  const [newName, setNewName] = useState<string>(data.documentName)
 
   const handleMoreOptions = (event: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
     event.stopPropagation();
@@ -66,15 +68,21 @@ const DocumentCard: React.FC<DocumentCardProps> = ({ data, setCallApi }) => {
     event.stopPropagation();
     try{
       await axios.delete(`/documents/d/${data._id}`);
-      setCallApi(true);
+      setDeletedDocument(data._id);
     }catch(error){
       console.log(error, "Error while deleting the document")
     }
     setShowMoreOptions(false)
   }
 
+  const handleDocumentClick = (id: string): void => {
+    navigate(`/document/${id}`);
+  };
+
   return (
-    <div className="WRAPPER relative w-52 h-[330px] flex flex-col rounded-documentCard border border-gray-300 hover:border-primary cursor-pointer">
+    <div className="WRAPPER relative w-52 h-[330px] flex flex-col rounded-documentCard border border-gray-300 hover:border-primary cursor-pointer"
+    onClick={() => handleDocumentClick(data._id)} 
+    >
       <div className="DOCUMENT-OVERVIEW w-full h-full bg-white rounded-documentCard"></div>
       <div className="DOCUMENT-INFORMATION flex flex-col w-full h-20 py-3 px-4 box-border border border-t-gray-300 rounded-b-documentCard">
         <span ref={documentNameRef} className="text-sm font-medium">
