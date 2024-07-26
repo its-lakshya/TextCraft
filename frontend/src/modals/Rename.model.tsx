@@ -11,10 +11,12 @@ interface props {
 const RenameModel: React.FC<props> = ({ name, documentId, setShowRenameModal, setNewName }) => {
   const nameRef = useRef<HTMLInputElement>(null);
 
+  // Handling click propogation
   const handleClick = (event: React.MouseEvent) => {
     event.stopPropagation();
   };
 
+  // Handling rename api request
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
