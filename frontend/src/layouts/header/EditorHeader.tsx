@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { buttonHoverAnimaiton } from '../../utils/Tailwind.utils';
 import { IoEarthSharp } from 'react-icons/io5';
@@ -8,7 +8,7 @@ import { getDate } from '../../utils/Date.utils';
 interface Document {
   createdAt: string;
   documentName: string;
-  content: string,
+  content: string;
   owner: string;
   updatedAt: string;
   __v: number;
@@ -19,29 +19,54 @@ interface DocumentProps {
   document?: Document;
 }
 
-const EditorHeader: React.FC<DocumentProps> = ({document}) => {
+const EditorHeader: React.FC<DocumentProps> = ({ document }) => {
   const documentNameRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
   const currentLocation = location.pathname.split('/');
   const documentId = currentLocation[currentLocation.length - 1];
-  let lastUpdatedAt:string = '';
-  
-  if(document?.updatedAt){
+  let lastUpdatedAt: string = '';
+
+  if (document?.updatedAt) {
     lastUpdatedAt = getDate(document?.updatedAt);
   }
 
-
-  const handleDocumentNameBlur = async (): Promise<void> => {
-    if (documentNameRef.current?.innerHTML === '') {
-      documentNameRef.current.innerHTML = 'Untitled_Document';
-    }
-
+  // Handling Rename api request
+  const renameDocument = async (): Promise<void> => {
     if (documentNameRef.current?.innerHTML) {
       await axios.patch(`/documents/d/rename/${documentId}`, {
         documentName: documentNameRef.current.innerHTML,
       });
     }
   };
+
+  // handle blur of the rename input div
+  const handleDocumentNameBlur = async (): Promise<void> => {
+    if (documentNameRef.current?.innerHTML === '') {
+      documentNameRef.current.innerHTML = 'Untitled_Document';
+    }
+    await renameDocument();
+  };
+
+  // Preventing the rename div to add line break when pressing enter
+  useEffect(() => {
+    const handleKeyDown = async (event: KeyboardEvent): Promise<void> => {
+      if (event.key === 'Enter') {
+        event.preventDefault(); // Prevent line breaks
+        if (documentNameRef.current) documentNameRef.current.blur();
+      }
+    };
+
+    const editableDiv = documentNameRef.current;
+    if (editableDiv) {
+      editableDiv.addEventListener('keydown', handleKeyDown);
+    }
+
+    return () => {
+      if (editableDiv) {
+        editableDiv.removeEventListener('keydown', handleKeyDown);
+      }
+    };
+  }, []);
 
   return (
     <div className="WRAPPER flex w-full h-[4rem] justify-between items-center box-border z-10 bg-documentBackground">
@@ -54,7 +79,7 @@ const EditorHeader: React.FC<DocumentProps> = ({document}) => {
         <div className="DOCUMENT-INFORMATION flex flex-col items-start w-auto h-auto">
           <div
             ref={documentNameRef}
-            className="max-w-[50vw] w-auto h-auto px-2 border-none text-lg font-medium overflow-hidden whitespace-nowrap focus:outline-primary"
+            className="max-w-[50vw] w-auto h-7 px-2 border-none text-lg font-medium overflow-hidden whitespace-nowrap focus:outline-primary"
             contentEditable="true"
             onBlur={handleDocumentNameBlur}
           >

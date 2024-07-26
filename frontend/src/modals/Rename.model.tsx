@@ -38,32 +38,32 @@ const RenameModel: React.FC<props> = ({ name, documentId, setShowRenameModal, se
 
   return (
     <div
-      className="fixed top-0 left-0 z-50 w-screen h-screen flex justify-center items-center bg-[#666666] bg-opacity-75 pointer-events-auto"
+      className="WRAPPER fixed top-0 left-0 z-50 w-screen h-screen flex justify-center items-center bg-[#666666] bg-opacity-75 pointer-events-auto"
       onClick={handleClick}
     >
       <form
-        className="w-96 h-48 flex flex-col justify-center gap-4 items-start p-7 bg-white rounded-lg"
+        className="MAIN-CONTAINER w-96 h-48 flex flex-col justify-center gap-4 items-start p-7 bg-white rounded-lg"
         onSubmit={e => handleSubmit(e)}
         method="post"
         onReset={handleReset}
       >
-        <span className="text-2xl font-light">Rename</span>
+        <span className="RENAME-HEADING text-2xl font-light">Rename</span>
         <input
           ref={nameRef}
           type="text"
           defaultValue={name}
-          className="w-full h-8 outline-none border border-gray-300 rounded-md px-2 py-1 text-sm focus:border-primary"
+          className="INPUT-FIELD w-full h-8 outline-none border border-gray-300 rounded-md px-2 py-1 text-sm focus:border-primary overflow-hidden"
         ></input>
         <div className="w-full flex justify-end items-center gap-4 capitalize">
           <button
             type="reset"
-            className="border text-primary border-gray-200 rounded-[4px] w-24 py-2 hover:border-primary"
+            className="CANCEL-BUTTON border text-primary border-gray-200 rounded-[4px] w-24 py-2 hover:border-primary"
           >
             Cancel
           </button>
           <button
             type="submit"
-            className="bg-primary text-white rounded-[4px] w-24 py-2 uppercase hover:bg-primaryDark"
+            className="OK-BUTTON bg-primary text-white rounded-[4px] w-24 py-2 uppercase hover:bg-primaryDark"
           >
             OK
           </button>
