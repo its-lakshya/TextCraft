@@ -5,6 +5,7 @@ import EditorHeader from '../layouts/header/EditorHeader';
 import axios from '../axios.config';
 import io from 'socket.io-client';
 import { useNavigate } from 'react-router-dom';
+import Loader from '../components/loader/Loader';
 interface Document {
   createdAt: string;
   documentName: string;
@@ -56,25 +57,24 @@ const DocumentEdit = () => {
     socket.on('connect', () => {
       console.log('Connected to server');
     });
-    
+
     socket.on('disconnect', () => {
       console.log('Disconnected from server');
     });
-    
+
     return () => {
       socket.disconnect();
     };
     // eslint-disable-next-line
   }, []);
-  
-  
+
   useEffect(() => {
-    if(userDetails !== undefined){
-      console.log(userDetails.userName)
+    if (userDetails !== undefined) {
+      console.log(userDetails.userName);
       socket.emit('join-document', { documentId, userDetails });
     }
     // eslint-disable-next-line
-  },[userDetails])
+  }, [userDetails]);
 
   if (documentData) {
     return (
@@ -83,11 +83,15 @@ const DocumentEdit = () => {
           <EditorHeader document={documentData} />
           <Toolbar />
         </div>
-          <Editor documentData={documentData} socket={socket} />
+        <Editor documentData={documentData} socket={socket} />
       </div>
     );
   } else {
-    return null;
+    return (
+      <div className='w-screen h-screen flex justify-center items-center' style={{backdropFilter: 'blur(5px)',}}>
+        <Loader />
+      </div>
+    );
   }
 };
 
