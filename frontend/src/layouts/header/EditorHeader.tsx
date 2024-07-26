@@ -4,6 +4,9 @@ import { buttonHoverAnimaiton } from '../../utils/Tailwind.utils';
 import { IoEarthSharp } from 'react-icons/io5';
 import axios from '../../axios.config';
 import { getDate } from '../../utils/Date.utils';
+import { CircularLoader } from '../../components/loader/Loader';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/Store';
 
 interface Document {
   createdAt: string;
@@ -20,10 +23,12 @@ interface DocumentProps {
 }
 
 const EditorHeader: React.FC<DocumentProps> = ({ document }) => {
-  const documentNameRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
+  const documentNameRef = useRef<HTMLDivElement>(null);
   const currentLocation = location.pathname.split('/');
   const documentId = currentLocation[currentLocation.length - 1];
+  const isSaving = useSelector((store: RootState) => store.docSaving.isSaving)
+  
   let lastUpdatedAt: string = '';
 
   if (document?.updatedAt) {
@@ -77,13 +82,22 @@ const EditorHeader: React.FC<DocumentProps> = ({ document }) => {
           </span>
         </Link>
         <div className="DOCUMENT-INFORMATION flex flex-col items-start w-auto h-auto">
-          <div
-            ref={documentNameRef}
-            className="max-w-[50vw] w-auto h-7 px-2 border-none text-lg font-medium overflow-hidden whitespace-nowrap focus:outline-primary"
-            contentEditable="true"
-            onBlur={handleDocumentNameBlur}
-          >
-            {document?.documentName}
+          <div className="flex items-center w-auto gap-2">
+            <div
+              ref={documentNameRef}
+              className="max-w-[50vw] w-auto h-7 px-2 border-none text-lg font-medium overflow-hidden whitespace-nowrap focus:outline-primary"
+              contentEditable="true"
+              onBlur={handleDocumentNameBlur}
+            >
+              {document?.documentName}
+            </div>
+            {isSaving ? (
+              <span className='flex items-center gap-2 text-sm text-gray-500'>
+              <CircularLoader size={'size-4'} border="border border-[3px]" /> saving...
+              </span>
+            ) : (
+              <span className="text-sm text-gray-500">Saved to cloud</span>
+            )}
           </div>
           <div className="flex items-center gap-0 w-auto h-auto text-sm">
             <button className="px-2 py-[2px] rounded-sm hover:bg-primaryLight hover:bg-opacity-30">

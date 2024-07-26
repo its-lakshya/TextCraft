@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import ReactQuill from 'react-quill';
 import { modules } from '../toolbar/Toolbar';
 import 'react-quill/dist/quill.snow.css';
 import './A4Document.css';
 import { Socket } from 'socket.io-client';
 import axios from '../../axios.config';
+import { setIsSaving } from '../../store/slices/DocSaving.slice';
+import { useDispatch } from 'react-redux';
 
 interface Document {
   createdAt: string;
@@ -22,10 +24,13 @@ interface EditorProps {
 }
 
 const Editor: React.FC<EditorProps> = ({ documentData, socket }) => {
-  const [value, setValue] = useState<string | undefined>(undefined);
+  const dispatch = useDispatch();
+  const timeoutRef = useRef<number | null>(null); // Ref to store timeout ID
   const currentLocation = location.pathname.split('/');
+  const [oldContent, setOldConent] = useState<string>('');
   const documentId = currentLocation[currentLocation.length - 1];
-  const [oldContent, setOldConent] = useState<string>('')
+  const [value, setValue] = useState<string | undefined>(undefined);
+
 
   const formats = [
     'header',
@@ -48,17 +53,35 @@ const Editor: React.FC<EditorProps> = ({ documentData, socket }) => {
     'code-block',
   ];
 
-  // Saving changes to mongoDB and emiting edit-document socket event
+  // Saving content of the document to database
+  const handleSave = async (content: string) => {
+    try{
+      await axios.patch(`/documents/d/${documentId}`, { content: content });
+      console.log('hiii')
+      dispatch(setIsSaving(false));
+    }catch(error){
+      console.log(error, "Error saving the content of the document")
+    }
+  }
+
+  // Emiting edit-document socket event and calling handleSave function
   const handleChange = (content: string) => {
-    // console.log(content, oldContent)
-    if(oldContent !== content){
+    if (oldContent !== content) {
       const encodedRichText = encodeURIComponent(JSON.stringify(content));
-      socket.emit('edit-document', { documentId, changes: encodedRichText});
-      setTimeout(() => {
-        (async () => {
-          await axios.patch(`/documents/d/${documentId}`, { content: content });
-        })();
+      socket.emit('edit-document', { documentId, changes: encodedRichText });
+      dispatch(setIsSaving(true));
+
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+
+      // Set a new timeout
+      timeoutRef.current = window.setTimeout(() => {
+        handleSave(content);
       }, 1000);
+      // setTimeout(() => {
+      //     HandleSave(content)
+      // }, 3000);
     }
   };
 
@@ -77,19 +100,13 @@ const Editor: React.FC<EditorProps> = ({ documentData, socket }) => {
   // });
 
   useEffect(() => {
-
-    socket.on('document-changes', ({socketId, changes}) => {
-      if(socketId != socket.id){
+    socket.on('document-changes', ({ socketId, changes }) => {
+      if (socketId != socket.id) {
         const decodedRichText = decodeURIComponent(changes);
-        // console.log(decodedRichText)
         setValue(JSON.parse(decodedRichText));
         setOldConent(JSON.parse(decodedRichText));
       }
     });
-
-    // return () => {
-    //   socket.off('document-changes', handleDocumentChanges);
-    // };
   }, [socket]);
 
   return (
