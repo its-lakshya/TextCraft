@@ -21,11 +21,10 @@ router.route('/d/user').get(getUserDocuments);
 
 router.route('/d/shared').get(getSharedDocuments);
 
-router.route('/d/:documentId').get(getDocumentByID).delete(deleteDocument);
+router.route('/d/:documentId').get(getDocumentByID).delete(deleteDocument).patch(updateDocumentContent);;
 
 router
   .route('/d/rename/:documentId')
   .patch(renameDocument)
-  .patch(updateDocumentContent);
 
 export default router;

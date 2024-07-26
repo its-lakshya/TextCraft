@@ -152,9 +152,7 @@ const renameDocument = asyncHandler(async (req, res) => {
 
 const updateDocumentContent = asyncHandler(async (req, res) => {
   const { documentId } = req.params;
-
   const { content } = req.body;
-
   const user = req.user;
 
   if (!user) {
@@ -169,7 +167,7 @@ const updateDocumentContent = asyncHandler(async (req, res) => {
     throw new apiError(400, 'Change content is required');
   }
 
-  const document = await Document.findByIdAndUpdate(documentId, content, { new: true });
+  const document = await Document.findByIdAndUpdate(documentId, {content}, { new: true });
 
   if (!document) {
     throw new apiError(500, 'Something went wrong while updating the content of the document');
