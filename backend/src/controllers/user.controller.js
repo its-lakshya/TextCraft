@@ -247,8 +247,9 @@ const isLoggedIn = asyncHandler(async (req, res) => {
 
   try {
     const decoded = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
-
-    res.status(200).json({ loggedIn: true, user: decoded.user });
+    let user = await User.findById(decoded._id).select("-password -refreshToken -createdAt -updatedAt -__v")
+    user = {isLoggedIn:true, user}
+    res.status(200).json(new apiResponse(200, user, "User is successfully verified"));
   } catch (error) {
     console.error('Error verifying access token:', error);
     res.status(401).json({ loggedIn: false, message: 'Invalid access token' });
