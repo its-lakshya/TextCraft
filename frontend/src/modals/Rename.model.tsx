@@ -2,7 +2,7 @@ import { useRef } from 'react';
 import axios from '../axios.config';
 
 interface props {
-  name: string;
+  name: string | undefined;
   documentId: string;
   setShowRenameModal: React.Dispatch<React.SetStateAction<boolean>>;
   setNewName: React.Dispatch<React.SetStateAction<string>>;

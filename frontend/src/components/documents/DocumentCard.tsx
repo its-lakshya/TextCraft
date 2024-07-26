@@ -125,7 +125,7 @@ const DocumentCard: React.FC<DocumentCardProps> = ({ data, setDeletedDocument })
           </div>
         </div>
       ) : null}
-      {showRenameModal ? <RenameModel name={data.documentName} documentId={data._id} setShowRenameModal={setShowRenameModal} setNewName={setNewName} /> : null}
+      {showRenameModal ? <RenameModel name={documentNameRef.current?.innerHTML} documentId={data._id} setShowRenameModal={setShowRenameModal} setNewName={setNewName} /> : null}
     </div>
   );
 };
