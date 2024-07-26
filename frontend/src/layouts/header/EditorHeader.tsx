@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { buttonHoverAnimaiton } from '../../utils/Tailwind.utils';
 import { IoEarthSharp } from 'react-icons/io5';
@@ -7,6 +7,11 @@ import { getDate } from '../../utils/Date.utils';
 import { CircularLoader } from '../../components/loader/Loader';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/Store';
+import { Socket } from 'socket.io-client';
+import { User } from '../../pages/DocumentEdit';
+import { FaUserGroup } from 'react-icons/fa6';
+import { motion } from 'framer-motion';
+import ActiveUsersModal from '../../modals/ActiveUsers.modal';
 
 interface Document {
   createdAt: string;
@@ -20,15 +25,23 @@ interface Document {
 
 interface DocumentProps {
   document?: Document;
+  socket: Socket;
 }
 
-const EditorHeader: React.FC<DocumentProps> = ({ document }) => {
+interface ActiveUsers {
+  documentId: string,
+  userDetails: User
+}
+
+const EditorHeader: React.FC<DocumentProps> = ({ document, socket }) => {
   const location = useLocation();
   const documentNameRef = useRef<HTMLDivElement>(null);
   const currentLocation = location.pathname.split('/');
+  const [activeUsers, setActiveUsers] = useState<ActiveUsers[]>();
+  const [activeUsersVisibility, setActiveUsersVisibility] = useState<boolean>(false)
   const documentId = currentLocation[currentLocation.length - 1];
-  const isSaving = useSelector((store: RootState) => store.docSaving.isSaving)
-  
+  const isSaving = useSelector((store: RootState) => store.docSaving.isSaving);
+
   let lastUpdatedAt: string = '';
 
   if (document?.updatedAt) {
@@ -73,6 +86,10 @@ const EditorHeader: React.FC<DocumentProps> = ({ document }) => {
     };
   }, []);
 
+  socket.on('update-active-users', data => {
+    setActiveUsers(data);
+  });
+
   return (
     <div className="WRAPPER flex w-full h-[4rem] justify-between items-center box-border z-10 bg-documentBackground">
       <div className="HEADER-LEFT flex w-auto items-center">
@@ -92,8 +109,8 @@ const EditorHeader: React.FC<DocumentProps> = ({ document }) => {
               {document?.documentName}
             </div>
             {isSaving ? (
-              <span className='flex items-center gap-2 text-sm text-gray-500'>
-              <CircularLoader size={'size-4'} border="border border-[3px]" /> saving...
+              <span className="flex items-center gap-2 text-sm text-gray-500">
+                <CircularLoader size={'size-4'} border="border border-[3px]" /> saving...
               </span>
             ) : (
               <span className="text-sm text-gray-500">Saved to cloud</span>
@@ -117,6 +134,16 @@ const EditorHeader: React.FC<DocumentProps> = ({ document }) => {
         </div>
       </div>
       <div className="HEADER-RIGHT flex items-center gap-3 w-auto">
+        <div className='relative'>
+          <motion.button
+            whileHover={{ scale: 1.2 }}
+            className="flex justify-center items-center text-2xl text-primaryDark mr-2"
+            onClick={() => setActiveUsersVisibility(!activeUsersVisibility)}
+          >
+            <FaUserGroup />
+          </motion.button>
+          {activeUsersVisibility ? <ActiveUsersModal activeUsers={activeUsers}/> : null}
+        </div>
         <button
           className={`SHARE flex justify-center items-center gap-2 w-32 h-10 bg-primary ${buttonHoverAnimaiton} hover:bg-primaryDark text-white rounded-full`}
         >

@@ -22,16 +22,16 @@ const CreateDocument: React.FC = () => {
       <div className='flex justify-center items-center gap-[10vw] w-documentsPageWidth max-w-documentsPageMaxWidth'>
         <motion.button
           className="CREATE-DOCUMENT flex justify-center items-center w-36 h-48 bg-white text-6xl text-[#EA4336] rounded-documentCard"
-          initial={{ scale: 100 }}
+          initial={{ scale: 20 }}
           animate={{ scale: 1 }}
-          transition={{ duration: 0.5, ease: 'easeOut' }}
+          transition={{ duration: 0.3, ease: 'easeInOut' }}
           whileHover={{ scale: 1.1 }}
           onClick={() => handleCreateDocument()}
         >
           <motion.span
             initial={{ scale: 0.6 }}
             animate={{ scale: 1 }}
-            transition={{ duration: 0.5, ease: 'easeIn', delay: 0.5 }}
+            transition={{ duration: 0.5, ease: 'easeIn', delay: 0.3 }}
           >
             <MdPlaylistAdd />
           </motion.span>

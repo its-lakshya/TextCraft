@@ -3,7 +3,7 @@ import { getDate } from '../../utils/Date.utils';
 import { useEffect, useRef, useState } from 'react';
 import { MdEditDocument } from 'react-icons/md';
 import { AiFillDelete } from 'react-icons/ai';
-import RenameModel from '../../modals/Rename.model';
+import RenameModal from '../../modals/Rename.modal';
 import axios from '../../axios.config';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
@@ -159,7 +159,7 @@ const DocumentCard: React.FC<DocumentCardProps> = ({ data, setDeletedDocument })
         </div>
       ) : null}
       {showRenameModal ? (
-        <RenameModel
+        <RenameModal
           name={documentNameRef.current?.innerHTML}
           documentId={data._id}
           setShowRenameModal={setShowRenameModal}

@@ -9,7 +9,7 @@ interface props {
   setNewName: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const RenameModel: React.FC<props> = ({ name, documentId, setShowRenameModal, setNewName }) => {
+const RenameModal: React.FC<props> = ({ name, documentId, setShowRenameModal, setNewName }) => {
   const nameRef = useRef<HTMLInputElement>(null);
   const dispatch = useDispatch();
 
@@ -102,4 +102,4 @@ const RenameModel: React.FC<props> = ({ name, documentId, setShowRenameModal, se
   );
 };
 
-export default RenameModel;
+export default RenameModal;

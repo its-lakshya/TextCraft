@@ -18,7 +18,7 @@ interface Document {
   _id: string;
 }
 
-interface User {
+export interface User {
   createdAt: string;
   email: string;
   fullName: string;
@@ -79,17 +79,19 @@ const DocumentEdit = () => {
     // eslint-disable-next-line
   }, [userDetails]);
 
+  // Showing the notification when user dissconnects from the document
   socket.on('disconnected-user', userDetails => {
     dispatch(
       setShowToast({
         showToast: true,
-        message: `${userDetails.userName} dissconnected`,
+        message: `${userDetails.userName} disconnected`,
         type: 'DEFAULT',
         timing: 3000
       }),
     );
   });
 
+  // Showing notification when user joins the document
   socket.on('joined-user', userDetails => {
     dispatch(
       setShowToast({
@@ -101,11 +103,13 @@ const DocumentEdit = () => {
     );
   });
 
+  // Maintaning the list of active users
+
   if (documentData) {
     return (
       <div className="WAPPER flex flex-col justify-start items-center w-full h-auto bg-documentBackground">
         <div className="flex flex-col fixed top-0 z-50 w-full px-10">
-          <EditorHeader document={documentData} />
+          <EditorHeader document={documentData} socket={socket}/>
           <Toolbar />
         </div>
         <Editor documentData={documentData} socket={socket} />

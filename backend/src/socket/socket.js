@@ -31,11 +31,12 @@ io.on('connection', socket => {
   });
 
   socket.on('disconnect', () => {
-    const {userDetails, documentId} = activeUser[socket.id];
-    if (userDetails) {
-      socket.to(documentId).emit('disconnected-user', userDetails);
-      io.to(documentId).emit('update-active-users', Object.values(activeUser));
+    const data = activeUser[socket.id];
+    
+    if (data && data?.userDetails) {
+      socket.to(data.documentId).emit('disconnected-user', data.userDetails);
       delete activeUser[socket.id];
+      io.to(data.documentId).emit('update-active-users', Object.values(activeUser));
     }
   });
 
