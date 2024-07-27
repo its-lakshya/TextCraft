@@ -41,7 +41,7 @@ const EditorHeader: React.FC<DocumentProps> = ({ document, socket }) => {
   const documentNameRef = useRef<HTMLDivElement>(null);
   const currentLocation = location.pathname.split('/');
   const documentId = currentLocation[currentLocation.length - 1];
-  const [showShareModal, setShowShareModa] = useState<boolean>(false);
+  const [showShareModal, setShowShareModal] = useState<boolean>(false);
   const [activeUsers, setActiveUsers] = useState<ActiveUsers[]>();
   const isSaving = useSelector((store: RootState) => store.docSaving.isSaving);
   const [activeUsersVisibility, setActiveUsersVisibility] = useState<boolean>(false)
@@ -168,14 +168,14 @@ const EditorHeader: React.FC<DocumentProps> = ({ document, socket }) => {
         </div>
         <button
           className={`SHARE flex justify-center items-center gap-2 w-32 h-10 bg-primary ${buttonHoverAnimaiton} hover:bg-primaryDark text-white rounded-full`}
-          onClick={() => setShowShareModa(!showShareModal)}
+          onClick={() => setShowShareModal(!showShareModal)}
         >
           <IoEarthSharp />
           Share
         </button>
         <span className="PROFILE size-8 rounded-full bg-gray-300"></span>
       </div>
-      {showShareModal ? <ShareModal document={document}/> : null}
+      {showShareModal ? <ShareModal document={document} setShowShareModal={setShowShareModal}/> : null}
     </div>
   );
 };

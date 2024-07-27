@@ -21,6 +21,7 @@ interface Document {
 
 interface ShareProps {
   document: Document | undefined;
+  setShowShareModal:  React.Dispatch<React.SetStateAction<boolean>>
 }
 
 interface publicAccess {
@@ -37,7 +38,7 @@ interface Collaborators {
   _id: string;
 }
 
-const ShareModal: React.FC<ShareProps> = ({ document }) => {
+const ShareModal: React.FC<ShareProps> = ({ document, setShowShareModal }) => {
   const dispatch = useDispatch();
   const location = useLocation();
   const isPublicRef = useRef<HTMLSpanElement>(null)
@@ -247,13 +248,15 @@ const ShareModal: React.FC<ShareProps> = ({ document }) => {
           </div>
         </div>
         <div className="BUTTONS flex justify-between items-center px-6">
-          <button className="COPY flex justify-center items-center gap-2 h-10 w-36 border border-primary text-sm text-primary font-medium rounded-3xl hover:bg-primaryExtraLight">
+          <button className={`COPY flex justify-center items-center gap-2 h-10 w-36 border border-primary text-sm text-primary font-medium rounded-3xl hover:bg-primaryExtraLight ${collaborators?.length === 0 && isPublic.tag === 'Restricted' ? 'pointer-events-none opacity-40' : null}`}>
             <span className="text-lg">
               <IoLink />
             </span>
             Copy link
           </button>
-          <button className="DONE w-36 h-10 bg-primary hover:bg-primaryDark text-sm text-white font-medium rounded-3xl">
+          <button className="DONE w-36 h-10 bg-primary hover:bg-primaryDark text-sm text-white font-medium rounded-3xl"
+          onClick={() => setShowShareModal(false)}
+          >
             Done
           </button>
         </div>
