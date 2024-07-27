@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store/Store';
 import { MdLockPerson } from 'react-icons/md';
 import { IoMdArrowDropdown } from 'react-icons/io';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { IoEarthSharp, IoEyeSharp, IoLink } from 'react-icons/io5';
 import axios from '../axios.config';
 import { useLocation } from 'react-router-dom';
@@ -40,6 +40,10 @@ interface Collaborators {
 const ShareModal: React.FC<ShareProps> = ({ document }) => {
   const dispatch = useDispatch();
   const location = useLocation();
+  const isPublicRef = useRef<HTMLSpanElement>(null)
+  const publicAccessRef = useRef<HTMLButtonElement>(null)
+  const publicAccessModal = useRef<HTMLDivElement>(null)
+  const publicAccessTypeModal = useRef<HTMLDivElement>(null)
   const currentLocation = location.pathname.split('/');
   const user = useSelector((store: RootState) => store.auth);
   const documentId = currentLocation[currentLocation.length - 1];
@@ -56,7 +60,7 @@ const ShareModal: React.FC<ShareProps> = ({ document }) => {
 
   const anyoneWithLink = {
     tag: 'Anyone with the link',
-    description: `Anyone on the internet with the link can be ${accessType}`,
+    description: `Anyone on the internet with the link can be `,
   };
 
   const handleAccess = async () => {
@@ -83,7 +87,7 @@ const ShareModal: React.FC<ShareProps> = ({ document }) => {
 
   const handleAccessType = async (accessType: string) => {
     try {
-      await axios.post(`/public/${documentId}`, { accessType });
+      await axios.post(`/public/${documentId}/access`, { accessType });
       if (accessType === 'read') {
         setAccessType('Viewer');
         dispatch(setShowToast({ showToast: true, message: 'Public access is set to view', type: 'SUCCESS', timing: 3000 }));
@@ -107,9 +111,9 @@ const ShareModal: React.FC<ShareProps> = ({ document }) => {
       else setAccessType('Editor');
     } catch (error) {
       console.log(error);
-      if ((error as Error)?.message === 'Request failed with status code 405') {
-        setIsPublic({ tag: restricted.tag, description: restricted.description });
-      }
+      // if ((error as Error)?.message === 'Request failed with status code 405') {
+      // }
+      setIsPublic({ tag: restricted.tag, description: restricted.description });
     }
   };
 
@@ -125,6 +129,19 @@ const ShareModal: React.FC<ShareProps> = ({ document }) => {
   useEffect(() => {
     getPublicAccessTypes();
     getCollaborators();
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent): void => {
+      if (isPublicRef.current && !isPublicRef.current.contains(event.target as Node)) setShowPublicAccessModal(false);
+      if (publicAccessRef.current && !publicAccessRef.current.contains(event.target as Node)) setShowPublicAccessTypeModal(false);
+    };
+
+    window.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      window.removeEventListener('mousedown', handleClickOutside);
+    };
   }, []);
 
   return (
@@ -168,7 +185,7 @@ const ShareModal: React.FC<ShareProps> = ({ document }) => {
               {isPublic.tag === 'Restricted' ? <MdLockPerson /> : <IoEarthSharp />}
             </span>
             <div className="flex flex-col items-start text-sm font-medium">
-              <span className="relative flex items-center">
+              <span className="relative flex items-center" ref={isPublicRef}>
                 <span
                   onClick={() => setShowPublicAccessModal(!showPublicAccessModal)}
                   className="flex items-center h-7 px-2 gap-2 hover:bg-zinc-300 rounded-md"
@@ -177,6 +194,7 @@ const ShareModal: React.FC<ShareProps> = ({ document }) => {
                 </span>
                 {showPublicAccessModal ? (
                   <div
+                    ref={publicAccessModal}
                     className="absolute top-6 flex flex-col justify-center items-start py-2 w-44 h-auto bg-white rounded-[4px]"
                     style={{
                       boxShadow:
@@ -192,9 +210,9 @@ const ShareModal: React.FC<ShareProps> = ({ document }) => {
                   </div>
                 ) : null}
               </span>
-              <span className="text-xs font-light ml-2">{isPublic?.description}</span>
+              <span className="text-xs font-light ml-2">{isPublic?.description} {isPublic.tag !== 'Restricted' ? accessType : null}</span>
             </div>
-            <button className={`absolute right-6 text-sm`}>
+            <button className={`absolute right-6 text-sm`} ref={publicAccessRef}>
               <span
                 className={`flex justify-center items-center w-24 h-9 px-3 gap-2 right-6 text-sm font-normal rounded-[4px] hover:bg-zinc-300 ${isPublic.tag === 'Restricted' ? 'pointer-events-none text-gray-400 font-light' : null} `}
                 onClick={() => setShowPublicAccessTypeModal(!showPublicAccessTypeModal)}
@@ -204,6 +222,7 @@ const ShareModal: React.FC<ShareProps> = ({ document }) => {
               </span>
               {showPublicAccessTypeModal ? (
                 <div
+                  ref={publicAccessTypeModal}
                   className="absolute top-10 left-0 flex flex-col justify-center items-start py-2 w-28 font-normal h-auto bg-white rounded-[4px]"
                   style={{
                     boxShadow:
