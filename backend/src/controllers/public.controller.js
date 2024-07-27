@@ -4,6 +4,7 @@ import { apiError } from '../utils/apiError.js';
 import { Document } from '../models/document.model.js';
 import { Collaboration } from '../models/collaboration.model.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
+import { Public } from '../models/public.model.js';
 
 const toggleIsPublic = asyncHandler(async (req, res) => {
   const { documentId } = req.params;
@@ -23,10 +24,10 @@ const toggleIsPublic = asyncHandler(async (req, res) => {
     throw new apiError(405, 'User is unauthorized to set public status this document');
   }
 
-  const alreadyPublic = await Collaboration.findOne({ document });
+  const alreadyPublic = await Public.findOne({ document });
 
   if (alreadyPublic) {
-    await Collaboration.findOneAndDelete({ document });
+    await Public.findOneAndDelete({ document });
 
     return res
       .status(200)
@@ -35,7 +36,7 @@ const toggleIsPublic = asyncHandler(async (req, res) => {
       );
   }
 
-  const publicDocument = await Collaboration.create({ document });
+  const publicDocument = await Public.create({ document });
 
   if (!publicDocument) {
     throw new apiError(500, 'Something went wrong while setting document to public');
@@ -71,7 +72,7 @@ const setPublicAccessType = asyncHandler(async (req, res) => {
     throw new apiError(405, 'User is unauthorized to rename this document');
   }
 
-  const collaboration = await Collaboration.findOneAndUpdate({ documentId, accessType });
+  const collaboration = await Public.findOneAndUpdate({ documentId, accessType });
 
   if (!collaboration) {
     throw new apiError(
@@ -98,13 +99,13 @@ const getPublicAccessInformation = asyncHandler(async (req, res) => {
   }
 
   const document = await Document.findById(documentId);
-  const collaboration = await Collaboration.findOne({ document });
+  const publicInformation = await Public.findOne({ document });
 
-  if (!collaboration) {
+  if (!publicInformation) {
     throw new apiError(405, 'Document is private');
   }
 
-  return res.status(200).json(new apiResponse(200, collaboration));
+  return res.status(200).json(new apiResponse(200, publicInformation));
 });
 
 export { toggleIsPublic, setPublicAccessType, getPublicAccessInformation };

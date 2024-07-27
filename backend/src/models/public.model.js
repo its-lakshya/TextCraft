@@ -15,6 +15,6 @@ const publicSchema = new Schema(
   { timestamps: true },
 );
 
-const Public = mongoose.model('Collaboration', publicSchema);
+const Public = mongoose.model('Public', publicSchema);
 
 export { Public };
