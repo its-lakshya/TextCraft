@@ -321,13 +321,9 @@ const getPublicAccessInformation = asyncHandler(async (req, res) => {
 
   console.log(documentId)
   const document = await Document.findById(documentId)
-  const collaboration = await Collaboration.find({document, isPublic: true})
+  const collaboration = await Collaboration.findOne({document, isPublic: true})
 
   if(!collaboration){
-    throw new apiError(500, 'Something went wrong while fetching public access information of the document')
-  }
-  
-  if(collaboration.length === 0){
     throw new apiError(405, 'Document is private')
   }
 
