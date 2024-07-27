@@ -285,9 +285,12 @@ const setPublicAccessType = asyncHandler(async (req, res) => {
   if(!mongoose.isValidObjectId(documentId)){
     throw new apiError(400, "Either invalid of missing document id");
   }
-
-  if(!publicAccessType || publicAccessType.trim() === '' || publicAccessType !== 'read' || publicAccessType !== 'write'){
-    throw new apiError(300, "A valid pubic access types is required")
+  if(!publicAccessType || publicAccessType.trim() === ''){
+    throw new apiError(400, "Pubic access types is required")
+  }
+  
+  if(publicAccessType !== 'read' && publicAccessType !== 'write') {
+    throw new apiError(400, "Invalid public access types is required")
   }
 
   const document = await Document.findById(documentId);
@@ -303,7 +306,7 @@ const setPublicAccessType = asyncHandler(async (req, res) => {
 
   return res
     .status(200)
-    .json(new apiResponse(200, "Public access type of the document is set successfully"))
+    .json(new apiResponse(200, "Public access type of the document is updated successfully"))
 
 });
 

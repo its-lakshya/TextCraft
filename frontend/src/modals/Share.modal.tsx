@@ -3,11 +3,10 @@ import { RootState } from '../store/Store';
 import { MdLockPerson } from 'react-icons/md';
 import { IoMdArrowDropdown } from 'react-icons/io';
 import { useEffect, useState } from 'react';
-import { IoLink } from 'react-icons/io5';
+import { IoEarthSharp, IoEyeSharp, IoLink } from 'react-icons/io5';
 import axios from '../axios.config';
 import { useLocation } from 'react-router-dom';
 import { setShowToast } from '../store/slices/Toast.slice';
-import { FaRegEye } from 'react-icons/fa6';
 import { FaUserEdit } from 'react-icons/fa';
 
 interface Document {
@@ -39,7 +38,7 @@ const ShareModal: React.FC<ShareProps> = ({ document }) => {
   const [showPublicAccessModal, setShowPublicAccessModal] = useState<boolean>(false);
   const [showPublicAccessTypeModal, setShowPublicAccessTypeModal] = useState<boolean>(false);
   const [isPublic, setIsPublic] = useState<publicAccess>({ tag: '', description: '' });
-
+  console.log(document?.owner)
   const restricted = {
     tag: 'Restricted',
     description: 'Only people with access can open with the link',
@@ -65,6 +64,7 @@ const ShareModal: React.FC<ShareProps> = ({ document }) => {
         );
       } else {
         setIsPublic({ tag: restricted.tag, description: restricted.description });
+        setPublicAccessType("Viewer");
         dispatch(
           setShowToast({
             showToast: true,
@@ -119,7 +119,15 @@ const ShareModal: React.FC<ShareProps> = ({ document }) => {
 
   const handlePublicAccessType = async (publicAccessType: string) => {
     try {
-      await axios.post(`/collaborations/c/${documentId}/public/access`, publicAccessType);
+      await axios.post(`/collaborations/c/${documentId}/public/access`, {publicAccessType: publicAccessType});
+      if(publicAccessType === 'read') {
+        setPublicAccessType('Viewer')
+        dispatch(setShowToast({showToast: true, message: "Public access is set to view", type: 'SUCCESS', timing: 3000}))
+      }
+      else{
+        setPublicAccessType('Editor')
+        dispatch(setShowToast({showToast: true, message: "Public access is set to edit", type: 'SUCCESS', timing: 3000}))
+      }
     } catch (error) {
       console.log(error);
     }
@@ -142,7 +150,7 @@ const ShareModal: React.FC<ShareProps> = ({ document }) => {
   }, []);
 
   return (
-    <div className="WAPPER fixed top-0 left-0 w-screen h-screen flex justify-center items-center bg-gray-300 bg-opacity-50 backdrop-blur-sm text-black font-light">
+    <div className="WAPPER fixed top-0 left-0 w-screen h-screen flex justify-center items-center bg-gray-300 bg-opacity-50 backdrop-blur-sm text-black font-light select-none">
       <div className="MAIN-CONTAINER flex flex-col gap-6 py-6 bg-white w-[35vw] h-auto rounded-lg">
         <div className="DOCUMENT-NAME text-2xl px-6">Share "{document?.documentName}" </div>
         <input
@@ -166,13 +174,14 @@ const ShareModal: React.FC<ShareProps> = ({ document }) => {
           <span className="font-medium px-6">General access</span>
           <div className="relative OWNER flex items-center gap-2 w-full h-14 px-6 cursor-pointer hover:bg-primaryExtraLight">
             <span className="size-9 flex items-center justify-center text-xl bg-primaryLight rounded-full">
-              <MdLockPerson />
+              {isPublic.tag === 'Restricted' ? <MdLockPerson /> : <IoEarthSharp />}
+              
             </span>
             <div className="flex flex-col items-start text-sm font-medium">
-              <span className="relative flex items-center h-7 px-2 hover:bg-zinc-300 rounded-md">
+              <span className="relative flex items-center">
                 <span
                   onClick={() => setShowPublicAccessModal(!showPublicAccessModal)}
-                  className="flex items-center gap-2"
+                  className="flex items-center h-7 px-2 gap-2 hover:bg-zinc-300 rounded-md"
                 >
                   {isPublic?.tag} <IoMdArrowDropdown />
                 </span>
@@ -185,13 +194,13 @@ const ShareModal: React.FC<ShareProps> = ({ document }) => {
                     }}
                   >
                     <span
-                      className="flex items-center w-full h-8 px-2 hover:bg-primaryExtraLight"
+                      className="flex items-center w-full h-8 px-4 hover:bg-primaryExtraLight"
                       onClick={() => handlePublicAccess(false)}
                     >
                       {restricted.tag}
                     </span>
                     <span
-                      className="flex items-center w-full h-8 px-2 hover:bg-primaryExtraLight"
+                      className="flex items-center w-full h-8 px-4 hover:bg-primaryExtraLight"
                       onClick={() => handlePublicAccess(true)}
                     >
                       {anyoneWithLink.tag}
@@ -202,10 +211,10 @@ const ShareModal: React.FC<ShareProps> = ({ document }) => {
               <span className="text-xs font-light ml-2">{isPublic?.description}</span>
             </div>
             <button
-              className={`absolute flex items-center h-9 px-3 gap-2 right-6 text-sm font-normal rounded-[4px] hover:bg-zinc-300 ${isPublic.tag === 'Restricted' ? 'pointer-events-none text-gray-400 font-light' : null} `}
+              className={`absolute right-6 text-sm`}
             >
               <span
-                className="flex items-center gap-2"
+                className={`flex justify-center items-center w-24 h-9 px-3 gap-2 right-6 text-sm font-normal rounded-[4px] hover:bg-zinc-300 ${isPublic.tag === 'Restricted' ? 'pointer-events-none text-gray-400 font-light' : null} `}
                 onClick={() => setShowPublicAccessTypeModal(!showPublicAccessTypeModal)}
               >
                 {publicAccessType}
@@ -213,7 +222,7 @@ const ShareModal: React.FC<ShareProps> = ({ document }) => {
               </span>
               {showPublicAccessTypeModal ? (
                 <div
-                  className="absolute top-10 flex flex-col justify-center items-start py-2 w-28 h-auto bg-white rounded-[4px]"
+                  className="absolute top-10 left-0 flex flex-col justify-center items-start py-2 w-28 font-normal h-auto bg-white rounded-[4px]"
                   style={{
                     boxShadow:
                       'rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px',
@@ -223,7 +232,7 @@ const ShareModal: React.FC<ShareProps> = ({ document }) => {
                     className="flex items-center gap-2 w-full h-8 px-4 hover:bg-primaryExtraLight"
                     onClick={() => handlePublicAccessType('read')}
                   >
-                    <FaRegEye /> Viewer
+                    <IoEyeSharp /> Viewer
                   </span>
                   <span
                     className="flex items-center gap-2 w-full h-8 px-4 hover:bg-primaryExtraLight"

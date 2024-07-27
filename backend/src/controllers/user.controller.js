@@ -274,7 +274,6 @@ const getUserDetails = asyncHandler(async (req, res) => {
     .json(new apiResponse(200, userDetails, "User details fetched successfully"));
 })
 
-
 export {
   registerUser,
   loginUser,
