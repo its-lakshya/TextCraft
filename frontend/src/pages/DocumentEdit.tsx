@@ -87,7 +87,8 @@ const DocumentEdit = () => {
         showToast: true,
         message: `${userDetails.userName} disconnected`,
         type: 'DEFAULT',
-        timing: 3000
+        timing: 3000,
+        image: `${userDetails.profileImage}`
       }),
     );
   });
@@ -99,7 +100,8 @@ const DocumentEdit = () => {
         showToast: true,
         message: `${userDetails.userName} joined`,
         type: 'DEFAULT',
-        timing: 3000
+        timing: 3000,
+        image: `${userDetails.profileImage}`
       }),
     );
   });

@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store/Store';
 import { setShowToast } from '../../store/slices/Toast.slice';
 import { motion } from 'framer-motion';
-import { FaUser } from 'react-icons/fa6';
+// import { FaUser } from 'react-icons/fa6';
 
 const Toast: React.FC = () => {
   const dispatch = useDispatch();
@@ -77,7 +77,7 @@ const Toast: React.FC = () => {
         </span>
       ): 
         <span>
-          <FaUser className='text-primary text-2xl' />
+         <img src={`${toast.image}`} alt='img' className='size-10 rounded-full'/>
         </span>
       }
       {toast.message}
