@@ -15,7 +15,6 @@ const documentSchema = new Schema({
   }
 }, {timestamps: true})
 
-
 const Document =  mongoose.model("Document", documentSchema)
 
 export { Document }
