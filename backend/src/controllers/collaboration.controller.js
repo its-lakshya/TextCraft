@@ -175,7 +175,83 @@ const getAllCollaborators = asyncHandler(async (req, res) => {
     throw new apiError(400, 'No such document exists');
   }
 
-  const collaborators = await Collaboration.find({ document }).populate('collaborator');
+  const collaborators = await Document.aggregate([
+    {
+      $match: {
+        _id: new mongoose.Types.ObjectId(documentId),
+      },
+    },
+    {
+      $project: {
+        documentName: 0,
+        createdAt: 0,
+        updatedAt: 0,
+        __v: 0,
+        owner: 0,
+      },
+    },
+    {
+      $lookup: {
+        from: 'collaborations',
+        localField: '_id',
+        foreignField: 'document',
+        as: 'collab',
+        pipeline: [
+          {
+            $project: {
+              accessType: 1,
+              collaborator: 1,
+              _id: 0,
+            },
+          },
+          {
+            $lookup: {
+              from: 'users',
+              localField: 'collaborator',
+              foreignField: '_id',
+              as: 'collaboratorDetails',
+              pipeline: [
+                {
+                  $project: {
+                    createdAt: 0,
+                    updatedAt: 0,
+                    gender: 0,
+                    password: 0,
+                    refreshToken: 0,
+                    __v: 0,
+                  },
+                },
+              ],
+            },
+          },
+          {
+            $unwind: { path: '$collaboratorDetails', preserveNullAndEmptyArrays: true },
+          },
+          {
+            $addFields: {
+              _id: '$collaboratorDetails._id',
+              userName: '$collaboratorDetails.userName',
+              email: '$collaboratorDetails.email',
+              fullName: '$collaboratorDetails.fullName',
+              profileImage: '$collaboratorDetails.profileImage',
+            },
+          },
+          {
+            $project: {
+              collaboratorDetails: 0,
+              collaborator: 0,
+            },
+          },
+        ],
+      },
+    },
+    {
+      $unwind: '$collab',
+    },
+    {
+      $replaceRoot: { newRoot: '$collab' },
+    },
+  ]);
 
   if (!collaborators) {
     throw new apiError(500, 'Something went wrong while fetching the collaborators');
