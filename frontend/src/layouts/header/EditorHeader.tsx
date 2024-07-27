@@ -14,6 +14,7 @@ import { motion } from 'framer-motion';
 import ActiveUsersModal from '../../modals/ActiveUsers.modal';
 import { MdOutlineCloudDone } from 'react-icons/md';
 import ShareModal from '../../modals/Share.modal';
+import ProfileModal from '../../modals/Profile.modal';
 
 interface Document {
   createdAt: string;
@@ -37,9 +38,12 @@ interface ActiveUsers {
 
 const EditorHeader: React.FC<DocumentProps> = ({ document, socket }) => {
   const location = useLocation();
+  const profileRef = useRef<HTMLSpanElement>(null)
   const activeUsersRef = useRef<HTMLSpanElement>(null);
   const documentNameRef = useRef<HTMLDivElement>(null);
   const currentLocation = location.pathname.split('/');
+  const [profileModal, setProfileModal] = useState(false);
+  const user = useSelector((store: RootState) => store.auth);
   const documentId = currentLocation[currentLocation.length - 1];
   const [showShareModal, setShowShareModal] = useState<boolean>(false);
   const [activeUsers, setActiveUsers] = useState<ActiveUsers[]>();
@@ -112,6 +116,24 @@ const EditorHeader: React.FC<DocumentProps> = ({ document, socket }) => {
     };
   }, []);
 
+  // Handling closing of profile model when clicked outsied
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent): void => {
+      if (
+        profileRef.current &&
+        !profileRef.current.contains(event.target as Node)
+      ) {
+        setProfileModal(false);
+      }
+    };
+
+    window.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      window.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   return (
     <div className="WRAPPER flex w-full h-[4rem] justify-between items-center box-border z-10 bg-documentBackground">
       <div className="HEADER-LEFT flex w-auto items-center">
@@ -173,7 +195,16 @@ const EditorHeader: React.FC<DocumentProps> = ({ document, socket }) => {
           <IoEarthSharp />
           Share
         </button>
-        <span className="PROFILE size-8 rounded-full bg-gray-300"></span>
+        <div className="relative">
+          <motion.img
+            whileHover={{ scale: 1.1 }}
+            src={user.profileImage}
+            alt="img"
+            className="size-8 bg-gray-300 rounded-full cursor-pointer"
+            onClick={() => setProfileModal(!profileModal)}
+          />
+          {profileModal ? <span ref={profileRef}><ProfileModal/> </span>: null}
+        </div>
       </div>
       {showShareModal ? <ShareModal document={document} setShowShareModal={setShowShareModal}/> : null}
     </div>
