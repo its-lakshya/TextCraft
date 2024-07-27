@@ -13,6 +13,7 @@ import { FaUserGroup } from 'react-icons/fa6';
 import { motion } from 'framer-motion';
 import ActiveUsersModal from '../../modals/ActiveUsers.modal';
 import { MdOutlineCloudDone } from 'react-icons/md';
+import ShareModal from '../../modals/Share.modal';
 
 interface Document {
   createdAt: string;
@@ -39,10 +40,11 @@ const EditorHeader: React.FC<DocumentProps> = ({ document, socket }) => {
   const activeUsersRef = useRef<HTMLSpanElement>(null);
   const documentNameRef = useRef<HTMLDivElement>(null);
   const currentLocation = location.pathname.split('/');
-  const [activeUsers, setActiveUsers] = useState<ActiveUsers[]>();
-  const [activeUsersVisibility, setActiveUsersVisibility] = useState<boolean>(false)
   const documentId = currentLocation[currentLocation.length - 1];
+  const [showShareModal, setShowShareModa] = useState<boolean>(false);
+  const [activeUsers, setActiveUsers] = useState<ActiveUsers[]>();
   const isSaving = useSelector((store: RootState) => store.docSaving.isSaving);
+  const [activeUsersVisibility, setActiveUsersVisibility] = useState<boolean>(false)
 
   let lastUpdatedAt: string = '';
 
@@ -166,12 +168,14 @@ const EditorHeader: React.FC<DocumentProps> = ({ document, socket }) => {
         </div>
         <button
           className={`SHARE flex justify-center items-center gap-2 w-32 h-10 bg-primary ${buttonHoverAnimaiton} hover:bg-primaryDark text-white rounded-full`}
+          onClick={() => setShowShareModa(!showShareModal)}
         >
           <IoEarthSharp />
           Share
         </button>
         <span className="PROFILE size-8 rounded-full bg-gray-300"></span>
       </div>
+      {showShareModal ? <ShareModal document={document}/> : null}
     </div>
   );
 };

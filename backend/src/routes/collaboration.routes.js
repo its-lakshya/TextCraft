@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { verifyJWT } from '../middlewares/auth.middleware.js';
-import { addCollaborator, getAllCollaborators, getCollaboratorsAccessType, removeCollaborator, updateAccessTypes, toggleIsPublic } from '../controllers/collaboration.controller.js';
+import { addCollaborator, getAllCollaborators, getCollaboratorsAccessType, removeCollaborator, updateAccessTypes, toggleIsPublic, setPublicAccessType, getPublicAccessInformation } from '../controllers/collaboration.controller.js';
 
 const router = Router();
 
@@ -11,5 +11,7 @@ router.route('/c/:documentId').get(getAllCollaborators).post(addCollaborator).de
 router.route('/c/:documentId/access').get(getCollaboratorsAccessType).patch(updateAccessTypes);
 
 router.route('/c/:documentId/public').post(toggleIsPublic);
+
+router.route('/c/:documentId/public/access').get(getPublicAccessInformation).post(setPublicAccessType);
 
 export default router;

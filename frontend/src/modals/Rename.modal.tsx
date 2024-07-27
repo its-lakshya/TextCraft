@@ -67,7 +67,7 @@ const RenameModal: React.FC<props> = ({ name, documentId, setShowRenameModal, se
 
   return (
     <div
-      className="WRAPPER fixed top-0 left-0 z-50 w-screen h-screen flex justify-center items-center bg-[#666666] bg-opacity-75 pointer-events-auto"
+      className="WRAPPER fixed top-0 left-0 z-50 w-screen h-screen flex justify-center items-center bg-gray-300 bg-opacity-50 backdrop-blur-md pointer-events-auto"
       onClick={handleClick}
     >
       <form
