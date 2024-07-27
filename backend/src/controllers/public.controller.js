@@ -7,7 +7,6 @@ import { asyncHandler } from '../utils/asyncHandler.js';
 
 const toggleIsPublic = asyncHandler(async (req, res) => {
   const { documentId } = req.params;
-  const { isPublic } = req.body;
   const user = req.user;
 
   if (!user) {
@@ -24,30 +23,25 @@ const toggleIsPublic = asyncHandler(async (req, res) => {
     throw new apiError(405, "User is unauthorized to set public status this document")
   }
 
-  if (isPublic === true) {
-    const alreadyPublic = await Collaboration.findOne({ document, isPublic: true });
-    if (alreadyPublic) {
-      throw new apiError(400, 'Document is already public');
-    }
+  const alreadyPublic = await Collaboration.findOne({ document });
 
-    const publicDocument = await Collaboration.create({ document, isPublic });
+  if (alreadyPublic) {
+    await Collaboration.findOneAndDelete({document});
 
-    if (!publicDocument) {
-      throw new apiError(500, 'Something went wrong while setting document to public');
-    }
     return res
-      .status(200)
-      .json(new apiResponse(200, 'Access Status is set to public successfully'));
+    .status(200)
+    .json(new apiResponse(200, {isPublic: false}, 'Access Status is set to private successfully'));
   }
 
-  const deletePublic = await Collaboration.findOneAndDelete({ document, isPublic: true });
-  if (!deletePublic) {
-    throw new apiError(400, 'Document is already private');
+  const publicDocument = await Collaboration.create({ document });
+
+  if (!publicDocument) {
+    throw new apiError(500, 'Something went wrong while setting document to public');
   }
 
   return res
     .status(200)
-    .json(new apiResponse(200, 'Doument is successfuly removed from public access'));
+    .json(new apiResponse(200, {isPublic: true}, 'Access Status is set to public successfully'));
 });
 
 const setPublicAccessType = asyncHandler(async (req, res) => {

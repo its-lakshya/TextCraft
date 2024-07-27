@@ -228,14 +228,10 @@ const getCollaboratorsAccessType = asyncHandler(async (req, res) => {
     );
 });
 
-
 export {
   addCollaborator,
   removeCollaborator,
   updateAccessTypes,
   getAllCollaborators,
   getCollaboratorsAccessType,
-  toggleIsPublic,
-  setPublicAccessType,
-  getPublicAccessInformation
 };

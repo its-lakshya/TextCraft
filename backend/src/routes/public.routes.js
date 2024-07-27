@@ -8,6 +8,4 @@ router.use(verifyJWT);
 
 router.route('/:documentId').post(toggleIsPublic).post(setPublicAccessType).get(getPublicAccessInformation);
 
-
-
 export default router;
