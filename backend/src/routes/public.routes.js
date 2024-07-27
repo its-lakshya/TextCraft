@@ -6,6 +6,8 @@ const router = Router();
 
 router.use(verifyJWT);
 
-router.route('/:documentId').post(toggleIsPublic).post(setPublicAccessType).get(getPublicAccessInformation);
+router.route('/:documentId').post(toggleIsPublic).get(getPublicAccessInformation);
+
+router.route('/:documentId/access').post(setPublicAccessType)
 
 export default router;
