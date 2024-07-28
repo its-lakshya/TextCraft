@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { verifyJWT } from '../middlewares/auth.middleware.js';
 import { upload } from '../middlewares/multer.middleware.js';
 import {
+  findUserByEmail,
   getUserDetails,
   isLoggedIn,
   loginUser,
@@ -39,6 +40,8 @@ router.route('/update-account').patch(updateUserDetails);
 router.route("/update-password").patch(updateUserPassword);
 
 router.route("/details").get(getUserDetails);
+
+router.route('/find-user').post(findUserByEmail)
 
 
 export default router;

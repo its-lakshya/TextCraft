@@ -3,7 +3,7 @@ import { apiError } from '../utils/apiError.js';
 import { apiResponse } from '../utils/apiResponse.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
 import { deleteFromCloudinary, uploadOnCloudinary } from '../utils/cloudinary.js';
-import jwt from 'jsonwebtoken'
+import jwt from 'jsonwebtoken';
 
 const generateAccessAndRefreshToken = async userId => {
   try {
@@ -247,9 +247,11 @@ const isLoggedIn = asyncHandler(async (req, res) => {
 
   try {
     const decoded = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
-    let user = await User.findById(decoded._id).select("-password -refreshToken -createdAt -updatedAt -__v")
-    user = {isLoggedIn:true, user}
-    res.status(200).json(new apiResponse(200, user, "User is successfully verified"));
+    let user = await User.findById(decoded._id).select(
+      '-password -refreshToken -createdAt -updatedAt -__v',
+    );
+    user = { isLoggedIn: true, user };
+    res.status(200).json(new apiResponse(200, user, 'User is successfully verified'));
   } catch (error) {
     console.error('Error verifying access token:', error);
     res.status(401).json({ loggedIn: false, message: 'Invalid access token' });
@@ -259,20 +261,42 @@ const isLoggedIn = asyncHandler(async (req, res) => {
 const getUserDetails = asyncHandler(async (req, res) => {
   const user = req.user;
 
-  if(!user){
-    throw new apiError(401, "Unauthorized request");
+  if (!user) {
+    throw new apiError(401, 'Unauthorized request');
   }
 
-  const userDetails = await User.findById(user._id).select("-password -refreshToken -__v");
+  const userDetails = await User.findById(user._id).select('-password -refreshToken -__v');
 
-  if(!userDetails){
+  if (!userDetails) {
     throw new apiError(500, "Something went wrong while fetching user's details");
   }
 
   return res
     .status(200)
-    .json(new apiResponse(200, userDetails, "User details fetched successfully"));
-})
+    .json(new apiResponse(200, userDetails, 'User details fetched successfully'));
+});
+
+const findUserByEmail = asyncHandler(async (req, res) => {
+  const { email } = req.body;
+  const user = req.user;
+
+  if (!user) {
+    throw new apiError(401, 'Unauthorized request');
+  }
+
+  if (!email || email.trim() === '') {
+    throw new apiError(400, 'Email is required');
+  }
+  const searchedUser = await User.findOne({ email }).select('-password -refreshToken -__v');
+
+  if (!searchedUser) {
+    throw new apiError(400, 'No such user exists');
+  }
+
+  return res
+    .status(200)
+    .json(new apiResponse(200, searchedUser, 'User details is fetched successfully'));
+});
 
 export {
   registerUser,
@@ -283,4 +307,5 @@ export {
   updateUserPassword,
   isLoggedIn,
   getUserDetails,
+  findUserByEmail,
 };
