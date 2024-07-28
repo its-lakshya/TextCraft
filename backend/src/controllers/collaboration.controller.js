@@ -29,6 +29,9 @@ const addCollaborator = asyncHandler(async (req, res) => {
 
   const document = await Document.findById(documentId);
 
+  if (!document.owner.equals(user._id))
+    throw new apiError(400, 'User not authorized to add collaborator');
+
   if (!document) {
     throw new apiError(400, 'Document does not exist');
   }
@@ -81,6 +84,9 @@ const removeCollaborator = asyncHandler(async (req, res) => {
 
   const document = await Document.findById(documentId);
 
+  if (!document.owner.equals(user._id))
+    throw new apiError(400, 'User not authorized to remove collaborator');
+
   if (!document) {
     throw new apiError(400, 'Document does not exist');
   }
@@ -131,6 +137,9 @@ const updateAccessTypes = asyncHandler(async (req, res) => {
   }
 
   const document = await Document.findById(documentId);
+
+  if (!document.owner.equals(user._id))
+    throw new apiError(400, 'User not authorized to update access types');
 
   if (!document) {
     throw new apiError(400, 'No such document found');
