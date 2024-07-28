@@ -207,7 +207,7 @@ const ShareModal: React.FC<ShareProps> = ({ document, setShowShareModal }) => {
           <>
             <div className="DOCUMENT-NAME text-2xl px-6">Share "{document?.documentName}" </div>
 
-            <SearchBar/>
+            <SearchBar setIsLoading={setIsLoading} collaborators={collaborators} />
 
             <div className="PEOPLE-WITH-ACCESS flex flex-col gap-2">
               <span className="font-medium px-6">People with access</span>
@@ -235,7 +235,9 @@ const ShareModal: React.FC<ShareProps> = ({ document, setShowShareModal }) => {
               </div>
             </div>
 
-            <div className={`GENERAL-ACCESS ${user._id !== owner?._id ? 'pointer-events-none' : null}`}>
+            <div
+              className={`GENERAL-ACCESS ${user._id !== owner?._id ? 'pointer-events-none' : null}`}
+            >
               <span className="font-medium px-6">General access</span>
 
               <div className="relative OWNER flex items-center gap-2 w-full h-14 px-6 cursor-pointer hover:bg-primaryExtraLight">

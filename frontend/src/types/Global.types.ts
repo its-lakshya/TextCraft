@@ -119,3 +119,8 @@ export interface CollaboratorModalProps {
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>,
   owner: User | undefined
 }
+
+export interface SearchProps {
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  collaborators: Collaborator[] | undefined
+}
