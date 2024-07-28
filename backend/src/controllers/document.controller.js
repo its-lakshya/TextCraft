@@ -369,7 +369,7 @@ const getDocumentOwner = asyncHandler(async (req, res) => {
 
   if(!document) throw new apiError(400, "No such document present");
 
-  const owner = await User.findById(document.owner).select('-password -refreshToken');
+  const owner = await User.findById(document.owner).select('-password -refreshToken -__v');
 
   if(!owner) throw new apiError(500, "Something went wrong while fetching owner details");
 

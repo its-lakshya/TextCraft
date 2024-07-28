@@ -9,6 +9,7 @@ export interface User {
   userName: string;
   profileImage: string,
   _id: string;
+  mobileNumber?: string,
 }
 
 export interface VerifiedUser {

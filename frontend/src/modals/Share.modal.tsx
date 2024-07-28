@@ -8,23 +8,29 @@ import axios from '../axios.config';
 import { useLocation } from 'react-router-dom';
 import { setShowToast } from '../store/slices/Toast.slice';
 import { FaUserEdit } from 'react-icons/fa';
-import { Collaborators, publicAccess, ShareProps } from '../types/Global.types';
+import { Collaborators, publicAccess, ShareProps, User } from '../types/Global.types';
 
 const ShareModal: React.FC<ShareProps> = ({ document, setShowShareModal }) => {
   const dispatch = useDispatch();
   const location = useLocation();
+
   const isPublicRef = useRef<HTMLSpanElement>(null)
-  const publicAccessRef = useRef<HTMLButtonElement>(null)
   const publicAccessModal = useRef<HTMLDivElement>(null)
+  const publicAccessRef = useRef<HTMLButtonElement>(null)
   const publicAccessTypeModal = useRef<HTMLDivElement>(null)
+  
   const currentLocation = location.pathname.split('/');
-  const user = useSelector((store: RootState) => store.auth);
   const documentId = currentLocation[currentLocation.length - 1];
+  
+  const user = useSelector((store: RootState) => store.auth);
+
+  const [owner, setOwner] = useState<User>()
   const [accessType, setAccessType] = useState<string>('Viewer');
-  const [showPublicAccessModal, setShowPublicAccessModal] = useState<boolean>(false);
-  const [showPublicAccessTypeModal, setShowPublicAccessTypeModal] = useState<boolean>(false);
-  const [isPublic, setIsPublic] = useState<publicAccess>({ tag: '', description: '' });
   const [collaborators, setCollaborators] = useState<Collaborators[]>();
+  const [showPublicAccessModal, setShowPublicAccessModal] = useState<boolean>(false);
+  const [isPublic, setIsPublic] = useState<publicAccess>({ tag: '', description: '' });
+  const [showPublicAccessTypeModal, setShowPublicAccessTypeModal] = useState<boolean>(false);
+
 
   const restricted = {
     tag: 'Restricted',
@@ -84,8 +90,6 @@ const ShareModal: React.FC<ShareProps> = ({ document, setShowShareModal }) => {
       else setAccessType('Editor');
     } catch (error) {
       console.log(error);
-      // if ((error as Error)?.message === 'Request failed with status code 405') {
-      // }
       setIsPublic({ tag: restricted.tag, description: restricted.description });
     }
   };
@@ -99,11 +103,23 @@ const ShareModal: React.FC<ShareProps> = ({ document, setShowShareModal }) => {
     }
   };
 
+  const getOwner = async () => {
+    try{
+      const owner = await axios.get(`/documents/d/${documentId}/owner`);
+      setOwner(owner.data.data)
+      console.log(owner.data.data._id, user._id)
+    }catch(error){
+      console.log(error, "Error while fetching the owner details");
+    }
+  }
+
   useEffect(() => {
     getPublicAccessTypes();
     getCollaborators();
+    getOwner();
   }, []);
 
+  // Handling closing of public access and access types modal when clicked outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent): void => {
       if (isPublicRef.current && !isPublicRef.current.contains(event.target as Node)) setShowPublicAccessModal(false);
@@ -129,10 +145,10 @@ const ShareModal: React.FC<ShareProps> = ({ document, setShowShareModal }) => {
           <span className="font-medium px-6">People with access</span>
           <div className="LIST-OF-PEOPLE w-full max-h-44 h-auto overflow-scroll">
             <div className="relative OWNER flex items-center gap-4 w-full h-14 px-6 cursor-pointer hover:bg-primaryExtraLight">
-              <img src={user.profileImage} alt="img" className="size-9 rounded-full" />
+              <img src={owner?.profileImage} alt="img" className="size-9 rounded-full" />
               <div className="flex flex-col gap-0 text-sm font-medium">
-                {user.fullName} (you)
-                <span className="text-xs font-light h-auto leading-none">{user.email}</span>
+                {owner?.fullName} {owner?._id === user._id ? '(you)' : null}
+                <span className="text-xs font-light h-auto leading-none">{owner?.email}</span>
               </div>
               <span className="absolute right-6 text-sm text-gray-400 font-light">Owner</span>
             </div>
@@ -142,7 +158,7 @@ const ShareModal: React.FC<ShareProps> = ({ document, setShowShareModal }) => {
                   <div key={collaborator._id} className="relative OWNER flex items-center gap-4 w-full h-14 px-6 cursor-pointer hover:bg-primaryExtraLight">
                     <img src={collaborator.profileImage} alt="img" className="size-9 rounded-full" />
                     <div className="flex flex-col gap-0 text-sm font-medium">
-                      {collaborator.fullName} (you)
+                      {collaborator.fullName} {collaborator?._id === user._id ? '(you)' : null}
                       <span className="text-xs font-light h-auto leading-none">{collaborator.email}</span>
                     </div>
                     <span className="absolute right-6 text-sm text-gray-400 font-light">{collaborator.accessType}</span>

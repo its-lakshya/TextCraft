@@ -98,7 +98,7 @@ const DocumentsList: React.FC = () => {
         >
           {selectedOwner} <IoMdArrowDropdown />
           <div
-            className={`absolute top-7 py-2 w-full h-auto rounded-documentCard ${ownerModelVisibility} bg-documentBackground`}
+            className={`absolute top-7 py-2 w-full h-auto rounded-documentCard ${ownerModelVisibility} bg-documentBackground z-10`}
             style={{ boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px' }}
             ref={ownerListRef}
           >
