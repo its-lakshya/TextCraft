@@ -29,7 +29,7 @@ const toggleFavourite = asyncHandler(async (req, res) => {
     await Favourite.findOneAndDelete({ document, user });
     return res
       .status(200)
-      .json(new apiResponse(200, 'Document remove from favourite successfully'));
+      .json(new apiResponse(200, {isFavourite: false}, 'Document removed from favourite successfully'));
   } else {
     const favourite = await Favourite.create({
       document,
@@ -40,7 +40,7 @@ const toggleFavourite = asyncHandler(async (req, res) => {
       throw new apiError(500, 'Something went wrong while adding the document to favourites');
     }
 
-    return res.status(200).json(new apiResponse(200, 'Document added to favourite successfully'));
+    return res.status(200).json(new apiResponse(200, {isFavourite: true}, 'Document added to favourite successfully'));
   }
 });
 
