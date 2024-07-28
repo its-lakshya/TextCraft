@@ -6,7 +6,7 @@ const router = Router();
 
 router.use(verifyJWT);
 
-router.route('/c/:documentId').get(getAllCollaborators).post(addCollaborator).patch(updateAccebackend/src/routes/collaboration.routes.jsssTypes);
+router.route('/c/:documentId').get(getAllCollaborators).post(addCollaborator).patch(updateAccessTypes);
 
 router.route('/c/:documentId/remove').post(removeCollaborator);
 

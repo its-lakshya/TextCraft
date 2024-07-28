@@ -9,6 +9,7 @@ import { useLocation } from 'react-router-dom';
 import { setShowToast } from '../store/slices/Toast.slice';
 import { FaUserEdit } from 'react-icons/fa';
 import { Collaborators, publicAccess, ShareProps, User } from '../types/Global.types';
+import CollaboratorsModal from './Collaborators.modal';
 
 const ShareModal: React.FC<ShareProps> = ({ document, setShowShareModal }) => {
   const dispatch = useDispatch();
@@ -18,7 +19,7 @@ const ShareModal: React.FC<ShareProps> = ({ document, setShowShareModal }) => {
   const publicAccessModal = useRef<HTMLDivElement>(null)
   const publicAccessRef = useRef<HTMLButtonElement>(null)
   const publicAccessTypeModal = useRef<HTMLDivElement>(null)
-  
+
   const currentLocation = location.pathname.split('/');
   const documentId = currentLocation[currentLocation.length - 1];
   
@@ -107,7 +108,6 @@ const ShareModal: React.FC<ShareProps> = ({ document, setShowShareModal }) => {
     try{
       const owner = await axios.get(`/documents/d/${documentId}/owner`);
       setOwner(owner.data.data)
-      console.log(owner.data.data._id, user._id)
     }catch(error){
       console.log(error, "Error while fetching the owner details");
     }
@@ -124,6 +124,7 @@ const ShareModal: React.FC<ShareProps> = ({ document, setShowShareModal }) => {
     const handleClickOutside = (event: MouseEvent): void => {
       if (isPublicRef.current && !isPublicRef.current.contains(event.target as Node)) setShowPublicAccessModal(false);
       if (publicAccessRef.current && !publicAccessRef.current.contains(event.target as Node)) setShowPublicAccessTypeModal(false);
+      // if (collaboratorAccessRef.current && !collaboratorAccessRef.current.contains(event.target as Node)) setShowCollaboratorAccessTypeModal('');
     };
 
     window.addEventListener('mousedown', handleClickOutside);
@@ -137,13 +138,16 @@ const ShareModal: React.FC<ShareProps> = ({ document, setShowShareModal }) => {
     <div className="WAPPER fixed top-0 left-0 w-screen h-screen flex justify-center items-center bg-gray-300 bg-opacity-50 backdrop-blur-sm text-black font-light select-none">
       <div className="MAIN-CONTAINER flex flex-col gap-6 py-6 bg-white w-[35vw] h-auto rounded-lg">
         <div className="DOCUMENT-NAME text-2xl px-6">Share "{document?.documentName}" </div>
+
         <input
           placeholder="Search and add people"
           className="SEARCH  h-12 border border-gray-300 rounded-md px-4 mx-6 text-sm focus:outline-primary"
         ></input>
+
         <div className="PEOPLE-WITH-ACCESS flex flex-col gap-2">
           <span className="font-medium px-6">People with access</span>
           <div className="LIST-OF-PEOPLE w-full max-h-44 h-auto overflow-scroll">
+
             <div className="relative OWNER flex items-center gap-4 w-full h-14 px-6 cursor-pointer hover:bg-primaryExtraLight">
               <img src={owner?.profileImage} alt="img" className="size-9 rounded-full" />
               <div className="flex flex-col gap-0 text-sm font-medium">
@@ -152,27 +156,26 @@ const ShareModal: React.FC<ShareProps> = ({ document, setShowShareModal }) => {
               </div>
               <span className="absolute right-6 text-sm text-gray-400 font-light">Owner</span>
             </div>
+
             {collaborators &&
               collaborators?.map((collaborator) => {
                 return (
-                  <div key={collaborator._id} className="relative OWNER flex items-center gap-4 w-full h-14 px-6 cursor-pointer hover:bg-primaryExtraLight">
-                    <img src={collaborator.profileImage} alt="img" className="size-9 rounded-full" />
-                    <div className="flex flex-col gap-0 text-sm font-medium">
-                      {collaborator.fullName} {collaborator?._id === user._id ? '(you)' : null}
-                      <span className="text-xs font-light h-auto leading-none">{collaborator.email}</span>
-                    </div>
-                    <span className="absolute right-6 text-sm text-gray-400 font-light">{collaborator.accessType}</span>
-                  </div>
+                  <CollaboratorsModal collaborator={collaborator} documentId={documentId}/>
                 );
               })}
+
           </div>
         </div>
+
         <div className="GENERAL-ACCESS">
           <span className="font-medium px-6">General access</span>
+
           <div className="relative OWNER flex items-center gap-2 w-full h-14 px-6 cursor-pointer hover:bg-primaryExtraLight">
+
             <span className="size-9 flex items-center justify-center text-xl bg-primaryLight rounded-full">
               {isPublic.tag === 'Restricted' ? <MdLockPerson /> : <IoEarthSharp />}
             </span>
+
             <div className="flex flex-col items-start text-sm font-medium">
               <span className="relative flex items-center" ref={isPublicRef}>
                 <span
@@ -201,6 +204,7 @@ const ShareModal: React.FC<ShareProps> = ({ document, setShowShareModal }) => {
               </span>
               <span className="text-xs font-light ml-2">{isPublic?.description} {isPublic.tag !== 'Restricted' ? accessType : null}</span>
             </div>
+
             <button className={`absolute right-6 text-sm`} ref={publicAccessRef}>
               <span
                 className={`flex justify-center items-center w-24 h-9 px-3 gap-2 right-6 text-sm font-normal rounded-[4px] hover:bg-zinc-300 ${isPublic.tag === 'Restricted' ? 'pointer-events-none text-gray-400 font-light' : null} `}
@@ -233,20 +237,25 @@ const ShareModal: React.FC<ShareProps> = ({ document, setShowShareModal }) => {
                 </div>
               ) : null}
             </button>
+
           </div>
         </div>
+
         <div className="BUTTONS flex justify-between items-center px-6">
+
           <button className={`COPY flex justify-center items-center gap-2 h-10 w-36 border border-primary text-sm text-primary font-medium rounded-3xl hover:bg-primaryExtraLight ${collaborators?.length === 0 && isPublic.tag === 'Restricted' ? 'pointer-events-none opacity-40' : null}`}>
             <span className="text-lg">
               <IoLink />
             </span>
             Copy link
           </button>
+
           <button className="DONE w-36 h-10 bg-primary hover:bg-primaryDark text-sm text-white font-medium rounded-3xl"
           onClick={() => setShowShareModal(false)}
           >
             Done
           </button>
+
         </div>
       </div>
     </div>

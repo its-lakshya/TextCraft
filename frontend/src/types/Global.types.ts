@@ -103,3 +103,17 @@ export interface UserEmailPassword {
   email: string;
   password: string;
 }
+
+export interface Collaborator {
+  accessType: string,
+  userName: string,
+  fullName: string,
+  email: string,
+  _id: string,
+  profileImage: string,
+}
+
+export interface CollaboratorModalProps {
+  collaborator: Collaborator,
+  documentId: string,
+}
