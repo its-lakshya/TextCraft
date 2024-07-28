@@ -1,4 +1,4 @@
-import { Socket } from "socket.io-client";
+import { Socket } from 'socket.io-client';
 
 export interface User {
   createdAt: string;
@@ -7,9 +7,9 @@ export interface User {
   gender?: string;
   updatedAt: string;
   userName: string;
-  profileImage: string,
+  profileImage: string;
   _id: string;
-  mobileNumber?: string,
+  mobileNumber?: string;
 }
 
 export interface VerifiedUser {
@@ -35,7 +35,7 @@ export interface Document {
 }
 
 export interface DocumentProps {
-  document?: Document;
+  documentData?: Document;
   socket: Socket;
 }
 
@@ -51,16 +51,16 @@ export interface publicAccess {
 
 export interface Collaborators {
   accessType: string;
-  email: string,
-  fullName: string,
-  userName: string,
-  profileImage: string,
+  email: string;
+  fullName: string;
+  userName: string;
+  profileImage: string;
   _id: string;
 }
 
 export interface ShareProps {
   document: Document | undefined;
-  setShowShareModal:  React.Dispatch<React.SetStateAction<boolean>>
+  setShowShareModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export interface Renameprops {
@@ -79,20 +79,19 @@ export interface ActiveUserprops {
   activeUsers: ActiveUsers[] | undefined;
 }
 
-
 export interface EditorProps {
   documentData?: Document;
   socket: Socket;
 }
 
 export interface StartButton {
-  text: string,
-  link: string
+  text: string;
+  link: string;
 }
 
 export interface LoaderSize {
-  size: string,
-  border: string,
+  size: string;
+  border: string;
 }
 
 export interface Error404Props {
@@ -105,22 +104,22 @@ export interface UserEmailPassword {
 }
 
 export interface Collaborator {
-  accessType: string,
-  userName: string,
-  fullName: string,
-  email: string,
-  _id: string,
-  profileImage: string,
+  accessType: string;
+  userName: string;
+  fullName: string;
+  email: string;
+  _id: string;
+  profileImage: string;
 }
 
 export interface CollaboratorModalProps {
-  collaborator: Collaborator,
-  documentId: string,
-  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>,
-  owner: User | undefined
+  collaborator: Collaborator;
+  documentId: string;
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  owner: User | undefined;
 }
 
 export interface SearchProps {
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  collaborators: Collaborator[] | undefined
+  collaborators: Collaborator[] | undefined;
 }

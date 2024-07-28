@@ -50,15 +50,13 @@ const DocumentEdit = () => {
     return () => {
       socket.disconnect();
     };
-    // eslint-disable-next-line
   }, []);
 
+  // Specifying the condition that user details are available only then emit join-document socket event
   useEffect(() => {
     if (userDetails !== undefined) {
-      console.log(userDetails.userName);
       socket.emit('join-document', { documentId, userDetails });
     }
-    // eslint-disable-next-line
   }, [userDetails]);
 
   // Showing the notification when user dissconnects from the document
@@ -69,7 +67,7 @@ const DocumentEdit = () => {
         message: `${userDetails.userName} disconnected`,
         type: 'DEFAULT',
         timing: 3000,
-        image: `${userDetails.profileImage}`
+        image: `${userDetails.profileImage}`,
       }),
     );
   });
@@ -82,7 +80,7 @@ const DocumentEdit = () => {
         message: `${userDetails.userName} joined`,
         type: 'DEFAULT',
         timing: 3000,
-        image: `${userDetails.profileImage}`
+        image: `${userDetails.profileImage}`,
       }),
     );
   });
@@ -92,7 +90,7 @@ const DocumentEdit = () => {
     return (
       <div className="WAPPER flex flex-col justify-start items-center w-full h-auto bg-documentBackground">
         <div className="flex flex-col fixed top-0 z-50 w-full px-10">
-          <EditorHeader document={documentData} socket={socket}/>
+          <EditorHeader documentData={documentData} socket={socket} />
           <Toolbar />
         </div>
         <Editor documentData={documentData} socket={socket} />

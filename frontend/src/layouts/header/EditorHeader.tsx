@@ -13,13 +13,13 @@ import ActiveUsersModal from '../../modals/ActiveUsers.modal';
 import { MdOutlineCloudDone } from 'react-icons/md';
 import ShareModal from '../../modals/Share.modal';
 import ProfileModal from '../../modals/Profile.modal';
-import { ActiveUsers, DocumentProps } from '../../types/Global.types';
+import { ActiveUsers, EditorProps } from '../../types/Global.types';
 import { IoIosHeart, IoMdHeartEmpty } from 'react-icons/io';
 
-const EditorHeader: React.FC<DocumentProps> = ({ document, socket }) => {
+const EditorHeader: React.FC<EditorProps> = ({ documentData, socket }) => {
   const location = useLocation();
   const profileRef = useRef<HTMLSpanElement>(null);
-  const activeUsersRef = useRef<HTMLSpanElement>(null);
+  const activeUsersRef = useRef<HTMLDivElement>(null);
   const documentNameRef = useRef<HTMLDivElement>(null);
   const currentLocation = location.pathname.split('/');
   const [profileModal, setProfileModal] = useState(false);
@@ -34,8 +34,9 @@ const EditorHeader: React.FC<DocumentProps> = ({ document, socket }) => {
 
   let lastUpdatedAt: string = '';
 
-  if (document?.updatedAt) {
-    lastUpdatedAt = getDate(document?.updatedAt);
+  // Extracting last update data
+  if (documentData?.updatedAt) {
+    lastUpdatedAt = getDate(documentData?.updatedAt);
   }
 
   // Handling Rename api request
@@ -59,7 +60,6 @@ const EditorHeader: React.FC<DocumentProps> = ({ document, socket }) => {
     setIsFavouriteSaving(true);
     try {
       const response = await axios.post(`/favourite/d/${documentId}`);
-      console.log(response);
       setFavourite(response.data.data.isFavourite);
     } catch (error) {
       console.log(error, 'Error while toggling favourite status');
@@ -68,7 +68,8 @@ const EditorHeader: React.FC<DocumentProps> = ({ document, socket }) => {
     setIsFavouriteSaving(false);
   };
 
-  const checkisFavourite = async (): Promise<void> => {
+  // Calling api to check favourite status of the document
+  const checkIsFavourite = async (): Promise<void> => {
     try {
       await axios.get(`/favourite/d/${documentId}`);
       setFavourite(true);
@@ -78,8 +79,9 @@ const EditorHeader: React.FC<DocumentProps> = ({ document, socket }) => {
     }
   };
 
+  // Calling checkIsFavourite function
   useEffect(() => {
-    checkisFavourite();
+    checkIsFavourite();
   }, []);
 
   // Preventing the rename div to add line break when pressing enter
@@ -103,11 +105,12 @@ const EditorHeader: React.FC<DocumentProps> = ({ document, socket }) => {
     };
   }, []);
 
+  // Listening soket update-active-user event
   socket.on('update-active-users', data => {
     setActiveUsers(data);
   });
 
-  // Handling closing of the more options modal when click outside the button
+  // Handling closing of the active user modal when click outside the button
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent): void => {
       if (activeUsersRef.current && !activeUsersRef.current.contains(event.target as Node)) {
@@ -153,7 +156,7 @@ const EditorHeader: React.FC<DocumentProps> = ({ document, socket }) => {
               contentEditable="true"
               onBlur={handleDocumentNameBlur}
             >
-              {document?.documentName}
+              {documentData?.documentName}
             </div>
             <motion.span
               whileHover={{ scale: 1.2 }}
@@ -200,16 +203,19 @@ const EditorHeader: React.FC<DocumentProps> = ({ document, socket }) => {
         </div>
       </div>
       <div className="HEADER-RIGHT flex items-center gap-3 w-auto">
-        <div className="relative">
+        <div
+          className="relative"
+          ref={activeUsersRef}
+          onClick={() => setActiveUsersVisibility(!activeUsersVisibility)}
+        >
           <motion.button
             whileHover={{ scale: 1.2 }}
             className="flex justify-center items-center text-2xl text-primaryDark mr-2"
-            onClick={() => setActiveUsersVisibility(!activeUsersVisibility)}
           >
             <FaUserGroup />
           </motion.button>
           {activeUsersVisibility ? (
-            <span ref={activeUsersRef}>
+            <span>
               <ActiveUsersModal activeUsers={activeUsers} />
             </span>
           ) : null}
@@ -237,9 +243,10 @@ const EditorHeader: React.FC<DocumentProps> = ({ document, socket }) => {
         </div>
       </div>
       {showShareModal ? (
-        <ShareModal document={document} setShowShareModal={setShowShareModal} />
+        <ShareModal document={documentData} setShowShareModal={setShowShareModal} />
       ) : null}
     </div>
   );
 };
+
 export default EditorHeader;
