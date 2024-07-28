@@ -7,6 +7,6 @@ const router = Router();
 router.use(verifyJWT);
 
 router.route('/d/').get(getFavourieDocuments)
-router.route('/toggle/d/:documentId').post(toggleFavourite);
+router.route('/d/:documentId').post(toggleFavourite);
 
 export default router;

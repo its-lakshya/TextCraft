@@ -14,10 +14,11 @@ import { MdOutlineCloudDone } from 'react-icons/md';
 import ShareModal from '../../modals/Share.modal';
 import ProfileModal from '../../modals/Profile.modal';
 import { ActiveUsers, DocumentProps } from '../../types/Global.types';
+import { IoIosHeart, IoMdHeartEmpty } from 'react-icons/io';
 
 const EditorHeader: React.FC<DocumentProps> = ({ document, socket }) => {
   const location = useLocation();
-  const profileRef = useRef<HTMLSpanElement>(null)
+  const profileRef = useRef<HTMLSpanElement>(null);
   const activeUsersRef = useRef<HTMLSpanElement>(null);
   const documentNameRef = useRef<HTMLDivElement>(null);
   const currentLocation = location.pathname.split('/');
@@ -27,7 +28,8 @@ const EditorHeader: React.FC<DocumentProps> = ({ document, socket }) => {
   const [showShareModal, setShowShareModal] = useState<boolean>(false);
   const [activeUsers, setActiveUsers] = useState<ActiveUsers[]>();
   const isSaving = useSelector((store: RootState) => store.docSaving.isSaving);
-  const [activeUsersVisibility, setActiveUsersVisibility] = useState<boolean>(false)
+  const [activeUsersVisibility, setActiveUsersVisibility] = useState<boolean>(false);
+  const [favourite, setFavourite] = useState<boolean>(false);
 
   let lastUpdatedAt: string = '';
 
@@ -80,10 +82,7 @@ const EditorHeader: React.FC<DocumentProps> = ({ document, socket }) => {
   // Handling closing of the more options modal when click outside the button
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent): void => {
-      if (
-        activeUsersRef.current &&
-        !activeUsersRef.current.contains(event.target as Node)
-      ) {
+      if (activeUsersRef.current && !activeUsersRef.current.contains(event.target as Node)) {
         setActiveUsersVisibility(false);
       }
     };
@@ -98,10 +97,7 @@ const EditorHeader: React.FC<DocumentProps> = ({ document, socket }) => {
   // Handling closing of profile model when clicked outsied
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent): void => {
-      if (
-        profileRef.current &&
-        !profileRef.current.contains(event.target as Node)
-      ) {
+      if (profileRef.current && !profileRef.current.contains(event.target as Node)) {
         setProfileModal(false);
       }
     };
@@ -131,12 +127,21 @@ const EditorHeader: React.FC<DocumentProps> = ({ document, socket }) => {
             >
               {document?.documentName}
             </div>
+            <motion.span
+              whileHover={{scale: 1.2}}
+              className={`flex justify-center items-center size-6 rounded-full hover:bg-gray-200 cursor-pointer`}
+              onClick={() => setFavourite(!favourite)}
+            >
+             {!favourite ? <span className='text-lg text-gray-600 font-bold'><IoMdHeartEmpty /> </span>: <span className='text-lg text-primary'><IoIosHeart /></span>}
+            </motion.span>
             {isSaving ? (
               <span className="flex items-center gap-2 text-sm text-gray-500">
                 <CircularLoader size={'size-4'} border="border border-[3px]" /> saving...
               </span>
             ) : (
-              <span className="flex items-center gap-2 text-sm text-gray-500"><MdOutlineCloudDone /> Saved to cloud</span>
+              <span className="flex items-center gap-2 text-sm text-gray-500">
+                <MdOutlineCloudDone /> Saved to cloud
+              </span>
             )}
           </div>
           <div className="flex items-center gap-0 w-auto h-auto text-sm">
@@ -157,7 +162,7 @@ const EditorHeader: React.FC<DocumentProps> = ({ document, socket }) => {
         </div>
       </div>
       <div className="HEADER-RIGHT flex items-center gap-3 w-auto">
-        <div className='relative'>
+        <div className="relative">
           <motion.button
             whileHover={{ scale: 1.2 }}
             className="flex justify-center items-center text-2xl text-primaryDark mr-2"
@@ -165,7 +170,11 @@ const EditorHeader: React.FC<DocumentProps> = ({ document, socket }) => {
           >
             <FaUserGroup />
           </motion.button>
-          {activeUsersVisibility ? <span ref={activeUsersRef}><ActiveUsersModal activeUsers={activeUsers}/></span> : null}
+          {activeUsersVisibility ? (
+            <span ref={activeUsersRef}>
+              <ActiveUsersModal activeUsers={activeUsers} />
+            </span>
+          ) : null}
         </div>
         <button
           className={`SHARE flex justify-center items-center gap-2 w-32 h-10 bg-primary ${buttonHoverAnimaiton} hover:bg-primaryDark text-white rounded-full`}
@@ -182,10 +191,16 @@ const EditorHeader: React.FC<DocumentProps> = ({ document, socket }) => {
             className="size-8 bg-gray-300 rounded-full cursor-pointer"
             onClick={() => setProfileModal(!profileModal)}
           />
-          {profileModal ? <span ref={profileRef}><ProfileModal/> </span>: null}
+          {profileModal ? (
+            <span ref={profileRef}>
+              <ProfileModal />{' '}
+            </span>
+          ) : null}
         </div>
       </div>
-      {showShareModal ? <ShareModal document={document} setShowShareModal={setShowShareModal}/> : null}
+      {showShareModal ? (
+        <ShareModal document={document} setShowShareModal={setShowShareModal} />
+      ) : null}
     </div>
   );
 };

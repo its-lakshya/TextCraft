@@ -6,8 +6,8 @@ import { Favourite } from '../models/favourite.model.js';
 import { Document } from '../models/document.model.js';
 
 const toggleFavourite = asyncHandler(async (req, res) => {
+  const { documentId } = req.params;
   const user = req.user;
-  const documentId = req.params;
   if (!user) {
     throw new apiError(401, 'Unauthorized request');
   }

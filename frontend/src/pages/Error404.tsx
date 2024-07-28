@@ -21,7 +21,7 @@ const Error404: React.FC<Error404Props> = () => {
           <span className="ARROW group-hover:animate-arrowMove relative">
             <FaArrowLeftLong />
           </span>
-          Go Home
+          Go home
         </Link>
       </div>
     </div>
