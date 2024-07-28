@@ -52,9 +52,9 @@ const SearchBar: React.FC<SearchProps> = ({ setIsLoading, collaborators }) => {
   };
 
   const handleAddUser = async (accessType: string): Promise<void> => {
-    setIsLoading(true);
     if(alreadyACollaborator){
-      handleCollaboratorPermission(accessType)
+      await handleCollaboratorPermission(accessType)
+      setIsLoading(true);
     }else{
       try {
         await axios.post(`/collaborations/c/${documentId}`, {
