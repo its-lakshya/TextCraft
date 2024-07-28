@@ -71,8 +71,8 @@ const EditorHeader: React.FC<EditorProps> = ({ documentData, socket }) => {
   // Calling api to check favourite status of the document
   const checkIsFavourite = async (): Promise<void> => {
     try {
-      await axios.get(`/favourite/d/${documentId}`);
-      setFavourite(true);
+      const response = await axios.get(`/favourite/d/${documentId}`);
+      setFavourite(response.data.data.isFavourite);
     } catch (error) {
       console.log(error, 'Error while checking is favourite or either it is favourite ');
       setFavourite(false);
