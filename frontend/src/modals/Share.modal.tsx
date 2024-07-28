@@ -11,6 +11,7 @@ import { FaUserEdit } from 'react-icons/fa';
 import { Collaborators, publicAccess, ShareProps, User } from '../types/Global.types';
 import CollaboratorsModal from './Collaborators.modal';
 import Loader, { CircularLoader } from '../components/loader/Loader';
+import SearchBar from '../components/editor/SearchBar';
 
 const ShareModal: React.FC<ShareProps> = ({ document, setShowShareModal }) => {
   const dispatch = useDispatch();
@@ -206,10 +207,7 @@ const ShareModal: React.FC<ShareProps> = ({ document, setShowShareModal }) => {
           <>
             <div className="DOCUMENT-NAME text-2xl px-6">Share "{document?.documentName}" </div>
 
-            <input
-              placeholder="Search and add people"
-              className="SEARCH  h-12 border border-gray-300 rounded-md px-4 mx-6 text-sm focus:outline-primary"
-            ></input>
+            <SearchBar/>
 
             <div className="PEOPLE-WITH-ACCESS flex flex-col gap-2">
               <span className="font-medium px-6">People with access</span>
