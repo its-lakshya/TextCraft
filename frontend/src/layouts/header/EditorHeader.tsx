@@ -30,6 +30,7 @@ const EditorHeader: React.FC<DocumentProps> = ({ document, socket }) => {
   const isSaving = useSelector((store: RootState) => store.docSaving.isSaving);
   const [activeUsersVisibility, setActiveUsersVisibility] = useState<boolean>(false);
   const [favourite, setFavourite] = useState<boolean>(false);
+  const [isFavouriteSaving, setIsFavouriteSaving] = useState<boolean>(false);
 
   let lastUpdatedAt: string = '';
 
@@ -55,15 +56,16 @@ const EditorHeader: React.FC<DocumentProps> = ({ document, socket }) => {
   };
 
   const handleFavourite = async (): Promise<void> => {
-    console.log('hiiiiii')
-    try{
+    setIsFavouriteSaving(true);
+    try {
       const response = await axios.post(`/favourite/d/${documentId}`);
-      console.log(response)
+      console.log(response);
       setFavourite(response.data.data.isFavourite);
-    }catch(error){
-      console.log(error, "Error while toggling favourite status");
+    } catch (error) {
+      console.log(error, 'Error while toggling favourite status');
       setFavourite(false);
     }
+    setIsFavouriteSaving(false);
   };
 
   const checkisFavourite = async (): Promise<void> => {
@@ -158,7 +160,9 @@ const EditorHeader: React.FC<DocumentProps> = ({ document, socket }) => {
               className={`flex justify-center items-center size-6 rounded-full hover:bg-gray-200 cursor-pointer`}
               onClick={() => handleFavourite()}
             >
-              {!favourite ? (
+              {isFavouriteSaving ? (
+                <CircularLoader size={'size-4'} border="border border-[3px]" />
+              ) : !favourite ? (
                 <span className="text-lg text-gray-600 font-bold">
                   <IoMdHeartEmpty />{' '}
                 </span>
