@@ -4,6 +4,7 @@ import { apiResponse } from '../utils/apiResponse.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
 import { Favourite } from '../models/favourite.model.js';
 import { Document } from '../models/document.model.js';
+import { User } from '../models/user.model.js';
 
 const toggleFavourite = asyncHandler(async (req, res) => {
   const { documentId } = req.params;
@@ -27,7 +28,7 @@ const toggleFavourite = asyncHandler(async (req, res) => {
   if (alreadyFavoutite) {
     await Favourite.findOneAndDelete({ document, user });
     return res
-      .statsu(200)
+      .status(200)
       .json(new apiResponse(200, 'Document remove from favourite successfully'));
   } else {
     const favourite = await Favourite.create({
@@ -50,7 +51,50 @@ const getFavourieDocuments = asyncHandler(async (req, res) => {
     throw new apiError(401, 'Unauthorized request');
   }
 
-  const favouriteDocuments = await Favourite.find({ user });
+  // const favouriteDocuments = await Favourite.find({ user });
+
+  const favouriteDocuments = await User.aggregate([
+    {
+      $match: {
+        _id: new mongoose.Types.ObjectId(user._id),
+      },
+    },
+    {
+      $project: {
+        _id:1
+      }
+    },
+    {
+      $lookup: {
+        from: 'favourites',
+        localField: '_id',
+        foreignField: 'user',
+        as: 'fav',
+        pipeline: [
+          {
+            $lookup: {
+              from: 'documents',
+              localField: 'document',
+              foreignField: '_id',
+              as: 'documents'
+            }
+          },
+          {
+            $unwind: '$documents'
+          },
+          {
+            $replaceRoot: {newRoot: '$documents'}
+          }
+        ]
+      }
+    },
+    {
+      $unwind: '$fav'
+    },
+    {
+      $replaceRoot: {newRoot: '$fav'}
+    }
+  ]);
 
   if (!favouriteDocuments) {
     throw new apiError(500, 'Something went wrong while fething favourite documents');

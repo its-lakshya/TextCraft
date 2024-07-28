@@ -9,6 +9,7 @@ enum Owner {
   Anyone = 'Owned by anyone',
   Me = 'Owned by me',
   Shared = 'Shared with me',
+  Favourites = 'Favourites',
 }
 
 const DocumentsList: React.FC = () => {
@@ -45,14 +46,26 @@ const DocumentsList: React.FC = () => {
     };
   }, []);
 
-  // Calling api based on owner type selection by user
-  const getDocuments = async (type: string): Promise<void> => {
+  // Calling favourite document api
+  const getFavouriteDocuments = async (): Promise<void> => {
     try {
-      const response = await axios.get(`/documents/d/${type}`);
+      const response = await axios.get('/favourite/d');
+      console.log(response);
       setDocument(response.data.data);
     } catch (error) {
-      console.log(error, 'Error getting documents');
+      console.log(error, 'Error while fetching favourite documents');
     }
+    setIsLoading(false)
+  };
+
+  // Calling api based on owner type selection by user
+  const getDocuments = async (type: string): Promise<void> => {
+      try {
+        const response = await axios.get(`/documents/d/${type}`);
+        setDocument(response.data.data);
+      } catch (error) {
+        console.log(error, 'Error getting documents');
+      }
     setIsLoading(false);
   };
 
@@ -84,6 +97,7 @@ const DocumentsList: React.FC = () => {
         await getDocuments('shared');
         break;
       default:
+        await getFavouriteDocuments();
     }
   };
 
@@ -102,7 +116,7 @@ const DocumentsList: React.FC = () => {
             style={{ boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px' }}
             ref={ownerListRef}
           >
-            {[Owner.Anyone, Owner.Me, Owner.Shared].map((Owner, index) => {
+            {[Owner.Anyone, Owner.Me, Owner.Shared, Owner.Favourites].map((Owner, index) => {
               return (
                 <button
                   key={index}
@@ -118,7 +132,7 @@ const DocumentsList: React.FC = () => {
       </div>
       <div className="DOCUMENT-LIST flex flex-wrap  gap-[22.5px] w-full h-auto">
         {isLoading ? (
-          <div className='w-full h-[340px] flex items-center justify-center'>
+          <div className="w-full h-[340px] flex items-center justify-center">
             <Loader />
           </div>
         ) : documents ? (
