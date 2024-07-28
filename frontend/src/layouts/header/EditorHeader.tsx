@@ -54,6 +54,32 @@ const EditorHeader: React.FC<DocumentProps> = ({ document, socket }) => {
     await renameDocument();
   };
 
+  const handleFavourite = async (): Promise<void> => {
+    console.log('hiiiiii')
+    try{
+      const response = await axios.post(`/favourite/d/${documentId}`);
+      console.log(response)
+      setFavourite(response.data.data.isFavourite);
+    }catch(error){
+      console.log(error, "Error while toggling favourite status");
+      setFavourite(false);
+    }
+  };
+
+  const checkisFavourite = async (): Promise<void> => {
+    try {
+      await axios.get(`/favourite/d/${documentId}`);
+      setFavourite(true);
+    } catch (error) {
+      console.log(error, 'Error while checking is favourite or either it is favourite ');
+      setFavourite(false);
+    }
+  };
+
+  useEffect(() => {
+    checkisFavourite();
+  }, []);
+
   // Preventing the rename div to add line break when pressing enter
   useEffect(() => {
     const handleKeyDown = async (event: KeyboardEvent): Promise<void> => {
@@ -128,11 +154,19 @@ const EditorHeader: React.FC<DocumentProps> = ({ document, socket }) => {
               {document?.documentName}
             </div>
             <motion.span
-              whileHover={{scale: 1.2}}
+              whileHover={{ scale: 1.2 }}
               className={`flex justify-center items-center size-6 rounded-full hover:bg-gray-200 cursor-pointer`}
-              onClick={() => setFavourite(!favourite)}
+              onClick={() => handleFavourite()}
             >
-             {!favourite ? <span className='text-lg text-gray-600 font-bold'><IoMdHeartEmpty /> </span>: <span className='text-lg text-primary'><IoIosHeart /></span>}
+              {!favourite ? (
+                <span className="text-lg text-gray-600 font-bold">
+                  <IoMdHeartEmpty />{' '}
+                </span>
+              ) : (
+                <span className="text-lg text-primary">
+                  <IoIosHeart />
+                </span>
+              )}
             </motion.span>
             {isSaving ? (
               <span className="flex items-center gap-2 text-sm text-gray-500">
