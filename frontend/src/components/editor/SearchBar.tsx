@@ -56,6 +56,7 @@ const SearchBar: React.FC<SearchProps> = ({ setIsLoading, collaborators }) => {
       await handleCollaboratorPermission(accessType)
       setIsLoading(true);
     }else{
+      setIsLoading(true);
       try {
         await axios.post(`/collaborations/c/${documentId}`, {
           email: searchedUser?.email,

@@ -123,12 +123,14 @@ const checkIsFavourite = asyncHandler(async (req, res) => {
   const isFavourtie = await Favourite.findOne({ document, user });
 
   if (!isFavourtie) {
-    throw new apiError(500, 'Something went wrong while checking is favourite');
+    return res
+      .status(200)
+      .json(new apiResponse(200, { isFavourite: false }, 'Favourite status fetched successfully'));
   }
 
   return res
     .status(200)
-    .json(new apiResponse(200, { isFavourtie: true }, 'Favourite status fetched successfully'));
+    .json(new apiResponse(200, { isFavourite: true }, 'Favourite status fetched successfully'));
 });
 
 export { toggleFavourite, getFavourieDocuments, checkIsFavourite };
