@@ -51,8 +51,6 @@ const getFavourieDocuments = asyncHandler(async (req, res) => {
     throw new apiError(401, 'Unauthorized request');
   }
 
-  // const favouriteDocuments = await Favourite.find({ user });
-
   const favouriteDocuments = await User.aggregate([
     {
       $match: {
@@ -61,8 +59,8 @@ const getFavourieDocuments = asyncHandler(async (req, res) => {
     },
     {
       $project: {
-        _id:1
-      }
+        _id: 1,
+      },
     },
     {
       $lookup: {
@@ -76,24 +74,24 @@ const getFavourieDocuments = asyncHandler(async (req, res) => {
               from: 'documents',
               localField: 'document',
               foreignField: '_id',
-              as: 'documents'
-            }
+              as: 'documents',
+            },
           },
           {
-            $unwind: '$documents'
+            $unwind: '$documents',
           },
           {
-            $replaceRoot: {newRoot: '$documents'}
-          }
-        ]
-      }
+            $replaceRoot: { newRoot: '$documents' },
+          },
+        ],
+      },
     },
     {
-      $unwind: '$fav'
+      $unwind: '$fav',
     },
     {
-      $replaceRoot: {newRoot: '$fav'}
-    }
+      $replaceRoot: { newRoot: '$fav' },
+    },
   ]);
 
   if (!favouriteDocuments) {
@@ -105,4 +103,32 @@ const getFavourieDocuments = asyncHandler(async (req, res) => {
     .json(new apiResponse(200, favouriteDocuments, 'Favourite documents fetched successfully'));
 });
 
-export { toggleFavourite, getFavourieDocuments };
+const checkIsFavourite = asyncHandler(async (req, res) => {
+  const { documentId } = req.params;
+  const user = req.user;
+  if (!user) {
+    throw new apiError(401, 'Unauthorized request');
+  }
+
+  if (!mongoose.isValidObjectId(documentId)) {
+    throw new apiError(400, 'Invalid of missing document id');
+  }
+
+  const document = await Document.findById(documentId);
+
+  if (!document) {
+    throw new apiError(400, 'No such document exists');
+  }
+
+  const isFavourtie = await Favourite.findOne({ document, user });
+
+  if (!isFavourtie) {
+    throw new apiError(500, 'Something went wrong while checking is favourite');
+  }
+
+  return res
+    .status(200)
+    .json(new apiResponse(200, { isFavourtie: true }, 'Favourite status fetched successfully'));
+});
+
+export { toggleFavourite, getFavourieDocuments, checkIsFavourite };
