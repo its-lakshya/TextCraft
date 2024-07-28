@@ -3,25 +3,10 @@ import ReactQuill from 'react-quill';
 import { modules } from '../toolbar/Toolbar';
 import 'react-quill/dist/quill.snow.css';
 import './A4Document.css';
-import { Socket } from 'socket.io-client';
 import axios from '../../axios.config';
 import { setIsSaving } from '../../store/slices/DocSaving.slice';
 import { useDispatch } from 'react-redux';
-
-interface Document {
-  createdAt: string;
-  documentName: string;
-  content: string;
-  owner: string;
-  updatedAt: string;
-  __v: number;
-  _id: string;
-}
-
-interface EditorProps {
-  documentData?: Document;
-  socket: Socket;
-}
+import { EditorProps } from '../../types/Global.types';
 
 const Editor: React.FC<EditorProps> = ({ documentData, socket }) => {
   const dispatch = useDispatch();
@@ -79,9 +64,6 @@ const Editor: React.FC<EditorProps> = ({ documentData, socket }) => {
       timeoutRef.current = window.setTimeout(() => {
         handleSave(content);
       }, 1000);
-      // setTimeout(() => {
-      //     HandleSave(content)
-      // }, 3000);
     }
   };
 
@@ -92,12 +74,6 @@ const Editor: React.FC<EditorProps> = ({ documentData, socket }) => {
     }
     // eslint-disable-next-line
   }, []);
-
-  // socket.on('document-changes', (socketid, changes) => {
-  //   console.log(socketid);
-  //   const decodedRichText = decodeURIComponent(changes);
-  //   setValue(decodedRichText);
-  // });
 
   useEffect(() => {
     socket.on('document-changes', ({ socketId, changes }) => {

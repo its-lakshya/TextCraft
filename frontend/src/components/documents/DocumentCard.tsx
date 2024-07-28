@@ -8,20 +8,7 @@ import axios from '../../axios.config';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setShowToast } from '../../store/slices/Toast.slice';
-
-interface Document {
-  createdAt: string;
-  documentName: string;
-  owner: string;
-  updatedAt: string;
-  __v: number;
-  _id: string;
-}
-
-interface DocumentCardProps {
-  data: Document;
-  setDeletedDocument: React.Dispatch<React.SetStateAction<string>>;
-}
+import { DocumentCardProps } from '../../types/Global.types';
 
 const DocumentCard: React.FC<DocumentCardProps> = ({ data, setDeletedDocument }) => {
   const navigate = useNavigate();

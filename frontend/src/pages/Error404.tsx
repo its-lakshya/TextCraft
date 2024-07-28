@@ -2,10 +2,7 @@ import { Link, useLocation } from 'react-router-dom';
 import ErrorBackgroundImage from '../assets/images/404BackgroundImage.svg';
 import { buttonHoverAnimaiton } from '../utils/Tailwind.utils';
 import { FaArrowLeftLong } from 'react-icons/fa6';
-
-interface Error404Props {
-  document?: string;
-}
+import { Error404Props } from '../types/Global.types';
 
 const Error404: React.FC<Error404Props> = () => {
   const location = useLocation();

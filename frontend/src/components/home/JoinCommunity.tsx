@@ -4,11 +4,7 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/Store";
-
-interface StartButton {
-  text: string,
-  link: string
-}
+import { StartButton } from "../../types/Global.types";
 
 const JoinCommunity: React.FC = () => {
 

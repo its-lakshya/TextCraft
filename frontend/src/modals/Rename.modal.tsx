@@ -2,14 +2,9 @@ import { useRef } from 'react';
 import axios from '../axios.config';
 import { useDispatch } from 'react-redux';
 import { setShowToast } from '../store/slices/Toast.slice';
-interface props {
-  name: string | undefined;
-  documentId: string;
-  setShowRenameModal: React.Dispatch<React.SetStateAction<boolean>>;
-  setNewName: React.Dispatch<React.SetStateAction<string>>;
-}
+import { Renameprops } from '../types/Global.types';
 
-const RenameModal: React.FC<props> = ({ name, documentId, setShowRenameModal, setNewName }) => {
+const RenameModal: React.FC<Renameprops> = ({ name, documentId, setShowRenameModal, setNewName }) => {
   const nameRef = useRef<HTMLInputElement>(null);
   const dispatch = useDispatch();
 

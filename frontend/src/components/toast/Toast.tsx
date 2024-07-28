@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store/Store';
 import { setShowToast } from '../../store/slices/Toast.slice';
 import { motion } from 'framer-motion';
-// import { FaUser } from 'react-icons/fa6';
 
 const Toast: React.FC = () => {
   const dispatch = useDispatch();

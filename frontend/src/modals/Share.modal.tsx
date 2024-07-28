@@ -8,35 +8,7 @@ import axios from '../axios.config';
 import { useLocation } from 'react-router-dom';
 import { setShowToast } from '../store/slices/Toast.slice';
 import { FaUserEdit } from 'react-icons/fa';
-
-interface Document {
-  createdAt: string;
-  documentName: string;
-  content: string;
-  owner: string;
-  updatedAt: string;
-  __v: number;
-  _id: string;
-}
-
-interface ShareProps {
-  document: Document | undefined;
-  setShowShareModal:  React.Dispatch<React.SetStateAction<boolean>>
-}
-
-interface publicAccess {
-  tag: string;
-  description: string;
-}
-
-interface Collaborators {
-  accessType: string;
-  email: string,
-  fullName: string,
-  userName: string,
-  profileImage: string,
-  _id: string;
-}
+import { Collaborators, publicAccess, ShareProps } from '../types/Global.types';
 
 const ShareModal: React.FC<ShareProps> = ({ document, setShowShareModal }) => {
   const dispatch = useDispatch();

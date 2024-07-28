@@ -8,26 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import Loader from '../components/loader/Loader';
 import { useDispatch } from 'react-redux';
 import { setShowToast } from '../store/slices/Toast.slice';
-interface Document {
-  createdAt: string;
-  documentName: string;
-  content: string;
-  owner: string;
-  updatedAt: string;
-  __v: number;
-  _id: string;
-}
-
-export interface User {
-  createdAt: string;
-  email: string;
-  fullName: string;
-  gender: string;
-  updatedAt: string;
-  userName: string;
-  profileImage: string,
-  _id: string;
-}
+import { Document, User } from '../types/Global.types';
 
 const DocumentEdit = () => {
   const navigate = useNavigate();
@@ -107,7 +88,6 @@ const DocumentEdit = () => {
   });
 
   // Maintaning the list of active users
-
   if (documentData) {
     return (
       <div className="WAPPER flex flex-col justify-start items-center w-full h-auto bg-documentBackground">

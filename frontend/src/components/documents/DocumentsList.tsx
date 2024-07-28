@@ -3,19 +3,12 @@ import { IoMdArrowDropdown } from 'react-icons/io';
 import DocumentCard from './DocumentCard';
 import axios from '../../axios.config';
 import Loader from '../loader/Loader';
+import { Document } from '../../types/Global.types';
 
 enum Owner {
   Anyone = 'Owned by anyone',
   Me = 'Owned by me',
   Shared = 'Shared with me',
-}
-interface Document {
-  createdAt: string;
-  documentName: string;
-  owner: string;
-  updatedAt: string;
-  __v: number;
-  _id: string;
 }
 
 const DocumentsList: React.FC = () => {

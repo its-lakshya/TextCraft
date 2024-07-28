@@ -1,15 +1,6 @@
-import { User } from '../pages/DocumentEdit';
+import { ActiveUserprops } from '../types/Global.types';
 
-interface ActiveUsers {
-  documentId: string;
-  userDetails: User;
-}
-
-interface props {
-  activeUsers: ActiveUsers[] | undefined;
-}
-
-const ActiveUsersModal: React.FC<props> = ({ activeUsers }) => {
+const ActiveUsersModal: React.FC<ActiveUserprops> = ({ activeUsers }) => {
   return (
     <div
       className="WRAPPER absolute top-10 right-2 flex flex-col w-44 min-auto max-h-64 rounded-[4px] py-2 bg-white overflow-y-scroll overflow-x-hidden select-none"

@@ -3,18 +3,14 @@ import AuthBackgroundImage from '../assets/images/AuthBackgroundImage.svg';
 import { buttonHoverAnimaiton } from '../utils/Tailwind.utils';
 import { useState } from 'react';
 import axios from '../axios.config';
-
-type User = {
-  email: string;
-  password: string;
-};
+import { UserEmailPassword } from '../types/Global.types';
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
   const inputStyles: string =
     'w-full h-8 rounded-md px-4 border border-[#BCBEC0] text-black text-sm';
   const inputContainerStyles: string = 'flex flex-col gap-2 w-full';
-  const [user, setUser] = useState<User>({ email: '', password: '' });
+  const [user, setUser] = useState<UserEmailPassword>({ email: '', password: '' });
 
   const handleUserName = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setUser({ ...user, email: e.target.value });

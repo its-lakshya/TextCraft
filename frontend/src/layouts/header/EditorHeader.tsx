@@ -7,34 +7,13 @@ import { getDate } from '../../utils/Date.utils';
 import { CircularLoader } from '../../components/loader/Loader';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/Store';
-import { Socket } from 'socket.io-client';
-import { User } from '../../pages/DocumentEdit';
 import { FaUserGroup } from 'react-icons/fa6';
 import { motion } from 'framer-motion';
 import ActiveUsersModal from '../../modals/ActiveUsers.modal';
 import { MdOutlineCloudDone } from 'react-icons/md';
 import ShareModal from '../../modals/Share.modal';
 import ProfileModal from '../../modals/Profile.modal';
-
-interface Document {
-  createdAt: string;
-  documentName: string;
-  content: string;
-  owner: string;
-  updatedAt: string;
-  __v: number;
-  _id: string;
-}
-
-interface DocumentProps {
-  document?: Document;
-  socket: Socket;
-}
-
-interface ActiveUsers {
-  documentId: string,
-  userDetails: User
-}
+import { ActiveUsers, DocumentProps } from '../../types/Global.types';
 
 const EditorHeader: React.FC<DocumentProps> = ({ document, socket }) => {
   const location = useLocation();

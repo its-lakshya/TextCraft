@@ -7,7 +7,6 @@ const Footer: React.FC = () => {
   const location = useLocation();
   const [zIndex, setZindex] = useState<string>('-z-10');
 
-
   useEffect(() => {
     const onScroll = () => {
       if (window.scrollY + window.innerHeight >= document.body.offsetHeight - 20) {

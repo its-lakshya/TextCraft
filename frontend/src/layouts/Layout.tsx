@@ -7,18 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setAuthStatus, setUserDetails } from '../store/slices/Auth.slice.ts';
 import Toast from '../components/toast/Toast.tsx';
 import { RootState } from '../store/Store.ts';
-
-interface VerifiedUser {
-  isLoggedIn: boolean;
-  user: {
-    _id: string;
-    userName: string;
-    gender: string;
-    email: string;
-    fullName: string;
-    profileImage: string;
-  };
-}
+import { VerifiedUser } from '../types/Global.types.ts';
 
 const Layout: React.FC = () => {
   const dispatch = useDispatch();
@@ -59,6 +48,7 @@ const Layout: React.FC = () => {
           navigate('/auth/login');
       }
     })();
+  // eslint-disable-next-line
   }, [authStatus]);
 
   return (
