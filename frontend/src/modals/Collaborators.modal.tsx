@@ -6,34 +6,42 @@ import { FaUserEdit } from 'react-icons/fa';
 import { IoMdArrowDropdown } from 'react-icons/io';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/Store';
+import { CircularLoader } from '../components/loader/Loader';
 
-const CollaboratorsModal: React.FC<CollaboratorModalProps> = ({ collaborator, documentId }) => {
+const CollaboratorsModal: React.FC<CollaboratorModalProps> = ({ collaborator, documentId, setIsLoading, owner }) => {
   const user = useSelector((store: RootState) => store.auth);
   const collaboratorAccessRef = useRef<HTMLButtonElement>(null);
   const collaboratorAccessTypeModal = useRef<HTMLDivElement>(null);
-  const [accessType, setAccessType] = useState<string>(collaborator.accessType === 'read' ? 'Viewer' : 'Editor');
-  const [showCollaboratorAccessTypeModal, setShowCollaboratorAccessTypeModal] = useState<boolean>(false);
+  const [accessType, setAccessType] = useState<string>(
+    collaborator.accessType === 'read' ? 'Viewer' : 'Editor',
+  );
+  const [showCollaboratorAccessTypeModal, setShowCollaboratorAccessTypeModal] =
+    useState<boolean>(false);
+  const [showCircularLoader, setShowCircularLoader] = useState<boolean>(false)
 
-    // handling removal of the collaborator from the document
+  // handling removal of the collaborator from the document
   const handleRemoveCollaborator = async (email: string) => {
+    setShowCollaboratorAccessTypeModal(false);
+    setIsLoading(true);
     try {
       await axios.post(`/collaborations/c/${documentId}/remove`, { email });
     } catch (error) {
       console.log(error, 'Error while removing collaborator from document');
     }
-    setShowCollaboratorAccessTypeModal(false)
   };
 
   // Handling access permission of the collaborator
   const handleCollaboratorPermission = async (email: string, accessType: string) => {
+    setShowCollaboratorAccessTypeModal(false);
+    setShowCircularLoader(true);
     try {
       await axios.patch(`collaborations/c/${documentId}`, { email, accessType });
-      if(accessType === 'read')  setAccessType('Viewer')
-      else setAccessType('Editor')
+      if (accessType === 'read') setAccessType('Viewer');
+      else setAccessType('Editor');
     } catch (error) {
       console.log(error, 'Error while updating access type of the collaborator');
     }
-    setShowCollaboratorAccessTypeModal(false)
+    setShowCircularLoader(false);
   };
 
   // Handeling closing of the collaboration access type modal when clicked outside
@@ -60,13 +68,17 @@ const CollaboratorsModal: React.FC<CollaboratorModalProps> = ({ collaborator, do
   return (
     <div
       key={collaborator._id}
-      className="relative OWNER flex items-center gap-4 w-full h-14 px-6 cursor-pointer hover:bg-primaryExtraLight"
+      className={`relative OWNER flex items-center gap-4 w-full h-14 px-6 cursor-pointer hover:bg-primaryExtraLight ${user._id !== owner?._id ? 'pointer-events-none' : null}`}
     >
       <img src={collaborator.profileImage} alt="img" className="size-9 rounded-full" />
       <div className="flex flex-col gap-0 text-sm font-medium">
-        {collaborator.fullName} {collaborator?._id === user._id ? '(you)' : null}
+        <span className='flex items-center gap-2'>
+          {collaborator.fullName} {collaborator?._id === user._id ? '(you)' : null}
+          {showCircularLoader ? <span><CircularLoader size='size-4' border="border border-[3px]"/></span> : null}
+        </span>
         <span className="text-xs font-light h-auto leading-none">{collaborator.email}</span>
       </div>
+
       <button className={`absolute right-6 text-sm`} ref={collaboratorAccessRef}>
         <span
           className={`flex justify-center items-center w-24 h-9 px-3 gap-2 right-6 text-sm font-normal rounded-[4px] hover:bg-zinc-300`}

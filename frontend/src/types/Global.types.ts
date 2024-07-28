@@ -116,4 +116,6 @@ export interface Collaborator {
 export interface CollaboratorModalProps {
   collaborator: Collaborator,
   documentId: string,
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>,
+  owner: User | undefined
 }
