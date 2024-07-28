@@ -10,6 +10,7 @@ import { setShowToast } from '../store/slices/Toast.slice';
 import { FaUserEdit } from 'react-icons/fa';
 import { Collaborators, publicAccess, ShareProps, User } from '../types/Global.types';
 import CollaboratorsModal from './Collaborators.modal';
+import { CircularLoader } from '../components/loader/Loader';
 
 const ShareModal: React.FC<ShareProps> = ({ document, setShowShareModal }) => {
   const dispatch = useDispatch();
@@ -31,6 +32,7 @@ const ShareModal: React.FC<ShareProps> = ({ document, setShowShareModal }) => {
   const [showPublicAccessModal, setShowPublicAccessModal] = useState<boolean>(false);
   const [isPublic, setIsPublic] = useState<publicAccess>({ tag: '', description: '' });
   const [showPublicAccessTypeModal, setShowPublicAccessTypeModal] = useState<boolean>(false);
+  const [showCircularLoader, setShowCircularLoader] = useState<boolean>(false);
 
 
   const restricted = {
@@ -44,6 +46,7 @@ const ShareModal: React.FC<ShareProps> = ({ document, setShowShareModal }) => {
   };
 
   const handleAccess = async () => {
+    setShowCircularLoader(true)
     try {
       const response = await axios.post(`/public/${documentId}`);
       if(response.data.data.isPublic){
@@ -62,10 +65,12 @@ const ShareModal: React.FC<ShareProps> = ({ document, setShowShareModal }) => {
       }
       console.log(error, 'Error while updating public status');
     }
+    setShowCircularLoader(false)
     setShowPublicAccessModal(false);
   };
 
   const handleAccessType = async (accessType: string) => {
+    setShowCircularLoader(true)
     try {
       await axios.post(`/public/${documentId}/access`, { accessType });
       if (accessType === 'read') {
@@ -81,6 +86,8 @@ const ShareModal: React.FC<ShareProps> = ({ document, setShowShareModal }) => {
       }
       console.log(error, "Error while setting public access types");
     }
+    setShowPublicAccessTypeModal(false)
+    setShowCircularLoader(false)
   };
 
   const getPublicAccessTypes = async () => {
@@ -124,7 +131,6 @@ const ShareModal: React.FC<ShareProps> = ({ document, setShowShareModal }) => {
     const handleClickOutside = (event: MouseEvent): void => {
       if (isPublicRef.current && !isPublicRef.current.contains(event.target as Node)) setShowPublicAccessModal(false);
       if (publicAccessRef.current && !publicAccessRef.current.contains(event.target as Node)) setShowPublicAccessTypeModal(false);
-      // if (collaboratorAccessRef.current && !collaboratorAccessRef.current.contains(event.target as Node)) setShowCollaboratorAccessTypeModal('');
     };
 
     window.addEventListener('mousedown', handleClickOutside);
@@ -181,31 +187,32 @@ const ShareModal: React.FC<ShareProps> = ({ document, setShowShareModal }) => {
                 <span
                   onClick={() => setShowPublicAccessModal(!showPublicAccessModal)}
                   className="flex items-center h-7 px-2 gap-2 hover:bg-zinc-300 rounded-md"
-                >
+                  >
                   {isPublic?.tag} <IoMdArrowDropdown />
                 </span>
                 {showPublicAccessModal ? (
                   <div
-                    ref={publicAccessModal}
-                    className="absolute top-6 flex flex-col justify-center items-start py-2 w-44 h-auto bg-white rounded-[4px]"
-                    style={{
-                      boxShadow:
-                        'rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px',
-                    }}
+                  ref={publicAccessModal}
+                  className="absolute top-6 flex flex-col justify-center items-start py-2 w-44 h-auto bg-white rounded-[4px]"
+                  style={{
+                    boxShadow:
+                    'rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px',
+                  }}
                   >
                     <span
                       className="flex items-center w-full h-8 px-4 hover:bg-primaryExtraLight"
                       onClick={() => handleAccess()}
-                    >
+                      >
                       {isPublic.tag !== 'Restricted' ? restricted.tag : anyoneWithLink.tag }
                     </span>
                   </div>
                 ) : null}
+              {showCircularLoader ? <span><CircularLoader size='size-5' border="border border-[3px]"/></span> : null}
               </span>
               <span className="text-xs font-light ml-2">{isPublic?.description} {isPublic.tag !== 'Restricted' ? accessType : null}</span>
             </div>
-
-            <button className={`absolute right-6 text-sm`} ref={publicAccessRef}>
+              
+            <button className={`absolute flex items-center gap-1 right-6 text-sm`} ref={publicAccessRef}>
               <span
                 className={`flex justify-center items-center w-24 h-9 px-3 gap-2 right-6 text-sm font-normal rounded-[4px] hover:bg-zinc-300 ${isPublic.tag === 'Restricted' ? 'pointer-events-none text-gray-400 font-light' : null} `}
                 onClick={() => setShowPublicAccessTypeModal(!showPublicAccessTypeModal)}

@@ -11,8 +11,8 @@ const CollaboratorsModal: React.FC<CollaboratorModalProps> = ({ collaborator, do
   const user = useSelector((store: RootState) => store.auth);
   const collaboratorAccessRef = useRef<HTMLButtonElement>(null);
   const collaboratorAccessTypeModal = useRef<HTMLDivElement>(null);
-  const [showCollaboratorAccessTypeModal, setShowCollaboratorAccessTypeModal] =
-    useState<boolean>(false);
+  const [accessType, setAccessType] = useState<string>(collaborator.accessType === 'read' ? 'Viewer' : 'Editor');
+  const [showCollaboratorAccessTypeModal, setShowCollaboratorAccessTypeModal] = useState<boolean>(false);
 
     // handling removal of the collaborator from the document
   const handleRemoveCollaborator = async (email: string) => {
@@ -21,15 +21,19 @@ const CollaboratorsModal: React.FC<CollaboratorModalProps> = ({ collaborator, do
     } catch (error) {
       console.log(error, 'Error while removing collaborator from document');
     }
+    setShowCollaboratorAccessTypeModal(false)
   };
 
   // Handling access permission of the collaborator
   const handleCollaboratorPermission = async (email: string, accessType: string) => {
     try {
       await axios.patch(`collaborations/c/${documentId}`, { email, accessType });
+      if(accessType === 'read')  setAccessType('Viewer')
+      else setAccessType('Editor')
     } catch (error) {
       console.log(error, 'Error while updating access type of the collaborator');
     }
+    setShowCollaboratorAccessTypeModal(false)
   };
 
   // Handeling closing of the collaboration access type modal when clicked outside
@@ -69,7 +73,7 @@ const CollaboratorsModal: React.FC<CollaboratorModalProps> = ({ collaborator, do
           onClick={() => setShowCollaboratorAccessTypeModal(!showCollaboratorAccessTypeModal)}
           ref={collaboratorAccessRef}
         >
-          {collaborator.accessType === 'read' ? 'Viewer' : 'Editor'}
+          {accessType}
           <IoMdArrowDropdown />
         </span>
         {showCollaboratorAccessTypeModal ? (
