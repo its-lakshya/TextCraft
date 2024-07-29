@@ -8,6 +8,7 @@ export interface AuthState {
   email: string;
   fullName: string;
   profileImage: string;
+  mobileNumber?:string,
 }
 
 const initialState: AuthState = {

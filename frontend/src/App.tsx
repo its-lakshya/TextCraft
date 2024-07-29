@@ -10,6 +10,7 @@ import Documents from './pages/Documents';
 import { Provider } from 'react-redux';
 import Store from './store/Store';
 import Error404 from './pages/Error404';
+import Profile from './pages/Profile';
 
 const appRouter = createBrowserRouter([
   {
@@ -31,6 +32,10 @@ const appRouter = createBrowserRouter([
       {
         path: '/user/documents',
         element: <Documents/>
+      },
+      {
+        path: '/user/profile',
+        element: <Profile/>
       },
     ],
   },
