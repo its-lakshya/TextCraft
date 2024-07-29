@@ -9,7 +9,7 @@ import ProfileModal from '../../modals/Profile.modal';
 const Header: React.FC = () => {
   const location = useLocation();
   const loginRef = useRef<HTMLDivElement>(null);
-  const profileRef = useRef<HTMLSpanElement>(null)
+  const profileRef = useRef<HTMLSpanElement>(null);
   const documentRef = useRef<HTMLAnchorElement>(null);
   const user = useSelector((store: RootState) => store.auth);
   const [profileModal, setProfileModal] = useState<boolean>(false);
@@ -42,10 +42,7 @@ const Header: React.FC = () => {
   // Handling closing of profile model when clicked outsied
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent): void => {
-      if (
-        profileRef.current &&
-        !profileRef.current.contains(event.target as Node)
-      ) {
+      if (profileRef.current && !profileRef.current.contains(event.target as Node)) {
         setProfileModal(false);
       }
     };
@@ -77,7 +74,10 @@ const Header: React.FC = () => {
           Documents
         </Link>
       </div>
-      <div ref={loginRef} className="HEADER-RIGHT flex justify-center items-center gap-4 w-auto capitalize">
+      <div
+        ref={loginRef}
+        className="HEADER-RIGHT flex justify-center items-center gap-4 w-auto capitalize"
+      >
         <Link
           to="/auth/login"
           className={`LOGIN text-primary px-6 py-3 rounded-full ${buttonHoverAnimaiton} hover:bg-primaryLight`}
@@ -100,7 +100,11 @@ const Header: React.FC = () => {
             className="size-10 bg-gray-300 rounded-full cursor-pointer"
             onClick={() => setProfileModal(!profileModal)}
           />
-          {profileModal ? <span ref={profileRef}><ProfileModal setProfileModal={setProfileModal}/> </span>: null}
+          {profileModal ? (
+            <span ref={profileRef}>
+              <ProfileModal setProfileModal={setProfileModal} />{' '}
+            </span>
+          ) : null}
         </div>
       ) : null}
     </div>
