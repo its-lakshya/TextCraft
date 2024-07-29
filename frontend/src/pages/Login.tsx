@@ -67,6 +67,7 @@ const Login: React.FC = () => {
                 <input
                   type="text"
                   placeholder="username@gmail.com"
+                  required
                   onChange={e => {
                     handleEmail(e);
                   }}
@@ -81,6 +82,7 @@ const Login: React.FC = () => {
                 <input
                   type="password"
                   placeholder="password"
+                  required
                   onChange={e => handlePassword(e)}
                   className={`PASSWORD-INPUT ${inputStyles}`}
                 />

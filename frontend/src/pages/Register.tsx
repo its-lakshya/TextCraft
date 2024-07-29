@@ -17,6 +17,10 @@ const Register: React.FC = () => {
   const inputStyles: string =
     'w-full h-8 rounded-md px-4 border border-[#BCBEC0] text-black text-sm';
   const inputContainerStyles: string = 'flex flex-col gap-2 w-full';
+  const [invalidEmail, setInvalidEmail] = useState<boolean>(false);
+  const [invalidNumber, setInvalidNumber] = useState<boolean>(false);
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  const indianMobileNumberRegex = /^[6789]\d{9}$/;
 
   const [user, setUser] = useState<User>({
     fullName: '',
@@ -28,6 +32,16 @@ const Register: React.FC = () => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = e.target;
+    if (name === 'email') {
+      if (emailRegex.test(value) === true) setInvalidEmail(false);
+      else setInvalidEmail(true);
+    }
+
+    if (name === 'mobileNumber') {
+      if (indianMobileNumberRegex.test(value) === true) setInvalidNumber(false);
+      else setInvalidNumber(true);
+    }
+
     setUser(previousUser => ({
       ...previousUser,
       [name]: value,
@@ -36,21 +50,21 @@ const Register: React.FC = () => {
 
   const handleRegister = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
-    const userData = {
-      fullName: user.fullName,
-      userName: user.userName,
-      ...(user.mobileNumber && { mobileNumber: user.mobileNumber }),
-      email: user.email,
-      password: user.password,
-    }
-    try {
-      const response = await axios.post('/users/register', 
-        userData
-      );
-      console.log(response);
-      navigate('/auth/login')
-    } catch (error) {
-      console.log(error, 'Not registered');
+    if (!invalidEmail && !invalidNumber) {
+      const userData = {
+        fullName: user.fullName,
+        userName: user.userName,
+        ...(user.mobileNumber && { mobileNumber: user.mobileNumber }),
+        email: user.email,
+        password: user.password,
+      };
+      try {
+        const response = await axios.post('/users/register', userData);
+        console.log(response);
+        navigate('/auth/login');
+      } catch (error) {
+        console.log(error, 'Not registered');
+      }
     }
   };
 
@@ -70,7 +84,11 @@ const Register: React.FC = () => {
         </button>
         <div className="FORM-CONTAINER flex flex-col gap-6 w-full">
           <div className="HEADING text-2xl font-bold">Register</div>
-          <form className="FORM flex flex-col gap-6" onSubmit={e => handleRegister(e)} method='post'>
+          <form
+            className="FORM flex flex-col gap-6"
+            onSubmit={e => handleRegister(e)}
+            method="post"
+          >
             <div className="flex flex-col gap-3 items-start w-full">
               <div className={`${inputContainerStyles}`}>
                 <label className="NAME-LABEL capitalize">Fullname</label>
@@ -78,6 +96,7 @@ const Register: React.FC = () => {
                   type="text"
                   name="fullName"
                   placeholder="John Doe"
+                  required
                   className={`NAME-INPUT ${inputStyles}`}
                   onChange={e => handleInputChange(e)}
                 />
@@ -88,12 +107,15 @@ const Register: React.FC = () => {
                   type="text"
                   name="userName"
                   placeholder="john@doe"
+                  required
                   className={`EMAIL-INPUT ${inputStyles}`}
                   onChange={e => handleInputChange(e)}
                 />
               </div>
-              <div className={`${inputContainerStyles}`}>
-                <label className="MOBILE-LABEL capitalize">mobile (optional)</label>
+              <div className={`relative ${inputContainerStyles}`}>
+                <label className="MOBILE-LABEL capitalize">
+                  mobile <span className="text-xs">(optional)</span>
+                </label>
                 <input
                   type="text"
                   name="mobileNumber"
@@ -101,22 +123,34 @@ const Register: React.FC = () => {
                   className={`MOBILE-INPUT ${inputStyles}`}
                   onChange={e => handleInputChange(e)}
                 />
+                {invalidNumber ? (
+                  <div className="absolute top-[66px] right-0 text-xs text-red-500">
+                    Invalid mobile number
+                  </div>
+                ) : null}
               </div>
-              <div className={`${inputContainerStyles}`}>
+              <div className={`relative ${inputContainerStyles}`}>
                 <label className="EMAIL-LABEL capitalize">email</label>
                 <input
                   type="text"
                   name="email"
+                  required
                   placeholder="username@gmail.com"
                   className={`EMAIL-INPUT ${inputStyles}`}
                   onChange={e => handleInputChange(e)}
                 />
+                {invalidEmail ? (
+                  <div className="absolute top-[66px] right-0 text-xs text-red-500">
+                    Invalid email
+                  </div>
+                ) : null}
               </div>
               <div className={`${inputContainerStyles}`}>
                 <label className="PASSWORD-LABEL capitalize">Password</label>
                 <input
                   type="password"
                   name="password"
+                  required
                   placeholder="password"
                   className={`PASSWORD-INPUT ${inputStyles}`}
                   onChange={e => handleInputChange(e)}
@@ -125,7 +159,7 @@ const Register: React.FC = () => {
             </div>
             <button
               type="submit"
-              className={`LOGIN-BUTTON flex justify-center items-center text-lg font-bold bg-primary py-2 rounded-lg ${buttonHoverAnimaiton} hover:-translate-y-2 hover:bg-primaryDark`}
+              className={`LOGIN-BUTTON flex justify-center items-center text-lg font-bold bg-primary py-2 rounded-lg ${buttonHoverAnimaiton} hover:-translate-y-2 hover:bg-primaryDark ${invalidEmail ? 'pointer-events-none' : null}`}
             >
               Sign up
             </button>
