@@ -21,6 +21,15 @@ const Contact = () => {
     }
   }, []);
 
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    const form = event.target as HTMLFormElement;
+
+    form.fullName.value = ''
+    form.email.value = ''
+    form.message.value = ''
+  }
+
   return (
     <div className="WRAPPER flex flex-col justify-center items-center gap-8 w-full h-[calc(100vh-5rem)] bg-white px-rootXPadd mb-52">
       <div className="TEXT flex flex-col justify-center items-center gap-4">
@@ -46,7 +55,7 @@ const Contact = () => {
           </div>
           <div className="LINKS flex flex-col gap-8">
             <span className="flex items-center gap-4">
-              <IoMail /> kumarlakshya101@gmail.com
+              <IoMail /> TextCraft@proton.me
             </span>
             <span className="flex items-center gap-4">
               <FaLocationDot />
@@ -85,13 +94,14 @@ const Contact = () => {
             alt="img"
             className="ARROW-ELEMENT absolute bottom-8 right-28"
           />
-          <form className="FORM flex flex-col gap-8 p-10">
+          <form className="FORM flex flex-col gap-8 p-10" method='post' onSubmit={(e) => handleSubmit(e)}>
             <div className="flex gap-8">
               <div className="NAME-CONTAINER flex flex-col justify-center items-start w-1/2 gap-4">
                 <label className="text-sm text-[#8D8D8D] capitalize">Name</label>
                 <input
                   ref={nameRef}
                   type="text"
+                  name='fullName'
                   placeholder="john doe"
                   className="NAME w-full pb-[6px] font-light outline-none border-b focus:border-b-primary focus:pb-[5px] focus:border-b-2  border-b-black autofocus"
                 />
@@ -100,6 +110,7 @@ const Contact = () => {
                 <label className="text-sm text-[#8D8D8D] capitalize">Email</label>
                 <input
                   type="text"
+                  name='email'
                   placeholder="john@gmail.com"
                   className="EMAIL w-full pb-[6px] font-light outline-none border-b focus:border-b-primary focus:pb-[5px] focus:border-b-2  border-b-black "
                 />
@@ -109,6 +120,7 @@ const Contact = () => {
               <label className="text-sm text-[#8D8D8D] capitalize">Message</label>
               <textarea
                 rows={4}
+                name='message'
                 placeholder="write your message..."
                 className="NAME w-full p-2 font-light outline-none border border-black focus:outline-primary focus:border-none rounded-md resize-none"
               />

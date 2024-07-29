@@ -41,7 +41,7 @@ const ProfileModal: React.FC<ProfleModalProps> = ({ setProfileModal }) => {
 
   if (isLoading) {
     return (
-      <div className="fixed top-0 bottom-0 left-0 right-0 flex justify-center items-center w-screen h-screen bg-gray-300 bg-opacity-30 backdrop-blur-md">
+      <div className="fixed top-0 bottom-0 left-0 right-0 flex justify-center items-center w-screen h-screen bg-gray-300 bg-opacity-30 backdrop-blur-md z-50">
         <Loader />
       </div>
     );
