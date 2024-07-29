@@ -4,8 +4,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store/Store';
 import axios from '../axios.config';
 import { setAuthStatus, setUserDetails } from '../store/slices/Auth.slice';
+import { Link } from 'react-router-dom';
 
-const ProfileModal: React.FC = () => {
+interface ProfleModalProps {
+  setProfileModal: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+const ProfileModal: React.FC<ProfleModalProps> = ({setProfileModal}) => {
   const dispatch = useDispatch();
   const user = useSelector((store: RootState) => store.auth);
 
@@ -13,6 +18,7 @@ const ProfileModal: React.FC = () => {
     await axios.post('/users/logout');
     dispatch(setAuthStatus(false));
     dispatch(setUserDetails({_id: '', userName: '', gender: '', email: '', fullName: '', profileImage: ''}));
+    setProfileModal(false)
   };
 
   return (
@@ -29,12 +35,12 @@ const ProfileModal: React.FC = () => {
           <span className="text-xs font-light">{user.email}</span>
         </div>
       </div>
-      <span className="flex items-center gap-2 w-full px-4 h-8 hover:bg-primaryExtraLight cursor-pointer select-none text-primary">
+      <Link to='/user/profile' onClick={() => setProfileModal(false)} className="flex items-center gap-2 w-full px-4 h-8 hover:bg-primaryExtraLight cursor-pointer select-none text-primary">
         <span className="text-xl">
           <IoSettingsOutline />
         </span>
         Profile
-      </span>
+      </Link>
       <span
         className="flex items-center gap-2 w-full px-4 h-8 hover:bg-primaryExtraLight cursor-pointer select-none text-red-500"
         onClick={() => handleLogout()}

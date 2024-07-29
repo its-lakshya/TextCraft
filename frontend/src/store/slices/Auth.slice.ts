@@ -8,7 +8,7 @@ export interface AuthState {
   email: string;
   fullName: string;
   profileImage: string;
-  mobileNumber?:string,
+  mobileNumber?: string;
 }
 
 const initialState: AuthState = {
@@ -19,6 +19,7 @@ const initialState: AuthState = {
   email: '',
   fullName: '',
   profileImage: '',
+  mobileNumber: '',
 };
 
 const authSlice = createSlice({
@@ -36,7 +37,8 @@ const authSlice = createSlice({
       state.email = action.payload.email;
       state.fullName = action.payload.fullName;
       state.profileImage = action.payload.profileImage;
-    }
+      state.mobileNumber = action.payload.mobileNumber;
+    },
   },
 });
 

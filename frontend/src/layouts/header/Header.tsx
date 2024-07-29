@@ -100,7 +100,7 @@ const Header: React.FC = () => {
             className="size-10 bg-gray-300 rounded-full cursor-pointer"
             onClick={() => setProfileModal(!profileModal)}
           />
-          {profileModal ? <span ref={profileRef}><ProfileModal/> </span>: null}
+          {profileModal ? <span ref={profileRef}><ProfileModal setProfileModal={setProfileModal}/> </span>: null}
         </div>
       ) : null}
     </div>
