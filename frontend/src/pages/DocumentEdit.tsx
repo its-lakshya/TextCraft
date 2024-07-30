@@ -16,7 +16,7 @@ const DocumentEdit = () => {
   const currentLocation = location.pathname.split('/');
   const [userDetails, setUserDetails] = useState<User>();
   const [documentData, setDocumentData] = useState<Document>();
-  const socket = useMemo(() => io('http://localhost:8000'), []);
+  const socket = useMemo(() => io('https://textcraft.onrender.com'), []);
   const documentId = currentLocation[currentLocation.length - 1];
 
   // Api calls for getting document and user details

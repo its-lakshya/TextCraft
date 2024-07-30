@@ -91,16 +91,15 @@ const loginUser = asyncHandler(async (req, res) => {
   const { accessToken, refreshToken } = await generateAccessAndRefreshToken(user._id);
 
   const loggedInUser = await User.find(user._id).select('-password -refreshToken');
-  const options = {
-    httpOnly: true,
-    secure: true,
-    sameSite: 'None',
-    domain: 'textcraft.onrender.com'
-  };
+  // const options = {
+  //   httpOnly: true,
+  //   secure: true,
+  //   sameSite: 'None',
+  // };
 
-  res.cookie('accessToken', accessToken, options);
+  // res.cookie('accessToken', accessToken, options);
 
-  res.cookie('refreshToken', refreshToken, options);
+  // res.cookie('refreshToken', refreshToken, options);
 
   return res
     .status(200)
@@ -242,7 +241,7 @@ const updateUserPassword = asyncHandler(async (req, res) => {
 });
 
 const isLoggedIn = asyncHandler(async (req, res) => {
-  const accessToken = req?.cookies?.accessToken;
+  const {accessToken} = req.body;
   if (!accessToken) {
     return res.status(401).json({ loggedIn: false, message: 'Access token not found' });
   }

@@ -35,10 +35,13 @@ const Login: React.FC = () => {
     if (!invalidEmail) {
       setIsLoading(true);
       try {
-        await axios.post('/users/login', {
+        const response = await axios.post('/users/login', {
           email: user.email,
           password: user.password,
         });
+        console.log(response)
+        localStorage.setItem('accessToken', response.data.data.accessToken)
+        localStorage.setItem('refreshToken', response.data.data.refreshToken)
         localStorage.setItem('isAuthenticated', 'true');
         navigate('/');
       } catch (error) {

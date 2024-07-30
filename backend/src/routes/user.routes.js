@@ -27,7 +27,7 @@ router.route('/register').post(
 
 router.route('/login').post(loginUser);
 
-router.route('/check-auth').get(isLoggedIn);
+router.route('/check-auth').post(isLoggedIn);
 
 router.use(verifyJWT);
 
