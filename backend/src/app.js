@@ -12,7 +12,7 @@ const app = express();
 // defining middlewares
 app.use(
   cors({
-    origin: 'http://localhost:5173',
+    origin: `${process.env.CORS_ORIGIN}`,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     credentials: true,
   }),
