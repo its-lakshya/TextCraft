@@ -46,7 +46,7 @@ const DocumentsHeader = () => {
           />
           {profileModal ? (
             <span ref={profileRef}>
-              <ProfileModal />{' '}
+              <ProfileModal setProfileModal={setProfileModal} />{' '}
             </span>
           ) : null}
         </div>

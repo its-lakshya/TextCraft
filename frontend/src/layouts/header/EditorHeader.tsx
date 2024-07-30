@@ -237,7 +237,7 @@ const EditorHeader: React.FC<EditorProps> = ({ documentData, socket }) => {
           />
           {profileModal ? (
             <span ref={profileRef}>
-              <ProfileModal />{' '}
+              <ProfileModal setProfileModal={setProfileModal} />{' '}
             </span>
           ) : null}
         </div>
