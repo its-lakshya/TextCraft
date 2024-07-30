@@ -95,7 +95,7 @@ const loginUser = asyncHandler(async (req, res) => {
     httpOnly: true,
     secure: true,
     sameSite: 'None',
-    domain: 'textcraft-1.onrender.com'
+    domain: 'textcraft.onrender.com'
   };
 
   res.cookie('accessToken', accessToken, options);
