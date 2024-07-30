@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store/Store';
 import axios from '../axios.config';
 import { setAuthStatus, setUserDetails } from '../store/slices/Auth.slice';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import Loader from '../components/loader/Loader';
 
@@ -14,8 +14,11 @@ interface ProfleModalProps {
 
 const ProfileModal: React.FC<ProfleModalProps> = ({ setProfileModal }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
   const user = useSelector((store: RootState) => store.auth);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const currentLocation = location.pathname.split('/');
 
   const handleLogout = async () => {
     setIsLoading(true);
@@ -23,6 +26,7 @@ const ProfileModal: React.FC<ProfleModalProps> = ({ setProfileModal }) => {
       await axios.post('/users/logout');
       localStorage.setItem("accessToken", '')
       dispatch(setAuthStatus(false));
+      if (currentLocation[1] !== '' && currentLocation[1] !== 'contact-us') navigate('/auth/login');
       dispatch(
         setUserDetails({
           _id: '',

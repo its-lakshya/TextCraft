@@ -74,7 +74,7 @@ const Register: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center w-screen h-screen">
+      <div className="fixed flex justify-center items-center w-screen h-screen bg-gray-300 bg-opacity-50 backdrop-blur-md">
         <Loader />
       </div>
     );

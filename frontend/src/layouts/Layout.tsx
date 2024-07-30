@@ -51,7 +51,7 @@ const Layout: React.FC = () => {
       }
     })();
     // eslint-disable-next-line
-  }, [authStatus]);
+  }, [authStatus, localStorage.getItem('accessToken')]);
 
   useEffect(() => {
     setIsLoading(true);
