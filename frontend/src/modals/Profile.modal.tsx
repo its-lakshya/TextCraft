@@ -21,6 +21,7 @@ const ProfileModal: React.FC<ProfleModalProps> = ({ setProfileModal }) => {
     setIsLoading(true);
     try {
       await axios.post('/users/logout');
+      localStorage.setItem("accessToken", '')
       dispatch(setAuthStatus(false));
       dispatch(
         setUserDetails({

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import Header from './header/Header.tsx';
 import Footer from './footer/Footer.tsx';
@@ -8,6 +8,7 @@ import { setAuthStatus, setUserDetails } from '../store/slices/Auth.slice.ts';
 import Toast from '../components/toast/Toast.tsx';
 import { RootState } from '../store/Store.ts';
 import { VerifiedUser } from '../types/Global.types.ts';
+import Loader from '../components/loader/Loader.tsx';
 
 const Layout: React.FC = () => {
   const dispatch = useDispatch();
@@ -15,7 +16,8 @@ const Layout: React.FC = () => {
   const location = useLocation();
   const currentLocation = location.pathname.split('/');
   const toast = useSelector((store: RootState) => store.toast);
-  const authStatus = useSelector((store: RootState) => store.auth)
+  const authStatus = useSelector((store: RootState) => store.auth);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -48,9 +50,25 @@ const Layout: React.FC = () => {
           navigate('/auth/login');
       }
     })();
-  // eslint-disable-next-line
+    // eslint-disable-next-line
   }, [authStatus]);
 
+  useEffect(() => {
+    setIsLoading(true);
+    const timeout = setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
+
+    return () => clearTimeout(timeout);
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="fixed flex justify-center items-center w-screen h-screen bg-gray-300 bg-opacity-50 backdrop-blur-md">
+        <Loader />
+      </div>
+    );
+  }
   return (
     <div className="flex flex-col">
       <Header />
