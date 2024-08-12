@@ -322,7 +322,7 @@ const ShareModal: React.FC<ShareProps> = ({ document, setShowShareModal }) => {
             <div className="BUTTONS flex justify-between items-center px-6">
               <button
                 className={`COPY flex justify-center items-center gap-2 h-10 w-36 border border-primary text-sm text-primary font-medium rounded-3xl hover:bg-primaryExtraLight ${collaborators?.length === 0 && isPublic.tag === 'Restricted' ? 'pointer-events-none opacity-40' : null}`}
-                onClick={() => navigator.clipboard.writeText('https://textcraft-docs.netlify.app/' + location.pathname)}
+                onClick={() => navigator.clipboard.writeText('https://textcraft-docs.netlify.app' + location.pathname)}
               >
                 <span className="text-lg">
                   <IoLink />
